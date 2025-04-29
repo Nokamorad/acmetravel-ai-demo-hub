@@ -1,14 +1,15 @@
+
 import { ReactNode } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
 import { 
-  HomeIcon, 
-  PlusCircleIcon, 
-  CalendarIcon, 
-  UserIcon, 
-  HelpCircleIcon, 
-  MessageSquareIcon,
-  SearchIcon
+  Home as HomeIcon, 
+  PlusCircle as PlusCircleIcon, 
+  Calendar as CalendarIcon, 
+  User as UserIcon, 
+  HelpCircle as HelpCircleIcon, 
+  MessageSquare as MessageSquareIcon,
+  Search as SearchIcon
 } from "lucide-react";
 import PendoIntegration from "@/components/pendo/PendoIntegration";
 
