@@ -1,6 +1,6 @@
 
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { 
@@ -14,6 +14,7 @@ import PendoExperiment from "@/components/pendo/PendoExperiment";
 
 const Dashboard = () => {
   const [showWelcomeGuide, setShowWelcomeGuide] = useState(true);
+  const navigate = useNavigate();
   
   // Sample upcoming trips data
   const upcomingTrips = [
@@ -76,8 +77,7 @@ const Dashboard = () => {
           <Button 
             className="mt-4 md:mt-0 bg-acme-purple hover:bg-acme-purple-dark text-white"
             data-pendo-id="dashboard-new-trip"
-            as={Link}
-            to="/book"
+            onClick={() => navigate('/book')}
           >
             <PlusCircleIcon className="mr-2 h-4 w-4" />
             Plan a New Trip
@@ -147,8 +147,7 @@ const Dashboard = () => {
               variant="outline" 
               className="h-auto py-6 flex flex-col items-center justify-center border-2"
               data-pendo-id="quick-book-flight"
-              as={Link}
-              to="/book"
+              onClick={() => navigate('/book')}
             >
               <PlaneIcon className="h-6 w-6 mb-2 text-acme-purple" />
               <span>Book a Flight</span>
@@ -158,8 +157,7 @@ const Dashboard = () => {
               variant="outline" 
               className="h-auto py-6 flex flex-col items-center justify-center border-2"
               data-pendo-id="quick-book-hotel"
-              as={Link}
-              to="/book"
+              onClick={() => navigate('/book')}
             >
               <MapPinIcon className="h-6 w-6 mb-2 text-acme-purple" />
               <span>Book a Hotel</span>
