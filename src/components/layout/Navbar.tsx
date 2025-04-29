@@ -20,11 +20,19 @@ const Navbar = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  const smoothScroll = (id: string) => {
+    document.getElementById(id)?.scrollIntoView({ 
+      behavior: 'smooth'
+    });
+    setMobileMenuOpen(false);
+  };
+
   return (
     <nav 
       className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${
         scrolled ? 'bg-white/90 shadow-md backdrop-blur-md py-3' : 'bg-transparent py-5'
       }`}
+      data-pendo-id="main-navigation"
     >
       <div className="container mx-auto flex items-center justify-between px-4 md:px-6">
         <div className="flex items-center">
@@ -37,17 +45,33 @@ const Navbar = () => {
 
         {/* Desktop Navigation */}
         <div className="hidden md:flex items-center space-x-6">
-          <a href="#onboarding" className="text-acme-gray-dark hover:text-acme-purple transition-colors duration-200">
+          <a 
+            href="#onboarding" 
+            onClick={(e) => { e.preventDefault(); smoothScroll('onboarding'); }}
+            className="text-acme-gray-dark hover:text-acme-purple transition-colors duration-200"
+            data-pendo-id="nav-onboarding"
+          >
             Getting Started
           </a>
-          <a href="#support" className="text-acme-gray-dark hover:text-acme-purple transition-colors duration-200">
+          <a 
+            href="#support" 
+            onClick={(e) => { e.preventDefault(); smoothScroll('support'); }}
+            className="text-acme-gray-dark hover:text-acme-purple transition-colors duration-200"
+            data-pendo-id="nav-support"
+          >
             Getting Help
           </a>
-          <a href="#upsell" className="text-acme-gray-dark hover:text-acme-purple transition-colors duration-200">
+          <a 
+            href="#upsell" 
+            onClick={(e) => { e.preventDefault(); smoothScroll('upsell'); }}
+            className="text-acme-gray-dark hover:text-acme-purple transition-colors duration-200"
+            data-pendo-id="nav-upsell"
+          >
             Getting More
           </a>
           <Button 
             className="bg-acme-pink hover:bg-opacity-90 text-white"
+            data-pendo-id="nav-contact-sales"
           >
             Contact Sales
           </Button>
@@ -71,27 +95,28 @@ const Navbar = () => {
         <div className="md:hidden bg-white shadow-lg absolute top-full left-0 w-full py-4 px-6 flex flex-col space-y-4">
           <a 
             href="#onboarding" 
+            onClick={(e) => { e.preventDefault(); smoothScroll('onboarding'); }}
             className="text-acme-gray-dark hover:text-acme-purple transition-colors duration-200"
-            onClick={() => setMobileMenuOpen(false)}
           >
             Getting Started
           </a>
           <a 
             href="#support" 
+            onClick={(e) => { e.preventDefault(); smoothScroll('support'); }}
             className="text-acme-gray-dark hover:text-acme-purple transition-colors duration-200"
-            onClick={() => setMobileMenuOpen(false)}
           >
             Getting Help
           </a>
           <a 
             href="#upsell" 
+            onClick={(e) => { e.preventDefault(); smoothScroll('upsell'); }}
             className="text-acme-gray-dark hover:text-acme-purple transition-colors duration-200"
-            onClick={() => setMobileMenuOpen(false)}
           >
             Getting More
           </a>
           <Button 
             className="bg-acme-pink hover:bg-opacity-90 text-white w-full"
+            data-pendo-id="mobile-nav-contact-sales"
           >
             Contact Sales
           </Button>

@@ -13,30 +13,45 @@ const FeatureSection = ({ title, description }: FeatureSectionProps) => {
       title: "Getting Started",
       description: "Interactive onboarding experience with email integration to quickly get users productive with the platform.",
       icon: "🚀",
-      ctaText: "Start Onboarding Demo",
-      ctaUrl: "#onboarding-demo", // Replace with actual Pendo link
+      ctaText: "Explore Onboarding Demo",
+      ctaUrl: "#onboarding",
       accent: "purple" as const,
       imageUrl: "https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?auto=format&fit=crop&q=80",
+      keyPoints: [
+        "Personalized user paths based on travel frequency",
+        "Omnichannel engagement with Marketo integration",
+        "In-product guidance that flows naturally with the UI"
+      ]
     },
     {
       id: "support",
       title: "Getting Help",
       description: "Smart support using frustration detection and session replay to provide timely assistance.",
       icon: "🤝",
-      ctaText: "Start Support Demo",
-      ctaUrl: "#support-demo", // Replace with actual Pendo link
+      ctaText: "Explore Support Demo",
+      ctaUrl: "#support",
       accent: "pink" as const,
       imageUrl: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&q=80",
+      keyPoints: [
+        "Detect user frustration before support tickets",
+        "Session replay with AI-powered bug creation",
+        "Automated CSAT surveys to measure improvement"
+      ]
     },
     {
       id: "upsell",
       title: "Getting More",
       description: "Personalized upsell experiences with PMF surveys and A/B testing to drive growth.",
       icon: "✨",
-      ctaText: "Start Upsell Demo",
-      ctaUrl: "#upsell-demo", // Replace with actual Pendo link
+      ctaText: "Explore Upsell Demo",
+      ctaUrl: "#upsell",
       accent: "purple" as const,
       imageUrl: "https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?auto=format&fit=crop&q=80",
+      keyPoints: [
+        "Target ideal customers with PMF survey insights",
+        "A/B test different upsell approaches",
+        "Track cross-sell conversions end-to-end"
+      ]
     },
   ];
 

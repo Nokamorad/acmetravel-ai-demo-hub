@@ -2,7 +2,9 @@
 import Navbar from "@/components/layout/Navbar";
 import Hero from "@/components/hero/Hero";
 import FeatureSection from "@/components/features/FeatureSection";
+import UseCaseDetails from "@/components/features/UseCaseDetails";
 import Footer from "@/components/layout/Footer";
+import PendoIntegration from "@/components/pendo/PendoIntegration";
 
 const Index = () => {
   return (
@@ -14,12 +16,13 @@ const Index = () => {
         
         <FeatureSection 
           title="Discover the Power of Travel Agent"
-          description="Explore three powerful ways our AI assistant enhances the travel experience, from onboarding to support and personalized recommendations."
+          description="Explore how our AI assistant enhances the travel experience across three key journeys: onboarding, support, and personalized recommendations."
         />
         
-        {/* Pendo snippet placeholder - This comment is for the Pendo snippet that will be added later */}
+        <UseCaseDetails />
         
-        {/* You can add additional sections here as needed */}
+        {/* Pendo Integration Component */}
+        <PendoIntegration />
       </main>
       
       <Footer />

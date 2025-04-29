@@ -11,6 +11,7 @@ interface FeatureCardProps {
   ctaUrl: string;
   accent: "purple" | "pink";
   imageUrl: string;
+  keyPoints?: string[];
 }
 
 const FeatureCard = ({
@@ -21,7 +22,8 @@ const FeatureCard = ({
   ctaText,
   ctaUrl,
   accent,
-  imageUrl
+  imageUrl,
+  keyPoints = []
 }: FeatureCardProps) => {
   const accentClasses = {
     purple: {
@@ -41,6 +43,7 @@ const FeatureCard = ({
   return (
     <div
       id={id}
+      data-pendo-id={`feature-card-${id}`}
       className={cn(
         "rounded-lg p-6 md:p-8 border",
         accentClasses[accent].bg,
@@ -60,6 +63,17 @@ const FeatureCard = ({
         {description}
       </p>
       
+      {keyPoints.length > 0 && (
+        <ul className="mb-6 text-sm space-y-2">
+          {keyPoints.map((point, index) => (
+            <li key={index} className="flex items-start">
+              <span className={cn("mr-2 text-lg", accentClasses[accent].icon)}>•</span>
+              <span className="text-acme-gray-dark">{point}</span>
+            </li>
+          ))}
+        </ul>
+      )}
+      
       <div className="mb-8 rounded-lg overflow-hidden shadow-lg h-48 md:h-60">
         <img 
           src={imageUrl} 
@@ -71,7 +85,13 @@ const FeatureCard = ({
       <div className="text-center md:text-left">
         <Button 
           className={cn("text-white", accentClasses[accent].button)}
-          onClick={() => window.open(ctaUrl, '_blank')}
+          data-pendo-id={`cta-${id}`}
+          onClick={() => {
+            // Track click event and then navigate
+            console.log(`Demo started: ${id}`);
+            // This is where you would add Pendo tracking if needed
+            window.location.href = ctaUrl;
+          }}
         >
           {ctaText}
         </Button>
