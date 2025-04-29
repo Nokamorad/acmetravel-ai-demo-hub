@@ -8,7 +8,7 @@ const Hero = () => {
         <div className="flex flex-col md:flex-row md:items-center md:justify-between">
           <div className="md:w-1/2 mb-8 md:mb-0">
             <div className="inline-block px-4 py-1.5 bg-acme-purple/10 rounded-full text-acme-purple font-medium text-sm mb-4">
-              Pendo Demo Experience
+              Demo Experience
             </div>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-acme-gray-dark leading-tight mb-4">
               Meet <span className="text-acme-purple">Travel Agent</span>,<br />
@@ -30,10 +30,24 @@ const Hero = () => {
                 size="lg" 
                 variant="outline" 
                 className="border-acme-purple text-acme-purple hover:bg-acme-purple/10"
-                data-pendo-id="hero-secondary-cta"
+                data-pendo-id="hero-demo-walkthrough"
+                onClick={() => {
+                  if ((window as any).simulatePendoGuide) {
+                    (window as any).simulatePendoGuide('product-walkthrough');
+                  }
+                }}
               >
                 Watch Demo Walkthrough
               </Button>
+            </div>
+            
+            <div className="flex items-center mt-8">
+              <div className="flex -space-x-2">
+                <img src="https://i.pravatar.cc/100?img=1" alt="User" className="w-8 h-8 rounded-full border-2 border-white" />
+                <img src="https://i.pravatar.cc/100?img=2" alt="User" className="w-8 h-8 rounded-full border-2 border-white" />
+                <img src="https://i.pravatar.cc/100?img=3" alt="User" className="w-8 h-8 rounded-full border-2 border-white" />
+              </div>
+              <span className="ml-2 text-sm text-gray-600">Join 2,500+ travel managers using Travel Agent</span>
             </div>
           </div>
           <div className="md:w-2/5">
@@ -41,7 +55,7 @@ const Hero = () => {
               <div className="absolute -left-8 -top-8 w-40 h-40 bg-acme-purple-light/30 rounded-full filter blur-2xl animate-pulse-soft"></div>
               <div className="absolute -right-4 -bottom-8 w-32 h-32 bg-acme-pink-light/30 rounded-full filter blur-xl animate-pulse-soft" style={{animationDelay: '1s'}}></div>
               
-              <div className="glass-card rounded-xl p-6 relative z-10 shadow-lg animate-float">
+              <div className="glass-card rounded-xl p-6 relative z-10 shadow-lg animate-float" data-pendo-id="chat-preview-card">
                 <div className="flex items-center justify-between mb-4">
                   <div className="flex items-center gap-2">
                     <div className="w-3 h-3 bg-acme-purple rounded-full"></div>
@@ -69,12 +83,19 @@ const Hero = () => {
                 </div>
                 
                 <div className="flex items-center gap-3 mb-4">
-                  <div className="h-2 w-2 bg-green-400 rounded-full"></div>
+                  <div className="h-2 w-2 bg-green-400 rounded-full animate-pulse"></div>
                   <p className="text-sm text-gray-600">Travel Agent is thinking...</p>
                 </div>
                 
-                <Button className="w-full bg-acme-pink hover:bg-opacity-90 text-white"
-                  data-pendo-id="chat-demo-button">
+                <Button 
+                  className="w-full bg-acme-pink hover:bg-opacity-90 text-white"
+                  data-pendo-id="chat-demo-button"
+                  onClick={() => {
+                    if ((window as any).simulatePendoGuide) {
+                      (window as any).simulatePendoGuide('chat-experience');
+                    }
+                  }}
+                >
                   Experience Travel Agent
                 </Button>
               </div>

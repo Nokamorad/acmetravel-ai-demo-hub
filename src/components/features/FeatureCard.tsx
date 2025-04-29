@@ -39,6 +39,22 @@ const FeatureCard = ({
       icon: "text-acme-pink",
     },
   };
+  
+  // Function to simulate launching a Pendo guide
+  const launchDemo = (demoType: string) => {
+    console.log(`Demo started: ${demoType}`);
+    
+    // This would trigger a specific Pendo guide in production
+    if ((window as any).simulatePendoGuide) {
+      (window as any).simulatePendoGuide(`${demoType}-flow`);
+    }
+    
+    // For the demo site, we'll also scroll to the anchor
+    const element = document.getElementById(demoType);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
 
   return (
     <div
@@ -74,7 +90,21 @@ const FeatureCard = ({
         </ul>
       )}
       
-      <div className="mb-8 rounded-lg overflow-hidden shadow-lg h-48 md:h-60">
+      <div className="mb-8 rounded-lg overflow-hidden shadow-lg h-48 md:h-60 relative group">
+        <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+          <Button 
+            variant="secondary" 
+            size="sm"
+            data-pendo-id={`preview-${id}`}
+            onClick={() => {
+              if ((window as any).simulatePendoGuide) {
+                (window as any).simulatePendoGuide(`${id}-preview`);
+              }
+            }}
+          >
+            Preview
+          </Button>
+        </div>
         <img 
           src={imageUrl} 
           alt={title} 
@@ -86,12 +116,7 @@ const FeatureCard = ({
         <Button 
           className={cn("text-white", accentClasses[accent].button)}
           data-pendo-id={`cta-${id}`}
-          onClick={() => {
-            // Track click event and then navigate
-            console.log(`Demo started: ${id}`);
-            // This is where you would add Pendo tracking if needed
-            window.location.href = ctaUrl;
-          }}
+          onClick={() => launchDemo(id)}
         >
           {ctaText}
         </Button>

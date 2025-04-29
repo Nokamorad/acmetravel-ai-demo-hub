@@ -6,6 +6,7 @@ import { Menu } from "lucide-react";
 const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [demoMode, setDemoMode] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -26,6 +27,24 @@ const Navbar = () => {
     });
     setMobileMenuOpen(false);
   };
+  
+  // Toggle demo mode to simulate different user states
+  const toggleDemoMode = () => {
+    setDemoMode(!demoMode);
+    
+    // This would trigger different Pendo behaviors in production
+    if ((window as any).pendo) {
+      console.log(`Demo mode ${!demoMode ? 'activated' : 'deactivated'}`);
+    }
+  };
+  
+  // Simulate launching a guide from the navigation
+  const launchGuide = (guideId: string) => {
+    if ((window as any).simulatePendoGuide) {
+      (window as any).simulatePendoGuide(guideId);
+    }
+    console.log(`Launch guide: ${guideId}`);
+  };
 
   return (
     <nav 
@@ -41,6 +60,13 @@ const Navbar = () => {
               <span className="text-acme-purple">Acme</span>Travel
             </span>
           </a>
+          
+          {/* Demo mode indicator */}
+          {demoMode && (
+            <div className="ml-3 px-2 py-1 bg-acme-pink/20 rounded text-xs text-acme-pink font-medium">
+              Demo Mode
+            </div>
+          )}
         </div>
 
         {/* Desktop Navigation */}
@@ -72,8 +98,20 @@ const Navbar = () => {
           <Button 
             className="bg-acme-pink hover:bg-opacity-90 text-white"
             data-pendo-id="nav-contact-sales"
+            onClick={() => launchGuide('contact-sales')}
           >
             Contact Sales
+          </Button>
+          
+          {/* Demo toggle - this would allow easy switching between demo states */}
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={toggleDemoMode}
+            className="text-xs"
+            data-pendo-id="toggle-demo-mode"
+          >
+            {demoMode ? 'Exit Demo Mode' : 'Enter Demo Mode'}
           </Button>
         </div>
 
@@ -117,8 +155,18 @@ const Navbar = () => {
           <Button 
             className="bg-acme-pink hover:bg-opacity-90 text-white w-full"
             data-pendo-id="mobile-nav-contact-sales"
+            onClick={() => launchGuide('contact-sales')}
           >
             Contact Sales
+          </Button>
+          
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={toggleDemoMode}
+            className="text-xs w-full"
+          >
+            {demoMode ? 'Exit Demo Mode' : 'Enter Demo Mode'}
           </Button>
         </div>
       )}
