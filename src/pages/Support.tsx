@@ -1,11 +1,17 @@
-
 import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { MessageSquareIcon, SearchIcon, HelpCircleIcon, PlayIcon, AlertCircleIcon, InfoIcon } from "lucide-react";
+import { 
+  MessageSquare as MessageSquareIcon, 
+  Search as SearchIcon, 
+  HelpCircle as HelpCircleIcon, 
+  Play as PlayIcon, 
+  AlertCircle as AlertCircleIcon, 
+  Info as InfoIcon
+} from "lucide-react";
 import AppLayout from "@/components/layout/AppLayout";
 import PendoSurvey from "@/components/pendo/PendoSurvey";
 

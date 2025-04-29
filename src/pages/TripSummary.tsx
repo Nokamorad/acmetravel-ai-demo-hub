@@ -1,22 +1,21 @@
-
 import React, { useState } from 'react';
 import AppLayout from "@/components/layout/AppLayout";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { 
-  PlaneIcon, 
-  HotelIcon, 
-  CalendarIcon, 
-  MapPinIcon,
-  UserIcon,
-  ClockIcon,
-  CreditCardIcon,
-  PrinterIcon,
-  ShareIcon,
-  BellIcon,
-  MessageSquareIcon,
-  SearchIcon
+  Plane as PlaneIcon, 
+  Hotel as HotelIcon, 
+  Calendar as CalendarIcon, 
+  MapPin as MapPinIcon,
+  User as UserIcon,
+  Clock as ClockIcon,
+  CreditCard as CreditCardIcon,
+  Printer as PrinterIcon,
+  Share as ShareIcon,
+  Bell as BellIcon,
+  MessageSquare as MessageSquareIcon,
+  Search as SearchIcon
 } from "lucide-react";
 
 const TripSummary = () => {

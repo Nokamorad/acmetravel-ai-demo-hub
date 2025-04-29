@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
@@ -14,7 +13,8 @@ import {
   HotelIcon,
   CarIcon,
   CheckIcon,
-  ChevronRightIcon
+  ChevronRightIcon,
+  MessageSquareIcon
 } from "lucide-react";
 import AppLayout from "@/components/layout/AppLayout";
 import PendoExperiment from "@/components/pendo/PendoExperiment";
