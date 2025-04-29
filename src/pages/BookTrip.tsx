@@ -1,354 +1,284 @@
 
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { CalendarIcon, PlaneIcon, SearchIcon, MapPinIcon, ClockIcon } from "lucide-react";
+import React, { useState } from 'react';
 import AppLayout from "@/components/layout/AppLayout";
-import { useToast } from "@/hooks/use-toast";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { 
+  PlaneIcon, 
+  HotelIcon, 
+  CalendarIcon, 
+  SearchIcon,
+  TrainIcon,
+  CarIcon,
+  InfoIcon,
+  ChevronDownIcon
+} from "lucide-react";
 
 const BookTrip = () => {
-  const { toast } = useToast();
-  const [searchCompleted, setSearchCompleted] = useState(false);
-  const [selectedTab, setSelectedTab] = useState("flights");
-  const [searchParams, setSearchParams] = useState({
-    origin: "",
-    destination: "",
-    departDate: "",
-    returnDate: ""
-  });
-  
-  // Handle input change
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setSearchParams({
-      ...searchParams,
-      [name]: value
-    });
-  };
-  
-  // Simulate search functionality
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    // Frustration test - clicking search button multiple times fast
-    if (searchCompleted) {
-      toast({
-        title: "Searching...",
-        description: "Please wait while we find options for you.",
-      });
-      return;
-    }
-    
-    // Basic validation
-    if (!searchParams.origin || !searchParams.destination || !searchParams.departDate) {
-      toast({
-        title: "Missing information",
-        description: "Please fill out all required fields.",
-        variant: "destructive"
-      });
-      return;
-    }
-    
-    toast({
-      title: "Finding the best options",
-      description: "Searching across multiple airlines...",
-    });
-    
-    // Simulate search delay
-    setTimeout(() => {
-      setSearchCompleted(true);
-    }, 1500);
-  };
-  
-  // Book selected option and go to trip summary
-  const bookFlight = () => {
-    toast({
-      title: "Flight booked successfully!",
-      description: "Your flight has been added to your itinerary.",
-    });
-    
-    // In production, this would use a proper router push
-    setTimeout(() => {
-      window.location.href = "/trip";
-    }, 1500);
-  };
+  const [tripType, setTripType] = useState('business');
   
   return (
     <AppLayout>
-      <div className="max-w-6xl mx-auto">
+      <div className="max-w-5xl mx-auto px-4 py-6">
+        <h1 className="text-2xl font-bold text-acme-gray-dark mb-6">Book a trip</h1>
+        
+        {/* Trip Type Selection */}
         <div className="mb-6">
-          <h1 className="text-2xl font-bold text-acme-gray-dark">Book Your Trip</h1>
-          <p className="text-gray-500">Search for flights, hotels, and more</p>
+          <div className="inline-flex rounded-md border border-gray-200 p-1 bg-white">
+            <button
+              onClick={() => setTripType('business')}
+              className={`px-4 py-1.5 text-sm font-medium rounded-md ${
+                tripType === 'business' ? 'bg-acme-purple text-white' : 'text-gray-700'
+              }`}
+              data-pendo-id="trip-type-business"
+            >
+              Business travel
+            </button>
+            <button
+              onClick={() => setTripType('personal')}
+              className={`px-4 py-1.5 text-sm font-medium rounded-md ${
+                tripType === 'personal' ? 'bg-acme-purple text-white' : 'text-gray-700'
+              }`}
+              data-pendo-id="trip-type-personal"
+            >
+              Personal travel
+            </button>
+          </div>
         </div>
         
-        {/* Search Form - Pendo Target Area */}
-        <Card className="mb-8" data-pendo-id="booking-search-card">
-          <CardHeader className="pb-3">
-            <Tabs 
-              defaultValue="flights" 
-              onValueChange={setSelectedTab}
-              className="w-full"
+        {/* Travel Options Tabs */}
+        <Tabs defaultValue="flights" className="mb-6">
+          <TabsList className="bg-white border-b border-gray-200 w-full justify-start mb-0 p-0 h-auto rounded-none gap-0">
+            <TabsTrigger 
+              value="flights" 
+              className="data-[state=active]:border-b-2 data-[state=active]:border-acme-purple data-[state=active]:text-acme-purple data-[state=active]:shadow-none rounded-none px-6 py-3"
+              data-pendo-id="travel-tab-flights"
             >
-              <TabsList className="grid grid-cols-2 mb-4">
-                <TabsTrigger value="flights" data-pendo-id="tab-flights">
-                  <PlaneIcon className="w-4 h-4 mr-2" />
-                  Flights
-                </TabsTrigger>
-                <TabsTrigger value="hotels" data-pendo-id="tab-hotels">
-                  <MapPinIcon className="w-4 h-4 mr-2" />
-                  Hotels
-                </TabsTrigger>
-              </TabsList>
-              
-              <TabsContent value="flights">
-                <form onSubmit={handleSearch} className="space-y-4">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                      <Label htmlFor="origin">Origin</Label>
-                      <Input
-                        id="origin"
-                        name="origin"
-                        value={searchParams.origin}
-                        onChange={handleInputChange}
-                        placeholder="City or airport code"
-                        data-pendo-id="input-origin"
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="destination">Destination</Label>
-                      <Input
-                        id="destination"
-                        name="destination"
-                        value={searchParams.destination}
-                        onChange={handleInputChange}
-                        placeholder="City or airport code"
-                        data-pendo-id="input-destination"
-                      />
-                    </div>
-                  </div>
-                  
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                      <Label htmlFor="departDate">Departure Date</Label>
-                      <div className="relative">
-                        <Input
-                          id="departDate"
-                          name="departDate"
-                          type="date"
-                          value={searchParams.departDate}
-                          onChange={handleInputChange}
-                          data-pendo-id="input-depart-date"
-                        />
-                        <CalendarIcon className="absolute right-3 top-3 h-4 w-4 text-gray-400" />
-                      </div>
-                    </div>
-                    <div>
-                      <Label htmlFor="returnDate">Return Date (Optional)</Label>
-                      <div className="relative">
-                        <Input
-                          id="returnDate"
-                          name="returnDate"
-                          type="date"
-                          value={searchParams.returnDate}
-                          onChange={handleInputChange}
-                          data-pendo-id="input-return-date"
-                        />
-                        <CalendarIcon className="absolute right-3 top-3 h-4 w-4 text-gray-400" />
-                      </div>
-                    </div>
-                  </div>
-                  
-                  <div className="text-right">
-                    <Button 
-                      type="submit"
-                      className="bg-acme-purple hover:bg-acme-purple-dark text-white"
-                      data-pendo-id="search-flights-button"
-                    >
-                      <SearchIcon className="mr-2 h-4 w-4" />
-                      Search Flights
-                    </Button>
-                  </div>
-                </form>
-              </TabsContent>
-              
-              <TabsContent value="hotels">
-                <form onSubmit={handleSearch} className="space-y-4">
-                  <div>
-                    <Label htmlFor="destination">Destination</Label>
-                    <Input
-                      id="destination"
-                      name="destination"
-                      value={searchParams.destination}
-                      onChange={handleInputChange}
-                      placeholder="City or hotel name"
-                      data-pendo-id="input-hotel-destination"
+              <PlaneIcon className="h-4 w-4 mr-2" />
+              Flights
+            </TabsTrigger>
+            <TabsTrigger 
+              value="hotels" 
+              className="data-[state=active]:border-b-2 data-[state=active]:border-acme-purple data-[state=active]:text-acme-purple data-[state=active]:shadow-none rounded-none px-6 py-3"
+              data-pendo-id="travel-tab-hotels"
+            >
+              <HotelIcon className="h-4 w-4 mr-2" />
+              Hotels
+            </TabsTrigger>
+            <TabsTrigger 
+              value="trains" 
+              className="data-[state=active]:border-b-2 data-[state=active]:border-acme-purple data-[state=active]:text-acme-purple data-[state=active]:shadow-none rounded-none px-6 py-3"
+              data-pendo-id="travel-tab-trains"
+            >
+              <TrainIcon className="h-4 w-4 mr-2" />
+              Trains
+            </TabsTrigger>
+            <TabsTrigger 
+              value="cars" 
+              className="data-[state=active]:border-b-2 data-[state=active]:border-acme-purple data-[state=active]:text-acme-purple data-[state=active]:shadow-none rounded-none px-6 py-3"
+              data-pendo-id="travel-tab-cars"
+            >
+              <CarIcon className="h-4 w-4 mr-2" />
+              Rental cars
+            </TabsTrigger>
+          </TabsList>
+          
+          <TabsContent value="flights" className="mt-4">
+            <Card className="border shadow-sm p-6">
+              <div className="grid grid-cols-1 lg:grid-cols-5 gap-4">
+                <div className="lg:col-span-2">
+                  <label className="block text-sm font-medium mb-1">From</label>
+                  <div className="relative">
+                    <PlaneIcon className="absolute left-3 top-2.5 h-4 w-4 text-gray-500 rotate-[270deg]" />
+                    <Input 
+                      placeholder="Enter origin city or airport"
+                      className="pl-10 bg-white"
+                      data-pendo-id="flight-origin"
                     />
                   </div>
-                  
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                      <Label htmlFor="checkIn">Check-in Date</Label>
-                      <div className="relative">
-                        <Input
-                          id="checkIn"
-                          name="departDate"
-                          type="date"
-                          value={searchParams.departDate}
-                          onChange={handleInputChange}
-                          data-pendo-id="input-checkin-date"
-                        />
-                        <CalendarIcon className="absolute right-3 top-3 h-4 w-4 text-gray-400" />
-                      </div>
-                    </div>
-                    <div>
-                      <Label htmlFor="checkOut">Check-out Date</Label>
-                      <div className="relative">
-                        <Input
-                          id="checkOut"
-                          name="returnDate"
-                          type="date"
-                          value={searchParams.returnDate}
-                          onChange={handleInputChange}
-                          data-pendo-id="input-checkout-date"
-                        />
-                        <CalendarIcon className="absolute right-3 top-3 h-4 w-4 text-gray-400" />
-                      </div>
-                    </div>
+                </div>
+                
+                <div className="lg:col-span-2">
+                  <label className="block text-sm font-medium mb-1">To</label>
+                  <div className="relative">
+                    <PlaneIcon className="absolute left-3 top-2.5 h-4 w-4 text-gray-500 rotate-90" />
+                    <Input 
+                      placeholder="Enter destination city or airport"
+                      className="pl-10 bg-white"
+                      data-pendo-id="flight-destination"
+                    />
                   </div>
-                  
-                  <div className="text-right">
-                    <Button 
-                      type="submit"
-                      className="bg-acme-purple hover:bg-acme-purple-dark text-white"
-                      data-pendo-id="search-hotels-button"
-                    >
-                      <SearchIcon className="mr-2 h-4 w-4" />
-                      Search Hotels
-                    </Button>
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium mb-1">Trip type</label>
+                  <div className="relative">
+                    <select className="w-full h-10 pl-3 pr-8 border border-gray-300 rounded-md bg-white text-sm focus:ring-2 focus:ring-acme-purple focus:border-acme-purple">
+                      <option>Round-trip</option>
+                      <option>One-way</option>
+                      <option>Multi-city</option>
+                    </select>
+                    <ChevronDownIcon className="absolute right-3 top-2.5 h-4 w-4 text-gray-500" />
                   </div>
-                </form>
-              </TabsContent>
-            </Tabs>
-          </CardHeader>
-        </Card>
-        
-        {/* Search Results - Pendo Target Area for Upsell */}
-        {searchCompleted && (
-          <div data-pendo-id="search-results">
-            <h2 className="text-xl font-semibold mb-4">
-              {selectedTab === 'flights' ? 'Available Flights' : 'Available Hotels'}
-            </h2>
-            
-            <div className="space-y-4">
-              {/* Flight Result Card - Rage Click Test Zone */}
-              <Card 
-                className="border hover:border-acme-purple transition-colors"
-                data-pendo-id="flight-result-1"
-              >
-                <CardContent className="pt-6">
-                  <div className="flex flex-col md:flex-row justify-between">
-                    <div className="flex flex-col md:flex-row items-start md:items-center gap-4">
-                      <div className="bg-gray-100 p-3 rounded-full">
-                        <PlaneIcon className="h-6 w-6 text-acme-purple" />
-                      </div>
-                      <div>
-                        <h3 className="font-semibold text-lg">San Francisco to New York</h3>
-                        <div className="flex flex-col sm:flex-row sm:items-center text-sm text-gray-500 gap-2 sm:gap-4 mt-1">
-                          <div className="flex items-center">
-                            <CalendarIcon className="h-4 w-4 mr-1" />
-                            May 15, 2025
-                          </div>
-                          <div className="flex items-center">
-                            <ClockIcon className="h-4 w-4 mr-1" />
-                            6:30 AM - 2:45 PM
-                          </div>
-                          <div>
-                            Non-stop · 5h 15m
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    
-                    <div className="mt-4 md:mt-0 flex flex-col items-end">
-                      <span className="text-2xl font-bold text-acme-gray-dark">$549</span>
-                      <span className="text-sm text-gray-500">Economy</span>
-                      <Button 
-                        className="mt-3 bg-acme-purple hover:bg-acme-purple-dark text-white"
-                        onClick={bookFlight}
-                        data-pendo-id="book-flight-button"
-                      >
-                        Book Now
-                      </Button>
-                    </div>
+                </div>
+                
+                <div className="lg:col-span-2">
+                  <label className="block text-sm font-medium mb-1">Depart date</label>
+                  <div className="relative">
+                    <CalendarIcon className="absolute left-3 top-2.5 h-4 w-4 text-gray-500" />
+                    <Input 
+                      type="date" 
+                      placeholder="mm/dd/yyyy"
+                      className="pl-10 bg-white"
+                      data-pendo-id="flight-depart-date"
+                    />
                   </div>
-                  
-                  {/* Optional Upsell Area for Pendo Experiments */}
-                  {selectedTab === 'flights' && (
-                    <div 
-                      className="mt-6 pt-4 border-t border-gray-100"
-                      data-pendo-id="flight-upsell-area"
-                    >
-                      <p className="text-sm text-acme-pink flex items-center">
-                        <svg className="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                          <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v3.586L7.707 9.293a1 1 0 00-1.414 1.414l3 3a1 1 0 001.414 0l3-3a1 1 0 00-1.414-1.414L11 10.586V7z" clipRule="evenodd" />
-                        </svg>
-                        Find a hotel near your destination?
-                      </p>
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
+                </div>
+                
+                <div className="lg:col-span-2">
+                  <label className="block text-sm font-medium mb-1">Return date</label>
+                  <div className="relative">
+                    <CalendarIcon className="absolute left-3 top-2.5 h-4 w-4 text-gray-500" />
+                    <Input 
+                      type="date" 
+                      placeholder="mm/dd/yyyy"
+                      className="pl-10 bg-white"
+                      data-pendo-id="flight-return-date"
+                    />
+                  </div>
+                </div>
+                
+                <div className="lg:col-span-1">
+                  <label className="block text-sm font-medium mb-1">Passengers</label>
+                  <div className="relative">
+                    <select className="w-full h-10 pl-3 pr-8 border border-gray-300 rounded-md bg-white text-sm focus:ring-2 focus:ring-acme-purple focus:border-acme-purple">
+                      <option>1 passenger</option>
+                      <option>2 passengers</option>
+                      <option>3 passengers</option>
+                      <option>4 passengers</option>
+                    </select>
+                    <ChevronDownIcon className="absolute right-3 top-2.5 h-4 w-4 text-gray-500" />
+                  </div>
+                </div>
+              </div>
               
-              {/* Additional Result Cards */}
-              <Card 
-                className="border opacity-60"
-                data-pendo-id="flight-result-2"
-              >
-                <CardContent className="pt-6">
-                  <div className="flex flex-col md:flex-row justify-between">
-                    <div className="flex flex-col md:flex-row items-start md:items-center gap-4">
-                      <div className="bg-gray-100 p-3 rounded-full">
-                        <PlaneIcon className="h-6 w-6 text-gray-400" />
-                      </div>
-                      <div>
-                        <h3 className="font-semibold text-lg">San Francisco to New York</h3>
-                        <div className="flex flex-col sm:flex-row sm:items-center text-sm text-gray-500 gap-2 sm:gap-4 mt-1">
-                          <div className="flex items-center">
-                            <CalendarIcon className="h-4 w-4 mr-1" />
-                            May 15, 2025
-                          </div>
-                          <div className="flex items-center">
-                            <ClockIcon className="h-4 w-4 mr-1" />
-                            8:15 AM - 5:20 PM
-                          </div>
-                          <div>
-                            1 stop · 7h 05m
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    
-                    <div className="mt-4 md:mt-0 flex flex-col items-end">
-                      <span className="text-2xl font-bold text-acme-gray-dark">$489</span>
-                      <span className="text-sm text-gray-500">Economy</span>
-                      <Button 
-                        variant="outline"
-                        className="mt-3"
-                        data-pendo-id="book-flight-button-2"
-                      >
-                        Book Now
-                      </Button>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
+              <div className="flex items-center mt-4">
+                <input type="checkbox" id="nonstop" className="mr-2" />
+                <label htmlFor="nonstop" className="text-sm">Nonstop flights only</label>
+              </div>
+              
+              <div className="mt-6 flex justify-end">
+                <Button 
+                  className="bg-acme-purple hover:bg-acme-purple-dark text-white px-8"
+                  data-pendo-id="search-flights"
+                >
+                  <SearchIcon className="mr-2 h-4 w-4" />
+                  Search flights
+                </Button>
+              </div>
+            </Card>
+            
+            {/* Policy Information */}
+            <div className="mt-4 bg-blue-50 border border-blue-200 rounded-lg p-4">
+              <div className="flex items-start">
+                <InfoIcon className="h-5 w-5 text-blue-500 mr-3 mt-0.5" />
+                <div>
+                  <h3 className="font-medium text-blue-800">Your flight booking policy</h3>
+                  <p className="text-sm text-blue-700 mt-1">
+                    Business class is allowed for flights over 6 hours. For all other flights, economy class is required by your company policy.
+                  </p>
+                </div>
+              </div>
             </div>
+          </TabsContent>
+          
+          <TabsContent value="hotels">
+            <Card className="border shadow-sm p-6">
+              <p className="text-center text-gray-500">Hotel booking functionality would be implemented here.</p>
+            </Card>
+          </TabsContent>
+          
+          <TabsContent value="trains">
+            <Card className="border shadow-sm p-6">
+              <p className="text-center text-gray-500">Train booking functionality would be implemented here.</p>
+            </Card>
+          </TabsContent>
+          
+          <TabsContent value="cars">
+            <Card className="border shadow-sm p-6">
+              <p className="text-center text-gray-500">Car rental functionality would be implemented here.</p>
+            </Card>
+          </TabsContent>
+        </Tabs>
+        
+        {/* Recent Searches Section */}
+        <div className="mb-6">
+          <h2 className="text-lg font-semibold text-acme-gray-dark mb-3">Your recent searches</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <Card className="border shadow-sm p-4">
+              <div className="flex justify-between items-center">
+                <div>
+                  <div className="flex items-center">
+                    <span className="text-sm font-medium">SFO → NYC</span>
+                    <span className="mx-2 text-gray-400">•</span>
+                    <span className="text-xs text-gray-500">May 15 - May 20</span>
+                  </div>
+                  <p className="text-xs text-gray-500 mt-1">1 passenger, Economy</p>
+                </div>
+                <Button 
+                  variant="outline" 
+                  size="sm"
+                  className="text-xs"
+                >
+                  Search again
+                </Button>
+              </div>
+            </Card>
+            
+            <Card className="border shadow-sm p-4">
+              <div className="flex justify-between items-center">
+                <div>
+                  <div className="flex items-center">
+                    <span className="text-sm font-medium">LAX → MIA</span>
+                    <span className="mx-2 text-gray-400">•</span>
+                    <span className="text-xs text-gray-500">Apr 5 - Apr 10</span>
+                  </div>
+                  <p className="text-xs text-gray-500 mt-1">1 passenger, Economy</p>
+                </div>
+                <Button 
+                  variant="outline" 
+                  size="sm"
+                  className="text-xs"
+                >
+                  Search again
+                </Button>
+              </div>
+            </Card>
           </div>
-        )}
+        </div>
+        
+        {/* Travel Agent Help Card */}
+        <Card className="border shadow-sm p-4 bg-acme-purple/5">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center">
+              <div className="bg-acme-purple rounded-full p-2 mr-3">
+                <PlaneIcon className="h-4 w-4 text-white" />
+              </div>
+              <div>
+                <h3 className="font-medium text-acme-gray-dark">Need help with your booking?</h3>
+                <p className="text-sm text-gray-600">Travel Agent can assist with finding the best flights and accommodations.</p>
+              </div>
+            </div>
+            <Button 
+              className="bg-acme-pink hover:bg-opacity-90 text-white whitespace-nowrap"
+              data-pendo-id="chat-with-travel-agent"
+            >
+              Ask Travel Agent
+            </Button>
+          </div>
+        </Card>
       </div>
     </AppLayout>
   );

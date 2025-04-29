@@ -1,262 +1,302 @@
 
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import React, { useState } from 'react';
+import AppLayout from "@/components/layout/AppLayout";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
+import { Card } from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { 
   PlaneIcon, 
   HotelIcon, 
-  MapPinIcon, 
   CalendarIcon, 
-  InfoIcon,
-  ShareIcon,
+  MapPinIcon,
+  UserIcon,
+  ClockIcon,
+  CreditCardIcon,
   PrinterIcon,
-  DownloadIcon
+  ShareIcon,
+  BellIcon,
+  MessageSquareIcon,
+  SearchIcon
 } from "lucide-react";
-import AppLayout from "@/components/layout/AppLayout";
-import PendoSurvey from "@/components/pendo/PendoSurvey";
 
 const TripSummary = () => {
-  const [showSurvey, setShowSurvey] = useState(true);
-  
-  // Sample trip data
-  const tripDetails = {
-    id: "NYC-MAY2025",
-    destination: "New York City",
-    dates: "May 15-20, 2025",
-    status: "Confirmed",
-    bookingRef: "ACME-54321",
-    flightDetails: {
-      airline: "AcmeAir",
-      flightNumber: "AA1234",
-      departure: "SFO - May 15, 6:30 AM",
-      arrival: "JFK - May 15, 2:45 PM",
-      class: "Economy",
-      seat: "14A"
-    },
-    hotelDetails: {
-      name: "Midtown Business Hotel",
-      address: "123 Park Avenue, New York, NY",
-      checkIn: "May 15, 2025",
-      checkOut: "May 20, 2025",
-      roomType: "Executive King",
-      confirmation: "HTL-98765"
-    }
-  };
+  const [activeTab, setActiveTab] = useState('upcoming');
   
   return (
     <AppLayout>
-      <div className="max-w-6xl mx-auto">
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
-          <div>
-            <h1 className="text-2xl font-bold text-acme-gray-dark">Trip Summary</h1>
-            <p className="text-gray-500">Your complete itinerary for {tripDetails.destination}</p>
-          </div>
-          
-          <div className="mt-4 md:mt-0 flex flex-wrap gap-2">
+      <div className="max-w-6xl mx-auto px-4 py-6">
+        {/* Page Header */}
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6">
+          <h1 className="text-2xl font-bold text-acme-gray-dark">Your Trips</h1>
+          <div className="mt-2 sm:mt-0 flex flex-wrap gap-2">
             <Button 
               variant="outline" 
               size="sm"
-              data-pendo-id="share-itinerary"
+              className="text-gray-700"
+              data-pendo-id="search-trips"
             >
-              <ShareIcon className="h-4 w-4 mr-1" />
-              Share
+              <SearchIcon className="h-4 w-4 mr-1" />
+              Search trips
             </Button>
             <Button 
-              variant="outline" 
+              className="bg-acme-purple text-white"
               size="sm"
-              data-pendo-id="print-itinerary"
+              onClick={() => window.location.href = '/book'}
+              data-pendo-id="new-trip-button"
             >
-              <PrinterIcon className="h-4 w-4 mr-1" />
-              Print
-            </Button>
-            <Button 
-              variant="outline" 
-              size="sm"
-              data-pendo-id="download-itinerary"
-            >
-              <DownloadIcon className="h-4 w-4 mr-1" />
-              Download
+              New trip
             </Button>
           </div>
         </div>
         
-        {/* Trip Overview Card - Pendo Target */}
-        <Card className="mb-6" data-pendo-id="trip-overview-card">
-          <CardHeader className="pb-2">
-            <div className="flex justify-between items-start">
-              <div>
-                <CardTitle>{tripDetails.destination}</CardTitle>
-                <p className="text-gray-500 text-sm mt-1">{tripDetails.dates}</p>
-              </div>
-              <Badge className="bg-green-600">{tripDetails.status}</Badge>
-            </div>
-          </CardHeader>
-          <CardContent>
-            <div className="flex items-center text-sm text-gray-700">
-              <InfoIcon className="h-4 w-4 mr-1 text-gray-400" />
-              Booking Reference: <span className="font-medium ml-1">{tripDetails.bookingRef}</span>
-            </div>
-          </CardContent>
-        </Card>
-        
-        {/* Flight Details - Pendo Target for Frustration Detection */}
-        <Card className="mb-6 relative overflow-hidden" data-pendo-id="flight-details-card">
-          <div className="absolute top-0 left-0 w-1 h-full bg-acme-purple"></div>
-          <CardHeader>
-            <CardTitle className="text-lg flex items-center">
-              <PlaneIcon className="h-5 w-5 mr-2 text-acme-purple" />
-              Flight Details
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              <div className="flex justify-between items-start flex-col md:flex-row">
-                <div>
-                  <h3 className="font-medium">{tripDetails.flightDetails.airline} {tripDetails.flightDetails.flightNumber}</h3>
-                  <p className="text-sm text-gray-500">Confirmation #: {tripDetails.bookingRef}</p>
-                </div>
-                <Button 
-                  variant="ghost" 
-                  size="sm" 
-                  className="text-acme-purple hover:text-acme-purple-dark hover:bg-acme-purple/10 mt-2 md:mt-0"
-                  data-pendo-id="modify-flight"
-                >
-                  Change Flight
-                </Button>
-              </div>
-              
-              <div className="flex flex-col md:flex-row md:items-center gap-4">
-                <div className="bg-gray-100 p-3 rounded-full">
-                  <PlaneIcon className="h-4 w-4 text-acme-purple rotate-45" />
-                </div>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 w-full">
-                  <div>
-                    <h4 className="text-xs text-gray-500 uppercase">Departure</h4>
-                    <p className="font-medium">{tripDetails.flightDetails.departure}</p>
-                  </div>
-                  <div>
-                    <h4 className="text-xs text-gray-500 uppercase">Arrival</h4>
-                    <p className="font-medium">{tripDetails.flightDetails.arrival}</p>
-                  </div>
-                  <div>
-                    <h4 className="text-xs text-gray-500 uppercase">Seat</h4>
-                    <p className="font-medium">{tripDetails.flightDetails.class}, {tripDetails.flightDetails.seat}</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-        
-        {/* Hotel Details - Pendo Target for Experiment */}
-        <Card className="mb-8 relative overflow-hidden" data-pendo-id="hotel-details-card">
-          <div className="absolute top-0 left-0 w-1 h-full bg-acme-pink"></div>
-          <CardHeader>
-            <CardTitle className="text-lg flex items-center">
-              <HotelIcon className="h-5 w-5 mr-2 text-acme-pink" />
-              Hotel Details
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              <div className="flex justify-between items-start flex-col md:flex-row">
-                <div>
-                  <h3 className="font-medium">{tripDetails.hotelDetails.name}</h3>
-                  <div className="flex items-center text-sm text-gray-500 mt-1">
-                    <MapPinIcon className="h-3 w-3 mr-1" />
-                    {tripDetails.hotelDetails.address}
-                  </div>
-                </div>
-                <Button 
-                  variant="ghost" 
-                  size="sm" 
-                  className="text-acme-pink hover:text-acme-pink hover:bg-acme-pink/10 mt-2 md:mt-0"
-                  data-pendo-id="modify-hotel"
-                >
-                  Change Hotel
-                </Button>
-              </div>
-              
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div>
-                  <h4 className="text-xs text-gray-500 uppercase">Check-in</h4>
-                  <p className="font-medium">{tripDetails.hotelDetails.checkIn}</p>
-                </div>
-                <div>
-                  <h4 className="text-xs text-gray-500 uppercase">Check-out</h4>
-                  <p className="font-medium">{tripDetails.hotelDetails.checkOut}</p>
-                </div>
-                <div>
-                  <h4 className="text-xs text-gray-500 uppercase">Room Type</h4>
-                  <p className="font-medium">{tripDetails.hotelDetails.roomType}</p>
-                </div>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-        
-        {/* NPS or PMF Survey - Pendo Target */}
-        {showSurvey && (
-          <div className="mb-8" data-pendo-id="trip-survey-container">
-            <PendoSurvey 
-              type="pmf" 
-              title="Help us improve Travel Agent" 
-              description="How would you feel if you could no longer use AcmeTravel with Travel Agent?"
-              pendoId="trip-summary-pmf-survey"
-            />
+        {/* Trip Status Tabs */}
+        <div className="mb-6 border-b border-gray-200">
+          <div className="flex space-x-6">
+            <button
+              onClick={() => setActiveTab('upcoming')}
+              className={`py-2 px-1 text-sm font-medium border-b-2 ${
+                activeTab === 'upcoming' ? 'border-acme-purple text-acme-purple' : 'border-transparent text-gray-600 hover:text-acme-purple'
+              }`}
+              data-pendo-id="trip-tab-upcoming"
+            >
+              Upcoming
+            </button>
+            <button
+              onClick={() => setActiveTab('past')}
+              className={`py-2 px-1 text-sm font-medium border-b-2 ${
+                activeTab === 'past' ? 'border-acme-purple text-acme-purple' : 'border-transparent text-gray-600 hover:text-acme-purple'
+              }`}
+              data-pendo-id="trip-tab-past"
+            >
+              Past
+            </button>
+            <button
+              onClick={() => setActiveTab('canceled')}
+              className={`py-2 px-1 text-sm font-medium border-b-2 ${
+                activeTab === 'canceled' ? 'border-acme-purple text-acme-purple' : 'border-transparent text-gray-600 hover:text-acme-purple'
+              }`}
+              data-pendo-id="trip-tab-canceled"
+            >
+              Canceled
+            </button>
           </div>
-        )}
+        </div>
         
-        {/* Related Offers - Pendo Target for A/B Testing */}
-        <div data-pendo-id="related-offers">
-          <h2 className="text-xl font-semibold mb-4">Related Offers</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <Card className="border hover:shadow-md transition-shadow">
-              <div className="h-32 overflow-hidden">
+        {/* Trip Listing */}
+        <div className="space-y-6">
+          {/* Trip Card - San Francisco */}
+          <Card className="border shadow-sm overflow-hidden" data-pendo-id="trip-sf-2023">
+            <div className="lg:flex">
+              <div className="lg:w-1/4">
                 <img 
-                  src="https://images.unsplash.com/photo-1496442226666-8d4d0e62e6e9?ixlib=rb-4.0.3&q=85&fm=jpg&crop=entropy&cs=srgb&w=500"
-                  alt="New York City Tour"
-                  className="w-full h-full object-cover"
+                  src="https://images.unsplash.com/photo-1501594907352-04cda38ebc29?ixlib=rb-4.0.3&q=85&fm=jpg&crop=entropy&cs=srgb&w=300" 
+                  alt="San Francisco" 
+                  className="w-full h-40 lg:h-full object-cover"
                 />
               </div>
-              <CardContent className="p-4">
-                <h3 className="font-medium">New York City Tours</h3>
-                <p className="text-sm text-gray-600 mt-1">
-                  Explore the best of NYC during your stay with exclusive guided tours.
-                </p>
-                <Button 
-                  className="mt-3 w-full bg-acme-purple hover:bg-acme-purple-dark text-white"
-                  data-pendo-id="offer-tours-cta"
-                >
-                  View Tours
-                </Button>
-              </CardContent>
-            </Card>
-            
-            <Card className="border hover:shadow-md transition-shadow">
-              <div className="h-32 overflow-hidden">
+              
+              <div className="p-5 lg:w-3/4">
+                <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-4">
+                  <div>
+                    <div className="flex items-center mb-1">
+                      <span className="text-xs px-2 py-0.5 rounded-full bg-acme-purple/10 text-acme-purple mr-2">Business</span>
+                      <span className="text-xs px-2 py-0.5 rounded-full bg-green-100 text-green-800">Confirmed</span>
+                    </div>
+                    <h2 className="text-lg font-bold text-acme-gray-dark">San Francisco Trip</h2>
+                    <div className="flex items-center text-sm text-gray-600 mt-1">
+                      <CalendarIcon className="h-3.5 w-3.5 mr-1" />
+                      <span>May 15 - May 20, 2025</span>
+                    </div>
+                  </div>
+                  
+                  <div className="mt-3 sm:mt-0">
+                    <Button 
+                      data-pendo-id="trip-manage-btn"
+                    >
+                      Manage
+                    </Button>
+                  </div>
+                </div>
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                  {/* Flight Details */}
+                  <div className="flex items-start space-x-3">
+                    <div className="bg-blue-50 p-2 rounded-full">
+                      <PlaneIcon className="h-4 w-4 text-blue-600" />
+                    </div>
+                    <div>
+                      <h4 className="font-medium text-sm">United Airlines UA287</h4>
+                      <div className="flex items-center text-sm text-gray-600 mt-1">
+                        <span className="font-semibold">JFK</span>
+                        <svg className="h-3 w-3 mx-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                        </svg>
+                        <span className="font-semibold">SFO</span>
+                      </div>
+                      <div className="text-xs text-gray-500 mt-1">May 15, 7:30 AM - 10:45 AM</div>
+                    </div>
+                  </div>
+                  
+                  {/* Hotel Details */}
+                  <div className="flex items-start space-x-3">
+                    <div className="bg-purple-50 p-2 rounded-full">
+                      <HotelIcon className="h-4 w-4 text-purple-600" />
+                    </div>
+                    <div>
+                      <h4 className="font-medium text-sm">Hilton San Francisco</h4>
+                      <div className="text-xs text-gray-500 mt-1">May 15 - May 20 (5 nights)</div>
+                      <div className="flex items-center text-xs text-gray-500 mt-1">
+                        <MapPinIcon className="h-3 w-3 mr-1" />
+                        <span>333 O'Farrell St, San Francisco</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="flex flex-wrap items-center justify-between border-t border-gray-100 pt-3">
+                  <div className="flex items-center text-sm text-gray-600">
+                    <UserIcon className="h-3.5 w-3.5 mr-1" />
+                    <span>Alex Morgan</span>
+                  </div>
+                  
+                  <div className="flex space-x-2 mt-2 sm:mt-0">
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      className="text-xs"
+                      data-pendo-id="trip-modify-btn"
+                    >
+                      Modify
+                    </Button>
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      className="text-xs text-red-600 hover:bg-red-50"
+                      data-pendo-id="trip-cancel-btn"
+                    >
+                      Cancel
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </Card>
+          
+          {/* Trip Card - New York */}
+          <Card className="border shadow-sm overflow-hidden" data-pendo-id="trip-nyc-2023">
+            <div className="lg:flex">
+              <div className="lg:w-1/4">
                 <img 
-                  src="https://images.unsplash.com/photo-1468818438311-4bab781ab9b8?ixlib=rb-4.0.3&q=85&fm=jpg&crop=entropy&cs=srgb&w=500"
-                  alt="Airport Transfer"
-                  className="w-full h-full object-cover"
+                  src="https://images.unsplash.com/photo-1496442226666-8d4d0e62e6e9?ixlib=rb-4.0.3&q=85&fm=jpg&crop=entropy&cs=srgb&w=300" 
+                  alt="New York" 
+                  className="w-full h-40 lg:h-full object-cover"
                 />
               </div>
-              <CardContent className="p-4">
-                <h3 className="font-medium">Airport Transfer Service</h3>
-                <p className="text-sm text-gray-600 mt-1">
-                  Book your private airport transfer between JFK and your hotel.
-                </p>
-                <Button 
-                  className="mt-3 w-full bg-acme-purple hover:bg-acme-purple-dark text-white"
-                  data-pendo-id="offer-transfer-cta"
-                >
-                  Book Transfer
-                </Button>
-              </CardContent>
-            </Card>
+              
+              <div className="p-5 lg:w-3/4">
+                <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-4">
+                  <div>
+                    <div className="flex items-center mb-1">
+                      <span className="text-xs px-2 py-0.5 rounded-full bg-acme-purple/10 text-acme-purple mr-2">Business</span>
+                      <span className="text-xs px-2 py-0.5 rounded-full bg-yellow-100 text-yellow-800">Pending</span>
+                    </div>
+                    <h2 className="text-lg font-bold text-acme-gray-dark">New York Conference</h2>
+                    <div className="flex items-center text-sm text-gray-600 mt-1">
+                      <CalendarIcon className="h-3.5 w-3.5 mr-1" />
+                      <span>June 5 - June 10, 2025</span>
+                    </div>
+                  </div>
+                  
+                  <div className="mt-3 sm:mt-0">
+                    <Button 
+                      data-pendo-id="trip-manage-btn"
+                    >
+                      Manage
+                    </Button>
+                  </div>
+                </div>
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                  {/* Flight Details */}
+                  <div className="flex items-start space-x-3">
+                    <div className="bg-blue-50 p-2 rounded-full">
+                      <PlaneIcon className="h-4 w-4 text-blue-600" />
+                    </div>
+                    <div>
+                      <h4 className="font-medium text-sm">Delta Airlines DL342</h4>
+                      <div className="flex items-center text-sm text-gray-600 mt-1">
+                        <span className="font-semibold">SFO</span>
+                        <svg className="h-3 w-3 mx-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                        </svg>
+                        <span className="font-semibold">JFK</span>
+                      </div>
+                      <div className="text-xs text-gray-500 mt-1">June 5, 6:15 AM - 2:45 PM</div>
+                    </div>
+                  </div>
+                  
+                  {/* Hotel Details */}
+                  <div className="flex items-start space-x-3">
+                    <div className="bg-gray-100 p-2 rounded-full">
+                      <HotelIcon className="h-4 w-4 text-gray-500" />
+                    </div>
+                    <div>
+                      <h4 className="font-medium text-sm">Hotel not yet booked</h4>
+                      <div className="text-xs text-gray-500 mt-1">Need to book accommodation</div>
+                      <Button 
+                        variant="link" 
+                        size="sm" 
+                        className="text-xs text-acme-purple p-0 h-auto mt-1"
+                      >
+                        Book hotel now
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="flex flex-wrap items-center justify-between border-t border-gray-100 pt-3">
+                  <div className="flex items-center text-sm text-gray-600">
+                    <UserIcon className="h-3.5 w-3.5 mr-1" />
+                    <span>Alex Morgan</span>
+                  </div>
+                  
+                  <div className="flex space-x-2 mt-2 sm:mt-0">
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      className="text-xs"
+                      data-pendo-id="trip-modify-btn"
+                    >
+                      Modify
+                    </Button>
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      className="text-xs text-red-600 hover:bg-red-50"
+                      data-pendo-id="trip-cancel-btn"
+                    >
+                      Cancel
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </Card>
+        </div>
+        
+        {/* Travel Assistant Section */}
+        <div className="mt-8 bg-acme-purple/5 border border-acme-purple/20 rounded-lg p-4 flex items-center justify-between">
+          <div>
+            <h3 className="font-medium text-acme-gray-dark mb-1">Need help with your trips?</h3>
+            <p className="text-sm text-gray-600">Travel Agent can help you modify bookings or answer any questions about your itinerary.</p>
           </div>
+          <Button 
+            className="bg-acme-pink hover:bg-opacity-90 text-white whitespace-nowrap"
+            data-pendo-id="chat-with-travel-agent"
+          >
+            <MessageSquareIcon className="mr-2 h-4 w-4" />
+            Chat with Travel Agent
+          </Button>
         </div>
       </div>
     </AppLayout>

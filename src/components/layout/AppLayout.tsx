@@ -5,10 +5,11 @@ import { Button } from "@/components/ui/button";
 import { 
   HomeIcon, 
   PlusCircleIcon, 
-  ListIcon, 
+  CalendarIcon, 
   UserIcon, 
   HelpCircleIcon, 
-  MessageSquareIcon 
+  MessageSquareIcon,
+  SearchIcon
 } from "lucide-react";
 import PendoIntegration from "@/components/pendo/PendoIntegration";
 
@@ -22,59 +23,96 @@ const AppLayout = ({ children }: AppLayoutProps) => {
   const navItems = [
     { path: '/', label: 'Dashboard', icon: HomeIcon },
     { path: '/book', label: 'Book Trip', icon: PlusCircleIcon },
-    { path: '/trip', label: 'Trip Summary', icon: ListIcon },
+    { path: '/trip', label: 'Trip Summary', icon: CalendarIcon },
     { path: '/profile', label: 'Profile', icon: UserIcon },
-    { path: '/support', label: 'Support', icon: HelpCircleIcon },
+    { path: '/support', label: 'Help', icon: HelpCircleIcon },
   ];
   
   return (
-    <div className="min-h-screen flex flex-col md:flex-row bg-gray-50">
-      {/* Sidebar Navigation */}
-      <aside className="bg-white border-r border-gray-200 w-full md:w-64 flex-shrink-0">
-        <div className="p-4 border-b border-gray-200 flex items-center">
-          <Link to="/" className="flex items-center">
-            <span className="font-bold text-xl text-acme-gray-dark">
-              <span className="text-acme-purple">Acme</span>Travel
-            </span>
-          </Link>
-        </div>
-        
-        <nav className="p-2">
-          <ul className="space-y-1">
+    <div className="min-h-screen flex flex-col bg-gray-50">
+      {/* Top Navigation Bar */}
+      <header className="bg-white border-b border-gray-200 py-2 px-4">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center">
+            <Link to="/" className="flex items-center">
+              <span className="font-bold text-xl text-acme-gray-dark">
+                <span className="text-acme-purple">Acme</span>Travel
+              </span>
+            </Link>
+          </div>
+          
+          <nav className="hidden md:flex mx-4 space-x-6">
             {navItems.map((item) => (
-              <li key={item.path}>
-                <Link 
-                  to={item.path} 
-                  className={`flex items-center px-4 py-2 rounded-md ${
-                    location.pathname === item.path
-                      ? 'bg-acme-purple text-white'
-                      : 'text-gray-600 hover:bg-gray-100'
-                  }`}
-                  data-pendo-id={`nav-${item.label.toLowerCase().replace(' ', '-')}`}
-                >
-                  <item.icon className="h-5 w-5 mr-3" />
-                  {item.label}
-                </Link>
-              </li>
+              <Link 
+                key={item.path}
+                to={item.path} 
+                className={`py-1 px-2 text-sm font-medium ${
+                  location.pathname === item.path
+                    ? 'text-acme-purple border-b-2 border-acme-purple'
+                    : 'text-gray-600 hover:text-acme-purple'
+                }`}
+                data-pendo-id={`nav-${item.label.toLowerCase().replace(' ', '-')}`}
+              >
+                {item.label}
+              </Link>
             ))}
-          </ul>
+          </nav>
+          
+          <div className="flex items-center gap-3">
+            <Button 
+              variant="outline" 
+              size="sm"
+              className="hidden md:flex text-gray-600"
+              data-pendo-id="need-help"
+            >
+              Need help?
+            </Button>
+            
+            <div className="flex items-center gap-2 border rounded-full px-2 py-1 bg-gray-50">
+              <span className="text-sm font-medium">TR</span>
+              <span className="text-sm hidden md:inline">Tamara Richards</span>
+            </div>
+          </div>
+        </div>
+      </header>
+      
+      <div className="flex flex-1 overflow-hidden">
+        {/* Mobile Navigation */}
+        <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-50">
+          <div className="flex items-center justify-around">
+            {navItems.map((item) => (
+              <Link 
+                key={item.path}
+                to={item.path} 
+                className={`flex flex-col items-center py-2 px-3 ${
+                  location.pathname === item.path
+                    ? 'text-acme-purple'
+                    : 'text-gray-600'
+                }`}
+              >
+                <item.icon className="h-5 w-5" />
+                <span className="text-xs mt-1">{item.label}</span>
+              </Link>
+            ))}
+          </div>
         </nav>
         
-        <div className="p-4 mt-4 border-t border-gray-200">
-          <Button 
-            className="w-full flex items-center bg-acme-pink hover:bg-opacity-90 text-white"
-            data-pendo-id="chat-with-travel-agent"
-          >
-            <MessageSquareIcon className="mr-2 h-4 w-4" />
-            Chat with Travel Agent
-          </Button>
-        </div>
-      </aside>
+        {/* Main Content */}
+        <main className="flex-1 overflow-auto">
+          {children}
+        </main>
+      </div>
       
-      {/* Main Content */}
-      <main className="flex-grow p-6">
-        {children}
-      </main>
+      {/* Chat Button (Mobile) */}
+      <div className="md:hidden fixed right-4 bottom-20 z-50">
+        <Button 
+          size="icon"
+          className="rounded-full w-12 h-12 bg-acme-pink hover:bg-opacity-90 text-white shadow-lg"
+          data-pendo-id="chat-with-travel-agent-mobile"
+        >
+          <MessageSquareIcon className="h-5 w-5" />
+        </Button>
+      </div>
       
       {/* Pendo Integration */}
       <PendoIntegration />
