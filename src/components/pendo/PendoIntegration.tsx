@@ -1,8 +1,11 @@
 
 import { useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 
 // This component handles the Pendo script integration
 const PendoIntegration: React.FC = () => {
+  const location = useLocation();
+  
   useEffect(() => {
     // Initialize Pendo with visitor and account data
     const initPendo = () => {
@@ -30,7 +33,7 @@ const PendoIntegration: React.FC = () => {
             email: 'demo@acmetravel.com',
             full_name: 'Demo User',
             role: 'Business Traveler',
-            travel_frequency: 'frequent',
+            travel_frequency: getUserTravelFrequency(),
             created_at: new Date().toISOString()
           },
           account: {
@@ -48,6 +51,17 @@ const PendoIntegration: React.FC = () => {
 
     // Initialize Pendo when the component mounts
     initPendo();
+
+    // Track page views for Pendo analytics
+    const trackPageView = () => {
+      if ((window as any).pendo && (window as any).pendo.track) {
+        console.log(`Pendo track page view: ${location.pathname}`);
+        // In production: pendo.track('page_view', { page: location.pathname });
+      }
+    };
+    
+    // Track page view when location changes
+    trackPageView();
 
     // Add data attributes to key elements for Pendo targeting
     const addPendoAttributes = () => {
@@ -78,11 +92,53 @@ const PendoIntegration: React.FC = () => {
       // In production, this would trigger a specific Pendo guide
     };
     
+    // Helper to get user travel frequency from preferences
+    const getUserTravelFrequency = () => {
+      // In production, this would retrieve from user preferences in state management
+      return localStorage.getItem('travelFrequency') || 'frequent';
+    };
+    
+    // Helper to simulate Pendo frustration detection (rage clicks)
+    const simulateFrustrationDetection = () => {
+      document.addEventListener('click', (e) => {
+        const target = e.target as HTMLElement;
+        
+        // Check if the same element was clicked multiple times in quick succession
+        if (target.dataset.clickCount === undefined) {
+          target.dataset.clickCount = '1';
+          target.dataset.lastClickTime = Date.now().toString();
+        } else {
+          const lastClickTime = parseInt(target.dataset.lastClickTime || '0');
+          const currentTime = Date.now();
+          
+          // If clicked again within 1 second
+          if (currentTime - lastClickTime < 1000) {
+            const clickCount = parseInt(target.dataset.clickCount || '0') + 1;
+            target.dataset.clickCount = clickCount.toString();
+            target.dataset.lastClickTime = currentTime.toString();
+            
+            // Simulate rage click detection at 3+ rapid clicks
+            if (clickCount >= 3) {
+              console.log(`Pendo frustration detected: Rage clicks on ${target.outerHTML.slice(0, 50)}...`);
+              target.dataset.clickCount = '0';
+            }
+          } else {
+            // Reset if time between clicks is too long
+            target.dataset.clickCount = '1';
+            target.dataset.lastClickTime = currentTime.toString();
+          }
+        }
+      });
+    };
+    
+    // Initialize frustration detection
+    simulateFrustrationDetection();
+    
     return () => {
       // Clean up event listeners if component unmounts
       document.removeEventListener('click', () => {});
     };
-  }, []);
+  }, [location]); // Re-run when location changes
 
   return null; // This component doesn't render anything visible
 };
