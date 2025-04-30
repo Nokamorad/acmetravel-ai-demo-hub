@@ -67,6 +67,9 @@ const PendoExperiment = ({
     }
   };
   
+  // Default icon URL if none is provided in the variant
+  const defaultIconUrl = "https://imgur.com/A2idHvM";
+  
   return (
     <Card 
       className={`border hover:shadow-md transition-shadow duration-300 overflow-hidden`}
@@ -75,16 +78,14 @@ const PendoExperiment = ({
       <CardContent className="p-0">
         <div className="p-6">
           <div className="flex items-center gap-3 mb-3">
-            {variant.iconUrl && (
-              <div className="w-8 h-8 flex-shrink-0">
-                <img 
-                  src={variant.iconUrl} 
-                  alt="" 
-                  className="w-full h-full object-contain"
-                  data-pendo-id={`experiment-${experimentId}-icon`}
-                />
-              </div>
-            )}
+            <div className="w-8 h-8 flex-shrink-0">
+              <img 
+                src={variant.iconUrl || defaultIconUrl}
+                alt="" 
+                className="w-full h-full object-contain"
+                data-pendo-id={`experiment-${experimentId}-icon`}
+              />
+            </div>
             <h3 className="text-lg font-semibold">{variant.title}</h3>
           </div>
           

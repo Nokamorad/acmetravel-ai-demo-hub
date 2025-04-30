@@ -36,9 +36,11 @@ const AppLayout = ({ children }: AppLayoutProps) => {
         <div className="flex items-center justify-between">
           <div className="flex items-center">
             <Link to="/" className="flex items-center" data-pendo-id="header-logo">
-              <span className="font-bold text-xl text-acme-gray-dark">
-                <span className="text-acme-purple">Acme</span>Travel
-              </span>
+              <img 
+                src="https://imgur.com/g5i69y7" 
+                alt="Voyagr Logo" 
+                className="h-8"
+              />
             </Link>
           </div>
           

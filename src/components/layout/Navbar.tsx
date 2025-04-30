@@ -56,16 +56,11 @@ const Navbar = () => {
       <div className="container mx-auto flex items-center justify-between px-4 md:px-6">
         <div className="flex items-center">
           <a href="#" className="flex items-center" data-pendo-id="nav-logo">
-            <div className="mr-2 flex items-center">
-              <div className="text-midnight-navy text-3xl font-bold relative">
-                <span className="text-sky-blue">V</span>oyagr
-              </div>
-            </div>
-            <div className="font-sans ml-1">
-              <span className="text-sm text-midnight-navy/70">
-                by AcmeCorp
-              </span>
-            </div>
+            <img 
+              src="https://imgur.com/g5i69y7" 
+              alt="Voyagr Logo" 
+              className="h-8"
+            />
           </a>
           
           {/* Demo mode indicator */}
