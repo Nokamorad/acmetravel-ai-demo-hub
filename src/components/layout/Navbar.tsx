@@ -104,7 +104,7 @@ const Navbar = () => {
             Getting More
           </a>
           <Button 
-            className="bg-sky-blue hover:bg-opacity-90 text-white"
+            className="text-white"
             data-pendo-id="nav-contact-sales"
             onClick={() => launchGuide('contact-sales')}
           >
@@ -161,7 +161,7 @@ const Navbar = () => {
             Getting More
           </a>
           <Button 
-            className="bg-sky-blue hover:bg-opacity-90 text-white w-full"
+            className="text-white w-full"
             data-pendo-id="mobile-nav-contact-sales"
             onClick={() => launchGuide('contact-sales')}
           >
