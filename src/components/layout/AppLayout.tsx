@@ -11,7 +11,6 @@ import {
   MessageSquare as MessageSquareIcon,
   Search as SearchIcon
 } from "lucide-react";
-import PendoIntegration from "@/components/pendo/PendoIntegration";
 
 interface AppLayoutProps {
   children: ReactNode;
@@ -110,9 +109,6 @@ const AppLayout = ({ children }: AppLayoutProps) => {
           <MessageSquareIcon className="h-5 w-5" />
         </Button>
       </div>
-      
-      {/* Pendo Integration */}
-      <PendoIntegration />
     </div>
   );
 };

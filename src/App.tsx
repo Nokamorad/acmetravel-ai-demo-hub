@@ -12,6 +12,7 @@ import TripSummary from "./pages/TripSummary";
 import Profile from "./pages/Profile";
 import Support from "./pages/Support";
 import NotFound from "./pages/NotFound";
+import PendoIntegration from "@/components/pendo/PendoIntegration";
 
 // Create a client
 const queryClient = new QueryClient();
@@ -23,6 +24,8 @@ const App = () => (
         <Toaster />
         <Sonner />
         <BrowserRouter>
+          {/* Pendo Integration at the app level ensures it's available on all routes */}
+          <PendoIntegration />
           <Routes>
             <Route path="/" element={<Dashboard />} />
             <Route path="/landing" element={<Index />} />

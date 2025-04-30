@@ -1,24 +1,55 @@
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
+import { v4 as uuidv4 } from 'uuid';
+
+// Interface for visitor metadata types
+interface VisitorMetadata {
+  visitor_id: string;
+  visitor_type: 'commuter' | 'occasional' | 'manager';
+  utm_source: string | null;
+  first_booking_complete: boolean;
+  language: string;
+  travel_frequency: string;
+}
 
 // This component handles the Pendo script integration
 const PendoIntegration: React.FC = () => {
   const location = useLocation();
+  const [metadata, setMetadata] = useState<VisitorMetadata>(() => {
+    // Try to load existing metadata from localStorage
+    const savedMetadata = localStorage.getItem('acmetravel_visitor');
+    if (savedMetadata) {
+      return JSON.parse(savedMetadata);
+    }
+    
+    // Generate new visitor metadata if none exists
+    const newMetadata: VisitorMetadata = {
+      visitor_id: uuidv4(), // Generate unique ID for each visitor
+      visitor_type: 'occasional',
+      utm_source: new URLSearchParams(window.location.search).get('utm_source'),
+      first_booking_complete: false,
+      language: navigator.language || 'en-US',
+      travel_frequency: 'occasional'
+    };
+    
+    // Save to localStorage
+    localStorage.setItem('acmetravel_visitor', JSON.stringify(newMetadata));
+    return newMetadata;
+  });
   
   useEffect(() => {
     // Initialize Pendo with visitor and account data
     const initPendo = () => {
-      if ((window as any).pendo) {
+      // Only initialize once
+      if ((window as any).pendo && (window as any).pendo._apiKey) {
         console.log('Pendo already initialized');
         return;
       }
       
-      // This is a placeholder for the actual Pendo initialization
-      console.log('Pendo would initialize here in production');
+      console.log('Initializing Pendo with visitor data:', metadata);
       
       // In a real implementation, you'd add your Pendo snippet here
-      /*
       (function(apiKey){
         (function(p,e,n,d,o){var v,w,x,y,z;o=p[d]=p[d]||{};o._q=o._q||[];
         v=['initialize','identify','updateOptions','pageLoad','track'];for(w=0,x=v.length;w<x;++w)(function(m){
@@ -26,15 +57,15 @@ const PendoIntegration: React.FC = () => {
             y=e.createElement(n);y.async=!0;y.src='https://cdn.pendo.io/agent/static/'+apiKey+'/pendo.js';
             z=e.getElementsByTagName(n)[0];z.parentNode.insertBefore(y,z);})(window,document,'script','pendo');
             
-        // Initialize Pendo with demo user data
-        pendo.initialize({
+        // Initialize Pendo with visitor data
+        (window as any).pendo.initialize({
           visitor: {
-            id: 'demo-user-123',
-            email: 'demo@acmetravel.com',
-            full_name: 'Demo User',
-            role: 'Business Traveler',
-            travel_frequency: getUserTravelFrequency(),
-            created_at: new Date().toISOString()
+            id: metadata.visitor_id,
+            visitor_type: metadata.visitor_type,
+            utm_source: metadata.utm_source,
+            first_booking_complete: metadata.first_booking_complete,
+            language: metadata.language,
+            travel_frequency: metadata.travel_frequency
           },
           account: {
             id: 'acme-travel-demo',
@@ -45,8 +76,7 @@ const PendoIntegration: React.FC = () => {
             industry: 'Travel'
           }
         });
-      })('YOUR_API_KEY');
-      */
+      })('DEMO_API_KEY'); // Replace with actual API key in production
     };
 
     // Initialize Pendo when the component mounts
@@ -56,91 +86,61 @@ const PendoIntegration: React.FC = () => {
     const trackPageView = () => {
       if ((window as any).pendo && (window as any).pendo.track) {
         console.log(`Pendo track page view: ${location.pathname}`);
-        // In production: pendo.track('page_view', { page: location.pathname });
+        (window as any).pendo.track('page_view', { page: location.pathname });
       }
     };
     
     // Track page view when location changes
     trackPageView();
-
-    // Add data attributes to key elements for Pendo targeting
-    const addPendoAttributes = () => {
-      // Log all elements with data-pendo-id for debugging
-      document.querySelectorAll('[data-pendo-id]').forEach(el => {
-        console.log(`Pendo element found: ${el.getAttribute('data-pendo-id')}`);
-      });
-      
-      // Simulate Pendo tracking events
-      document.addEventListener('click', (e) => {
-        const target = e.target as HTMLElement;
-        const pendoElement = target.closest('[data-pendo-id]');
-        
-        if (pendoElement) {
-          const pendoId = pendoElement.getAttribute('data-pendo-id');
-          // This would be where Pendo track events happen in production
-          console.log(`Pendo track event: ${pendoId} clicked`);
-        }
-      });
-    };
-
-    // Call after a short delay to ensure DOM is fully loaded
-    setTimeout(addPendoAttributes, 1000);
     
-    // Create helper for simulating Pendo guide launches
+    // Expose metadata update function to window for demo purposes
+    (window as any).updatePendoVisitor = (updates: Partial<VisitorMetadata>) => {
+      const updatedMetadata = { ...metadata, ...updates };
+      setMetadata(updatedMetadata);
+      localStorage.setItem('acmetravel_visitor', JSON.stringify(updatedMetadata));
+      
+      // Update Pendo visitor
+      if ((window as any).pendo && (window as any).pendo.updateOptions) {
+        (window as any).pendo.updateOptions({ 
+          visitor: updatedMetadata 
+        });
+      }
+      
+      console.log('Updated visitor metadata:', updatedMetadata);
+      return updatedMetadata;
+    };
+    
+    // Helper for simulating Pendo guide launches (for demo purposes)
     (window as any).simulatePendoGuide = (guideId: string) => {
       console.log(`Launching Pendo guide: ${guideId}`);
       // In production, this would trigger a specific Pendo guide
     };
     
-    // Helper to get user travel frequency from preferences
-    const getUserTravelFrequency = () => {
-      // In production, this would retrieve from user preferences in state management
-      return localStorage.getItem('travelFrequency') || 'frequent';
-    };
-    
-    // Helper to simulate Pendo frustration detection (rage clicks)
-    const simulateFrustrationDetection = () => {
-      document.addEventListener('click', (e) => {
-        const target = e.target as HTMLElement;
-        
-        // Check if the same element was clicked multiple times in quick succession
-        if (target.dataset.clickCount === undefined) {
-          target.dataset.clickCount = '1';
-          target.dataset.lastClickTime = Date.now().toString();
-        } else {
-          const lastClickTime = parseInt(target.dataset.lastClickTime || '0');
-          const currentTime = Date.now();
-          
-          // If clicked again within 1 second
-          if (currentTime - lastClickTime < 1000) {
-            const clickCount = parseInt(target.dataset.clickCount || '0') + 1;
-            target.dataset.clickCount = clickCount.toString();
-            target.dataset.lastClickTime = currentTime.toString();
-            
-            // Simulate rage click detection at 3+ rapid clicks
-            if (clickCount >= 3) {
-              console.log(`Pendo frustration detected: Rage clicks on ${target.outerHTML.slice(0, 50)}...`);
-              target.dataset.clickCount = '0';
-            }
-          } else {
-            // Reset if time between clicks is too long
-            target.dataset.clickCount = '1';
-            target.dataset.lastClickTime = currentTime.toString();
-          }
-        }
-      });
-    };
-    
-    // Initialize frustration detection
-    simulateFrustrationDetection();
-    
     return () => {
-      // Clean up event listeners if component unmounts
-      document.removeEventListener('click', () => {});
+      // Cleanup if necessary
     };
-  }, [location]); // Re-run when location changes
+  }, [location, metadata]); // Re-run when location or metadata changes
 
-  return null; // This component doesn't render anything visible
+  // Create an invisible button to toggle user segments for demo purposes
+  return (
+    <div className="fixed bottom-2 right-2 z-50 opacity-50 hover:opacity-100 transition-opacity">
+      <select 
+        className="text-xs bg-white border border-gray-200 rounded py-1 px-2 shadow-sm"
+        value={metadata.visitor_type}
+        onChange={(e) => {
+          const value = e.target.value as 'commuter' | 'occasional' | 'manager';
+          (window as any).updatePendoVisitor({ 
+            visitor_type: value,
+            travel_frequency: value === 'commuter' ? 'frequent' : (value === 'occasional' ? 'occasional' : 'regular')
+          });
+        }}
+      >
+        <option value="commuter">Commuter Segment</option>
+        <option value="occasional">Occasional Traveler</option>
+        <option value="manager">Travel Manager</option>
+      </select>
+    </div>
+  );
 };
 
 export default PendoIntegration;
