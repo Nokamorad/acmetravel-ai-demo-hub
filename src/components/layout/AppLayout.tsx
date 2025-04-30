@@ -30,19 +30,19 @@ const AppLayout = ({ children }: AppLayoutProps) => {
   ];
   
   return (
-    <div className="min-h-screen flex flex-col bg-gray-50">
+    <div className="min-h-screen flex flex-col bg-gray-50" data-pendo-id="app-layout-container">
       {/* Top Navigation Bar */}
-      <header className="bg-white border-b border-gray-200 py-2 px-4">
+      <header className="bg-white border-b border-gray-200 py-2 px-4" data-pendo-id="app-header">
         <div className="flex items-center justify-between">
           <div className="flex items-center">
-            <Link to="/" className="flex items-center">
+            <Link to="/" className="flex items-center" data-pendo-id="header-logo">
               <span className="font-bold text-xl text-acme-gray-dark">
                 <span className="text-acme-purple">Acme</span>Travel
               </span>
             </Link>
           </div>
           
-          <nav className="hidden md:flex mx-4 space-x-6">
+          <nav className="hidden md:flex mx-4 space-x-6" data-pendo-id="header-navigation">
             {navItems.map((item) => (
               <Link 
                 key={item.path}
@@ -52,6 +52,7 @@ const AppLayout = ({ children }: AppLayoutProps) => {
                     ? 'text-acme-purple border-b-2 border-acme-purple'
                     : 'text-gray-600 hover:text-acme-purple'
                 }`}
+                data-pendo-id={`nav-item-${item.label.toLowerCase().replace(/\s+/g, '-')}`}
               >
                 {item.label}
               </Link>
@@ -63,11 +64,15 @@ const AppLayout = ({ children }: AppLayoutProps) => {
               variant="outline" 
               size="sm"
               className="hidden md:flex text-gray-600"
+              data-pendo-id="header-help-button"
             >
               Need help?
             </Button>
             
-            <div className="flex items-center gap-2 border rounded-full px-2 py-1 bg-gray-50">
+            <div 
+              className="flex items-center gap-2 border rounded-full px-2 py-1 bg-gray-50"
+              data-pendo-id="user-profile-avatar"
+            >
               <Avatar className="h-6 w-6">
                 <AvatarFallback className="bg-acme-purple text-white text-xs">
                   {user.initials}
@@ -81,7 +86,7 @@ const AppLayout = ({ children }: AppLayoutProps) => {
       
       <div className="flex flex-1 overflow-hidden">
         {/* Mobile Navigation */}
-        <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-50">
+        <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-50" data-pendo-id="mobile-navigation">
           <div className="flex items-center justify-around">
             {navItems.map((item) => (
               <Link 
@@ -92,6 +97,7 @@ const AppLayout = ({ children }: AppLayoutProps) => {
                     ? 'text-acme-purple'
                     : 'text-gray-600'
                 }`}
+                data-pendo-id={`mobile-nav-item-${item.label.toLowerCase().replace(/\s+/g, '-')}`}
               >
                 <item.icon className="h-5 w-5" />
                 <span className="text-xs mt-1">{item.label}</span>
@@ -101,7 +107,7 @@ const AppLayout = ({ children }: AppLayoutProps) => {
         </nav>
         
         {/* Main Content */}
-        <main className="flex-1 overflow-auto">
+        <main className="flex-1 overflow-auto" data-pendo-id="main-content">
           {children}
         </main>
       </div>
@@ -111,6 +117,7 @@ const AppLayout = ({ children }: AppLayoutProps) => {
         <Button 
           size="icon"
           className="rounded-full w-12 h-12 bg-acme-pink hover:bg-opacity-90 text-white shadow-lg"
+          data-pendo-id="mobile-chat-button"
         >
           <MessageSquareIcon className="h-5 w-5" />
         </Button>

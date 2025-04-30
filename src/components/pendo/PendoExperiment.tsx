@@ -78,6 +78,7 @@ const PendoExperiment = ({
               src={variant.imageUrl} 
               alt={variant.title} 
               className="w-full h-full object-cover"
+              data-pendo-id={`experiment-${experimentId}-image`}
             />
           </div>
         )}

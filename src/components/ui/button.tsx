@@ -38,15 +38,24 @@ export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement>,
     VariantProps<typeof buttonVariants> {
   asChild?: boolean
+  pendoId?: string
 }
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant, size, asChild = false, ...props }, ref) => {
+  ({ className, variant, size, asChild = false, pendoId, children, ...props }, ref) => {
     const Comp = asChild ? Slot : "button"
+    
+    // Generate a Pendo ID if one isn't provided
+    const generatedPendoId = pendoId || 
+      (typeof children === 'string' ? 
+        `btn-${children.toString().toLowerCase().replace(/\s+/g, '-')}` : 
+        undefined);
+    
     return (
       <Comp
         className={cn(buttonVariants({ variant, size, className }))}
         ref={ref}
+        data-pendo-id={generatedPendoId}
         {...props}
       />
     )

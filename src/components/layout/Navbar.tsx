@@ -55,7 +55,7 @@ const Navbar = () => {
     >
       <div className="container mx-auto flex items-center justify-between px-4 md:px-6">
         <div className="flex items-center">
-          <a href="#" className="flex items-center">
+          <a href="#" className="flex items-center" data-pendo-id="nav-logo">
             <div className="mr-2 text-sky-blue">
               <Compass className="h-7 w-7" strokeWidth={2.5} />
             </div>
@@ -130,6 +130,7 @@ const Navbar = () => {
             size="icon" 
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             aria-label="Toggle menu"
+            data-pendo-id="mobile-menu-toggle"
           >
             <Menu className="h-6 w-6" />
           </Button>
@@ -143,6 +144,7 @@ const Navbar = () => {
             href="#onboarding" 
             onClick={(e) => { e.preventDefault(); smoothScroll('onboarding'); }}
             className="text-midnight-navy hover:text-sky-blue transition-colors duration-200"
+            data-pendo-id="mobile-nav-onboarding"
           >
             Getting Started
           </a>
@@ -150,6 +152,7 @@ const Navbar = () => {
             href="#support" 
             onClick={(e) => { e.preventDefault(); smoothScroll('support'); }}
             className="text-midnight-navy hover:text-sky-blue transition-colors duration-200"
+            data-pendo-id="mobile-nav-support"
           >
             Getting Help
           </a>
@@ -157,6 +160,7 @@ const Navbar = () => {
             href="#upsell" 
             onClick={(e) => { e.preventDefault(); smoothScroll('upsell'); }}
             className="text-midnight-navy hover:text-sky-blue transition-colors duration-200"
+            data-pendo-id="mobile-nav-upsell"
           >
             Getting More
           </a>
@@ -173,6 +177,7 @@ const Navbar = () => {
             size="sm"
             onClick={toggleDemoMode}
             className="text-xs w-full"
+            data-pendo-id="mobile-toggle-demo-mode"
           >
             {demoMode ? 'Exit Demo Mode' : 'Enter Demo Mode'}
           </Button>

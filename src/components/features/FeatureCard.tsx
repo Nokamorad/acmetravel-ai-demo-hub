@@ -67,7 +67,7 @@ const FeatureCard = ({
         "transition-transform duration-300 hover:-translate-y-2"
       )}
     >
-      <div className="mb-4 text-2xl text-center md:text-left">
+      <div className="mb-4 text-2xl text-center md:text-left" data-pendo-id={`feature-icon-${id}`}>
         <span className={accentClasses[accent].icon}>{icon}</span>
       </div>
       
@@ -80,9 +80,9 @@ const FeatureCard = ({
       </p>
       
       {keyPoints.length > 0 && (
-        <ul className="mb-6 text-sm space-y-2">
+        <ul className="mb-6 text-sm space-y-2" data-pendo-id={`feature-points-${id}`}>
           {keyPoints.map((point, index) => (
-            <li key={index} className="flex items-start">
+            <li key={index} className="flex items-start" data-pendo-id={`feature-point-${id}-${index}`}>
               <span className={cn("mr-2 text-lg", accentClasses[accent].icon)}>•</span>
               <span className="text-acme-gray-dark">{point}</span>
             </li>
@@ -90,7 +90,8 @@ const FeatureCard = ({
         </ul>
       )}
       
-      <div className="mb-8 rounded-lg overflow-hidden shadow-lg h-48 md:h-60 relative group">
+      <div className="mb-8 rounded-lg overflow-hidden shadow-lg h-48 md:h-60 relative group" 
+           data-pendo-id={`feature-image-container-${id}`}>
         <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
           <Button 
             variant="secondary" 
@@ -109,6 +110,7 @@ const FeatureCard = ({
           src={imageUrl} 
           alt={title} 
           className="w-full h-full object-cover object-center"
+          data-pendo-id={`feature-image-${id}`}
         />
       </div>
       
