@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
@@ -17,7 +18,6 @@ import {
   MessageSquareIcon
 } from "lucide-react";
 import AppLayout from "@/components/layout/AppLayout";
-import PendoExperiment from "@/components/pendo/PendoExperiment";
 import { generateUniqueTrips, generateUniqueTransactions } from '@/utils/dataGenerator';
 
 const Dashboard = () => {
@@ -209,50 +209,8 @@ const Dashboard = () => {
           </Card>
         </section>
         
-        {/* Suggested Hotels (Pendo Experiment Zone) */}
-        <section className="mb-6" data-pendo-id="suggested-hotels-section">
-          <div className="flex justify-between items-center mb-3">
-            <h2 className="text-lg font-semibold text-acme-gray-dark">Suggested Hotels</h2>
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <PendoExperiment
-              experimentId="suggested-hotels-upsell"
-              variants={[
-                {
-                  id: "variant-a",
-                  title: "Premium 5-Star Hotel in San Francisco",
-                  description: "Enjoy luxury accommodations near your upcoming meeting",
-                  buttonText: "Add to Itinerary",
-                  buttonColor: "purple",
-                  imageUrl: "https://images.unsplash.com/photo-1566073771259-6a8506099945?ixlib=rb-4.0.3&q=85&fm=jpg&crop=entropy&cs=srgb&w=300"
-                },
-                {
-                  id: "variant-b",
-                  title: "Limited Time Offer: San Francisco",
-                  description: "Save 25% on premium hotels when you book with your flight",
-                  buttonText: "View Special Offer",
-                  buttonColor: "pink",
-                  imageUrl: "https://images.unsplash.com/photo-1566073771259-6a8506099945?ixlib=rb-4.0.3&q=85&fm=jpg&crop=entropy&cs=srgb&w=300"
-                }
-              ]}
-            />
-          </div>
-        </section>
-        
-        {/* Travel Assistant Section */}
-        <section className="bg-gray-50 border border-gray-200 rounded-lg p-4 flex items-center justify-between">
-          <div>
-            <h3 className="font-medium text-acme-gray-dark mb-1">Need help planning your next trip?</h3>
-            <p className="text-sm text-gray-600">Ask Travel Agent for recommendations, policy questions, or booking assistance.</p>
-          </div>
-          <Button 
-            className="bg-acme-pink hover:bg-opacity-90 text-white whitespace-nowrap"
-          >
-            <MessageSquareIcon className="mr-2 h-4 w-4" />
-            Chat with Travel Agent
-          </Button>
-        </section>
+        {/* Placeholder for Pendo content */}
+        <div data-pendo-id="dashboard-bottom-content" className="mb-6"></div>
       </div>
     </AppLayout>
   );

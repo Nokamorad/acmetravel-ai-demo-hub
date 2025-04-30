@@ -11,6 +11,8 @@ interface VisitorMetadata {
   first_booking_complete: boolean;
   language: string;
   travel_frequency: string;
+  tier: 'standard' | 'premium' | 'executive';
+  annual_travel_spend: number;
 }
 
 // This component handles the Pendo script integration
@@ -24,13 +26,37 @@ const PendoIntegration: React.FC = () => {
     }
     
     // Generate new visitor metadata if none exists
+    const visitorType = Math.random() < 0.33 ? 'commuter' : 
+                        Math.random() < 0.66 ? 'occasional' : 'manager';
+    
+    // Determine tier and spend based on visitor type
+    let tier: 'standard' | 'premium' | 'executive';
+    let annualSpend: number;
+    
+    switch (visitorType) {
+      case 'commuter':
+        tier = Math.random() < 0.7 ? 'premium' : 'executive';
+        annualSpend = Math.floor(Math.random() * 50000) + 30000;
+        break;
+      case 'manager':
+        tier = 'executive';
+        annualSpend = Math.floor(Math.random() * 100000) + 75000;
+        break;
+      default: // occasional
+        tier = 'standard';
+        annualSpend = Math.floor(Math.random() * 15000) + 5000;
+    }
+    
     const newMetadata: VisitorMetadata = {
       visitor_id: uuidv4(), // Generate unique ID for each visitor
-      visitor_type: 'occasional',
+      visitor_type: visitorType,
       utm_source: new URLSearchParams(window.location.search).get('utm_source'),
       first_booking_complete: false,
       language: navigator.language || 'en-US',
-      travel_frequency: 'occasional'
+      travel_frequency: visitorType === 'commuter' ? 'frequent' : 
+                        visitorType === 'occasional' ? 'occasional' : 'regular',
+      tier: tier,
+      annual_travel_spend: annualSpend
     };
     
     // Save to localStorage
@@ -65,7 +91,9 @@ const PendoIntegration: React.FC = () => {
             utm_source: metadata.utm_source,
             first_booking_complete: metadata.first_booking_complete,
             language: metadata.language,
-            travel_frequency: metadata.travel_frequency
+            travel_frequency: metadata.travel_frequency,
+            tier: metadata.tier,
+            annual_travel_spend: metadata.annual_travel_spend
           },
           account: {
             id: 'acme-travel-demo',
@@ -121,7 +149,7 @@ const PendoIntegration: React.FC = () => {
     };
   }, [location, metadata]); // Re-run when location or metadata changes
 
-  // Create an invisible button to toggle user segments for demo purposes
+  // Create a dropdown to toggle user segments for demo purposes
   return (
     <div className="fixed bottom-2 right-2 z-50 opacity-50 hover:opacity-100 transition-opacity">
       <select 
@@ -129,15 +157,34 @@ const PendoIntegration: React.FC = () => {
         value={metadata.visitor_type}
         onChange={(e) => {
           const value = e.target.value as 'commuter' | 'occasional' | 'manager';
+          let tier: 'standard' | 'premium' | 'executive';
+          let annualSpend: number;
+          
+          switch (value) {
+            case 'commuter':
+              tier = 'premium';
+              annualSpend = 45000;
+              break;
+            case 'manager':
+              tier = 'executive';
+              annualSpend = 120000;
+              break;
+            default: // occasional
+              tier = 'standard';
+              annualSpend = 8000;
+          }
+          
           (window as any).updatePendoVisitor({ 
             visitor_type: value,
-            travel_frequency: value === 'commuter' ? 'frequent' : (value === 'occasional' ? 'occasional' : 'regular')
+            travel_frequency: value === 'commuter' ? 'frequent' : (value === 'occasional' ? 'occasional' : 'regular'),
+            tier: tier,
+            annual_travel_spend: annualSpend
           });
         }}
       >
-        <option value="commuter">Commuter Segment</option>
-        <option value="occasional">Occasional Traveler</option>
-        <option value="manager">Travel Manager</option>
+        <option value="commuter">Frequent Traveler (Premium)</option>
+        <option value="occasional">Occasional Traveler (Standard)</option>
+        <option value="manager">Travel Manager (Executive)</option>
       </select>
     </div>
   );

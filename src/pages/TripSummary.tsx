@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import AppLayout from "@/components/layout/AppLayout";
 import { Button } from "@/components/ui/button";
@@ -202,20 +203,8 @@ const TripSummary = () => {
           ))}
         </div>
         
-        {/* Travel Assistant Section */}
-        <div className="mt-8 bg-acme-purple/5 border border-acme-purple/20 rounded-lg p-4 flex items-center justify-between">
-          <div>
-            <h3 className="font-medium text-acme-gray-dark mb-1">Need help with your trips?</h3>
-            <p className="text-sm text-gray-600">Travel Agent can help you modify bookings or answer any questions about your itinerary.</p>
-          </div>
-          <Button 
-            className="bg-acme-pink hover:bg-opacity-90 text-white whitespace-nowrap"
-            data-pendo-id="chat-with-travel-agent"
-          >
-            <MessageSquareIcon className="mr-2 h-4 w-4" />
-            Chat with Travel Agent
-          </Button>
-        </div>
+        {/* Placeholder for Pendo content */}
+        <div data-pendo-id="trip-summary-bottom-content" className="mt-8 rounded-lg"></div>
       </div>
     </AppLayout>
   );
