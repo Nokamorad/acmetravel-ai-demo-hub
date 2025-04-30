@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -62,7 +63,7 @@ export default {
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
 				},
-				// Voyagr brand colors
+				// Voyagr brand colors with exact hex values from the design
 				"sky-blue": "#4F75FF",
 				"midnight-navy": "#1B1F3B",
 				"cloud-gray": "#E1E3E6",
@@ -80,7 +81,7 @@ export default {
 			},
 			fontFamily: {
 				'sans': ['Inter', 'sans-serif'],
-				'header': ['Montserrat', 'Satoshi', 'sans-serif'],
+				'header': ['Satoshi', 'Montserrat', 'sans-serif'],
 			},
 			borderRadius: {
 				lg: 'var(--radius)',

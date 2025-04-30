@@ -8,7 +8,7 @@ interface ExperimentVariant {
   title: string;
   description: string;
   buttonText: string;
-  buttonColor: "purple" | "pink";
+  buttonColor: "default" | "destructive";
   imageUrl?: string;
 }
 
@@ -63,9 +63,8 @@ const PendoExperiment = ({
           <p className="text-gray-600 mb-4">{variant.description}</p>
           <Button 
             onClick={handleClick}
-            className={`${variant.buttonColor === 'purple' 
-              ? 'bg-acme-purple hover:bg-acme-purple-dark' 
-              : 'bg-acme-pink hover:bg-opacity-90'} text-white w-full`}
+            variant={variant.buttonColor}
+            className="w-full"
             data-pendo-id={`experiment-${experimentId}-button`}
           >
             {hasInteracted ? 'Added to Itinerary' : variant.buttonText}

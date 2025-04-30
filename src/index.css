@@ -1,6 +1,7 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700&display=swap');
+@import url('https://api.fontshare.com/v2/css?f[]=satoshi@700,500,400&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -17,11 +18,11 @@
     --popover: 0 0% 100%;
     --popover-foreground: 222.2 84% 4.9%;
 
-    /* Updated primary color to Sky Blue */
+    /* Sky Blue - #4F75FF */
     --primary: 224 100% 65%;
     --primary-foreground: 210 40% 98%;
 
-    /* Updated secondary color to Cloud Gray */
+    /* Cloud Gray - #E1E3E6 */
     --secondary: 220 8% 89%;
     --secondary-foreground: 222.2 47.4% 11.2%;
 
@@ -31,7 +32,7 @@
     --accent: 210 40% 96.1%;
     --accent-foreground: 222.2 47.4% 11.2%;
 
-    /* Updated destructive color to Sunset Coral */
+    /* Sunset Coral - #FF6F61 */
     --destructive: 6 94% 69%;
     --destructive-foreground: 210 40% 98%;
 
@@ -53,6 +54,7 @@
   }
 
   .dark {
+    /* Midnight Navy - #1B1F3B */
     --background: 231 18% 17%;
     --foreground: 210 40% 98%;
 
@@ -62,7 +64,7 @@
     --popover: 231 18% 17%;
     --popover-foreground: 210 40% 98%;
 
-    /* Keep Sky Blue as primary in dark mode */
+    /* Sky Blue - #4F75FF */
     --primary: 224 100% 65%;
     --primary-foreground: 0 0% 100%;
 
@@ -76,7 +78,7 @@
     --accent: 217.2 32.6% 17.5%;
     --accent-foreground: 210 40% 98%;
 
-    /* Keep Sunset Coral for destructive in dark mode */
+    /* Sunset Coral - #FF6F61 */
     --destructive: 6 94% 69%;
     --destructive-foreground: 210 40% 98%;
 
@@ -122,5 +124,11 @@
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
     box-shadow: 0 8px 32px rgba(31, 38, 135, 0.1);
+  }
+
+  /* Logo styles */
+  .logo-voyagr {
+    font-family: 'Satoshi', sans-serif;
+    font-weight: 700;
   }
 }

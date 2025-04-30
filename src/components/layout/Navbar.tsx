@@ -56,14 +56,13 @@ const Navbar = () => {
       <div className="container mx-auto flex items-center justify-between px-4 md:px-6">
         <div className="flex items-center">
           <a href="#" className="flex items-center" data-pendo-id="nav-logo">
-            <div className="mr-2 text-sky-blue">
-              <Compass className="h-7 w-7" strokeWidth={2.5} />
+            <div className="mr-2 flex items-center">
+              <div className="text-midnight-navy text-3xl font-bold relative">
+                <span className="text-sky-blue">V</span>oyagr
+              </div>
             </div>
-            <div className="font-header">
-              <span className="font-bold text-3xl text-midnight-navy">
-                Voyagr
-              </span>
-              <span className="text-sm text-cloud-gray ml-1">
+            <div className="font-sans ml-1">
+              <span className="text-sm text-midnight-navy/70">
                 by AcmeCorp
               </span>
             </div>
