@@ -1,5 +1,5 @@
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -7,19 +7,31 @@ import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Switch } from "@/components/ui/switch";
 import { useToast } from "@/hooks/use-toast";
+import { useUser } from "@/contexts/UserContext";
 import { UserIcon, BellIcon, KeyIcon, GlobeIcon } from "lucide-react";
 import AppLayout from "@/components/layout/AppLayout";
 
 const Profile = () => {
   const { toast } = useToast();
+  const { user, updateUser } = useUser();
   
   // Profile form state
   const [profileForm, setProfileForm] = useState({
-    name: "Alex Johnson",
-    email: "alex@example.com",
-    company: "Acme Corporation",
-    phone: "+1 (555) 123-4567"
+    name: "",
+    email: "",
+    company: "",
+    phone: ""
   });
+  
+  // Initialize form with user data
+  useEffect(() => {
+    setProfileForm({
+      name: user.name,
+      email: user.email,
+      company: user.company,
+      phone: user.phone
+    });
+  }, [user]);
   
   // Preferences state
   const [preferences, setPreferences] = useState({
@@ -50,6 +62,14 @@ const Profile = () => {
   // Handle form submission
   const handleSave = (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Update user context
+    updateUser({
+      name: profileForm.name,
+      email: profileForm.email,
+      company: profileForm.company,
+      phone: profileForm.phone
+    });
     
     toast({
       title: "Profile saved",

@@ -2,6 +2,7 @@
 import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
+import { useUser } from '@/contexts/UserContext';
 
 // Interface for visitor metadata types
 interface VisitorMetadata {
@@ -18,6 +19,8 @@ interface VisitorMetadata {
 // This component handles the Pendo script integration
 const PendoIntegration: React.FC = () => {
   const location = useLocation();
+  const { user } = useUser();
+  
   const [metadata, setMetadata] = useState<VisitorMetadata>(() => {
     // Try to load existing metadata from localStorage
     const savedMetadata = localStorage.getItem('acmetravel_visitor');
@@ -74,6 +77,7 @@ const PendoIntegration: React.FC = () => {
       }
       
       console.log('Initializing Pendo with visitor data:', metadata);
+      console.log('User data:', user);
       
       // In a real implementation, you'd add your Pendo snippet here
       (function(apiKey){
@@ -87,6 +91,8 @@ const PendoIntegration: React.FC = () => {
         (window as any).pendo.initialize({
           visitor: {
             id: metadata.visitor_id,
+            user_name: user.name,
+            email: user.email,
             visitor_type: metadata.visitor_type,
             utm_source: metadata.utm_source,
             first_booking_complete: metadata.first_booking_complete,
@@ -130,7 +136,11 @@ const PendoIntegration: React.FC = () => {
       // Update Pendo visitor
       if ((window as any).pendo && (window as any).pendo.updateOptions) {
         (window as any).pendo.updateOptions({ 
-          visitor: updatedMetadata 
+          visitor: {
+            ...updatedMetadata,
+            user_name: user.name,
+            email: user.email
+          }
         });
       }
       
@@ -147,7 +157,7 @@ const PendoIntegration: React.FC = () => {
     return () => {
       // Cleanup if necessary
     };
-  }, [location, metadata]); // Re-run when location or metadata changes
+  }, [location, metadata, user]);
 
   // Create a dropdown to toggle user segments for demo purposes
   return (

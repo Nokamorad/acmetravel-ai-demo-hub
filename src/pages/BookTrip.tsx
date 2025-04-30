@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import CitySearchInput from "@/components/BookTrip/CitySearchInput";
 import { 
   PlaneIcon, 
   HotelIcon, 
@@ -16,8 +17,15 @@ import {
   ChevronDownIcon
 } from "lucide-react";
 
+interface CityData {
+  city: string;
+  code: string;
+}
+
 const BookTrip = () => {
   const [tripType, setTripType] = useState('business');
+  const [originCity, setOriginCity] = useState<CityData | null>(null);
+  const [destinationCity, setDestinationCity] = useState<CityData | null>(null);
   
   return (
     <AppLayout>
@@ -90,26 +98,22 @@ const BookTrip = () => {
               <div className="grid grid-cols-1 lg:grid-cols-5 gap-4">
                 <div className="lg:col-span-2">
                   <label className="block text-sm font-medium mb-1">From</label>
-                  <div className="relative">
-                    <PlaneIcon className="absolute left-3 top-2.5 h-4 w-4 text-gray-500 rotate-[270deg]" />
-                    <Input 
-                      placeholder="Enter origin city or airport"
-                      className="pl-10 bg-white"
-                      data-pendo-id="flight-origin"
-                    />
-                  </div>
+                  <CitySearchInput 
+                    placeholder="Enter origin city or airport"
+                    icon={PlaneIcon} 
+                    dataPendoId="flight-origin"
+                    onSelect={setOriginCity}
+                  />
                 </div>
                 
                 <div className="lg:col-span-2">
                   <label className="block text-sm font-medium mb-1">To</label>
-                  <div className="relative">
-                    <PlaneIcon className="absolute left-3 top-2.5 h-4 w-4 text-gray-500 rotate-90" />
-                    <Input 
-                      placeholder="Enter destination city or airport"
-                      className="pl-10 bg-white"
-                      data-pendo-id="flight-destination"
-                    />
-                  </div>
+                  <CitySearchInput 
+                    placeholder="Enter destination city or airport"
+                    icon={PlaneIcon} 
+                    dataPendoId="flight-destination"
+                    onSelect={setDestinationCity}
+                  />
                 </div>
                 
                 <div>

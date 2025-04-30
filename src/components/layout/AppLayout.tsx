@@ -2,14 +2,15 @@
 import { ReactNode } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
+import { useUser } from "@/contexts/UserContext";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { 
   Home as HomeIcon, 
   PlusCircle as PlusCircleIcon, 
   Calendar as CalendarIcon, 
   User as UserIcon, 
   HelpCircle as HelpCircleIcon, 
-  MessageSquare as MessageSquareIcon,
-  Search as SearchIcon
+  MessageSquare as MessageSquareIcon
 } from "lucide-react";
 
 interface AppLayoutProps {
@@ -18,6 +19,7 @@ interface AppLayoutProps {
 
 const AppLayout = ({ children }: AppLayoutProps) => {
   const location = useLocation();
+  const { user } = useUser();
   
   const navItems = [
     { path: '/', label: 'Dashboard', icon: HomeIcon },
@@ -66,8 +68,12 @@ const AppLayout = ({ children }: AppLayoutProps) => {
             </Button>
             
             <div className="flex items-center gap-2 border rounded-full px-2 py-1 bg-gray-50">
-              <span className="text-sm font-medium">TR</span>
-              <span className="text-sm hidden md:inline">Tamara Richards</span>
+              <Avatar className="h-6 w-6">
+                <AvatarFallback className="bg-acme-purple text-white text-xs">
+                  {user.initials}
+                </AvatarFallback>
+              </Avatar>
+              <span className="text-sm hidden md:inline">{user.name}</span>
             </div>
           </div>
         </div>
