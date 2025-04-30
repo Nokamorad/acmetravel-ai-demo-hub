@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
@@ -12,11 +12,103 @@ import {
   AlertCircle as AlertCircleIcon, 
   Info as InfoIcon
 } from "lucide-react";
+import { format, addDays } from "date-fns";
 import AppLayout from "@/components/layout/AppLayout";
 import PendoSurvey from "@/components/pendo/PendoSurvey";
 
+interface ChatMessage {
+  sender: 'user' | 'agent';
+  text: string;
+  timestamp: Date;
+}
+
 const Support = () => {
   const [message, setMessage] = useState('');
+  const [chatHistory, setChatHistory] = useState<ChatMessage[]>([
+    {
+      sender: 'agent',
+      text: "Hello! I'm Travel Agent. How can I help with your travel plans today?",
+      timestamp: new Date()
+    }
+  ]);
+  
+  // Function to generate travel dates within the next week
+  const generateTravelDates = () => {
+    const departDate = addDays(new Date(), Math.floor(Math.random() * 3) + 1); // 1-3 days from now
+    const returnDate = addDays(departDate, Math.floor(Math.random() * 4) + 2); // 2-5 days later
+    
+    return {
+      depart: format(departDate, 'EEEE, MMMM d'),
+      return: format(returnDate, 'EEEE, MMMM d')
+    };
+  };
+
+  // Handle sending a message to Travel Agent
+  const sendMessage = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!message.trim()) return;
+    
+    // Add user message to chat history
+    const userMessage: ChatMessage = {
+      sender: 'user',
+      text: message,
+      timestamp: new Date()
+    };
+    
+    setChatHistory(prev => [...prev, userMessage]);
+    setMessage('');
+    
+    // Process the message and generate response
+    setTimeout(() => {
+      if (message.toLowerCase().includes('hi') || message.toLowerCase().includes('hello')) {
+        // First response for greeting
+        const agentResponse: ChatMessage = {
+          sender: 'agent',
+          text: "Hi! I'd love to help you with that. What dates and which cities are you traveling to and from?",
+          timestamp: new Date()
+        };
+        setChatHistory(prev => [...prev, agentResponse]);
+        
+        // Auto-populate next user message after a delay
+        setTimeout(() => {
+          const dates = generateTravelDates();
+          const nextUserMessage: ChatMessage = {
+            sender: 'user',
+            text: `I need help booking travel for ${dates.depart} from Chattanooga to New York.`,
+            timestamp: new Date()
+          };
+          setChatHistory(prev => [...prev, nextUserMessage]);
+          
+          // Generate travel itinerary response
+          setTimeout(() => {
+            const price = Math.floor(Math.random() * 300) + 250;
+            const agentItinerary: ChatMessage = {
+              sender: 'agent',
+              text: `I found a great option for your trip from Chattanooga to New York on ${dates.depart} with a return on ${dates.return}!\n\n` +
+                    `✈️ Outbound: Chattanooga (CHA) to New York (LGA)\n` +
+                    `   Departure: ${dates.depart}, 8:15 AM\n` +
+                    `   Arrival: ${dates.depart}, 10:45 AM\n\n` +
+                    `✈️ Return: New York (LGA) to Chattanooga (CHA)\n` +
+                    `   Departure: ${dates.return}, 4:30 PM\n` +
+                    `   Arrival: ${dates.return}, 6:55 PM\n\n` +
+                    `💲 Total price: $${price}\n\n` +
+                    `Would you like to book this itinerary now?`,
+              timestamp: new Date()
+            };
+            setChatHistory(prev => [...prev, agentItinerary]);
+          }, 1500);
+        }, 3000);
+      } else {
+        // Generic response for other messages
+        const agentResponse: ChatMessage = {
+          sender: 'agent',
+          text: "I'm here to help with your travel plans. Can you provide more details about your trip?",
+          timestamp: new Date()
+        };
+        setChatHistory(prev => [...prev, agentResponse]);
+      }
+    }, 1000);
+  };
   
   // Sample FAQ data
   const faqs = [
@@ -41,18 +133,6 @@ const Support = () => {
       answer: "Yes, you can add multiple travelers during the booking process. You can save frequent travelers in your profile for quicker booking in the future."
     }
   ];
-  
-  // Handle sending a message to Travel Agent
-  const sendMessage = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!message.trim()) return;
-    
-    console.log("Message sent to Travel Agent:", message);
-    setMessage('');
-    
-    // In a real app, this would communicate with a chatbot service
-    // For now we'll just clear the input
-  };
   
   return (
     <AppLayout>
@@ -81,6 +161,7 @@ const Support = () => {
                 </TabsTrigger>
               </TabsList>
               
+              {/* FAQ Tab Content */}
               <TabsContent value="faq" data-pendo-id="faq-content">
                 <Card>
                   <CardHeader className="pb-3">
@@ -120,6 +201,7 @@ const Support = () => {
                 </Card>
               </TabsContent>
               
+              {/* Videos Tab Content */}
               <TabsContent value="videos" data-pendo-id="videos-content">
                 <Card>
                   <CardHeader>
@@ -191,6 +273,7 @@ const Support = () => {
                 </Card>
               </TabsContent>
               
+              {/* Troubleshooting Tab Content */}
               <TabsContent value="troubleshoot" data-pendo-id="troubleshoot-content">
                 <Card>
                   <CardHeader>
@@ -289,15 +372,25 @@ const Support = () => {
               </CardHeader>
               
               <CardContent className="flex-grow p-4 overflow-auto flex flex-col">
-                {/* Simulated chat history would go here */}
-                <div className="flex-grow">
-                  <div className="mb-4">
-                    <div className="bg-acme-purple/10 p-3 rounded-lg rounded-tl-none max-w-[80%] inline-block">
-                      <p className="text-sm">
-                        Hello! I'm Travel Agent. How can I help with your travel plans today?
-                      </p>
+                {/* Chat history */}
+                <div className="flex-grow space-y-4">
+                  {chatHistory.map((chat, index) => (
+                    <div key={index} className="mb-4">
+                      <div className={`${
+                        chat.sender === 'agent' 
+                          ? 'bg-acme-purple/10 rounded-lg rounded-tl-none' 
+                          : 'bg-acme-pink/10 rounded-lg rounded-tr-none ml-auto'
+                        } p-3 max-w-[85%] inline-block`}
+                      >
+                        <p className="text-sm whitespace-pre-line">
+                          {chat.text}
+                        </p>
+                        <div className="text-xs text-gray-500 mt-1">
+                          {format(chat.timestamp, 'h:mm a')}
+                        </div>
+                      </div>
                     </div>
-                  </div>
+                  ))}
                 </div>
                 
                 {/* Chat input */}
