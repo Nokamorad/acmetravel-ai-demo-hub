@@ -1,4 +1,3 @@
-
 import type { Config } from "tailwindcss";
 
 export default {
@@ -63,6 +62,12 @@ export default {
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
 				},
+				// Voyagr brand colors
+				"sky-blue": "#4F75FF",
+				"midnight-navy": "#1B1F3B",
+				"cloud-gray": "#E1E3E6",
+				"sunset-coral": "#FF6F61",
+				// Legacy Acme colors (keep for backward compatibility)
 				acme: {
 					purple: '#9b87f5',
 					'purple-dark': '#7E69AB',
@@ -72,6 +77,10 @@ export default {
 					gray: '#8E9196',
 					'gray-dark': '#1A1F2C',
 				}
+			},
+			fontFamily: {
+				'sans': ['Inter', 'sans-serif'],
+				'header': ['Montserrat', 'Satoshi', 'sans-serif'],
 			},
 			borderRadius: {
 				lg: 'var(--radius)',
@@ -118,9 +127,7 @@ export default {
 				'pulse-soft': 'pulse-soft 3s ease-in-out infinite',
 				'float': 'float 6s ease-in-out infinite',
 			},
-			fontFamily: {
-				'sans': ['Inter', 'sans-serif'],
-			}
+			
 		}
 	},
 	plugins: [require("tailwindcss-animate")],

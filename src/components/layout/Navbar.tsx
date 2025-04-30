@@ -1,7 +1,7 @@
 
 import { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
-import { Menu } from "lucide-react";
+import { Menu, Compass } from "lucide-react";
 
 const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
@@ -49,21 +49,29 @@ const Navbar = () => {
   return (
     <nav 
       className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${
-        scrolled ? 'bg-white/90 shadow-md backdrop-blur-md py-3' : 'bg-transparent py-5'
+        scrolled ? 'bg-white/90 shadow-md backdrop-blur-md py-4' : 'bg-transparent py-7'
       }`}
       data-pendo-id="main-navigation"
     >
       <div className="container mx-auto flex items-center justify-between px-4 md:px-6">
         <div className="flex items-center">
           <a href="#" className="flex items-center">
-            <span className="font-bold text-2xl text-acme-gray-dark">
-              <span className="text-acme-purple">Acme</span>Travel
-            </span>
+            <div className="mr-2 text-sky-blue">
+              <Compass className="h-7 w-7" strokeWidth={2.5} />
+            </div>
+            <div className="font-header">
+              <span className="font-bold text-3xl text-midnight-navy">
+                Voyagr
+              </span>
+              <span className="text-sm text-cloud-gray ml-1">
+                by AcmeCorp
+              </span>
+            </div>
           </a>
           
           {/* Demo mode indicator */}
           {demoMode && (
-            <div className="ml-3 px-2 py-1 bg-acme-pink/20 rounded text-xs text-acme-pink font-medium">
+            <div className="ml-3 px-2 py-1 bg-sunset-coral/20 rounded text-xs text-sunset-coral font-medium">
               Demo Mode
             </div>
           )}
@@ -74,7 +82,7 @@ const Navbar = () => {
           <a 
             href="#onboarding" 
             onClick={(e) => { e.preventDefault(); smoothScroll('onboarding'); }}
-            className="text-acme-gray-dark hover:text-acme-purple transition-colors duration-200"
+            className="text-midnight-navy hover:text-sky-blue transition-colors duration-200"
             data-pendo-id="nav-onboarding"
           >
             Getting Started
@@ -82,7 +90,7 @@ const Navbar = () => {
           <a 
             href="#support" 
             onClick={(e) => { e.preventDefault(); smoothScroll('support'); }}
-            className="text-acme-gray-dark hover:text-acme-purple transition-colors duration-200"
+            className="text-midnight-navy hover:text-sky-blue transition-colors duration-200"
             data-pendo-id="nav-support"
           >
             Getting Help
@@ -90,17 +98,17 @@ const Navbar = () => {
           <a 
             href="#upsell" 
             onClick={(e) => { e.preventDefault(); smoothScroll('upsell'); }}
-            className="text-acme-gray-dark hover:text-acme-purple transition-colors duration-200"
+            className="text-midnight-navy hover:text-sky-blue transition-colors duration-200"
             data-pendo-id="nav-upsell"
           >
             Getting More
           </a>
           <Button 
-            className="bg-acme-pink hover:bg-opacity-90 text-white"
+            className="bg-sky-blue hover:bg-opacity-90 text-white"
             data-pendo-id="nav-contact-sales"
             onClick={() => launchGuide('contact-sales')}
           >
-            Contact Sales
+            Start Exploring
           </Button>
           
           {/* Demo toggle - this would allow easy switching between demo states */}
@@ -134,30 +142,30 @@ const Navbar = () => {
           <a 
             href="#onboarding" 
             onClick={(e) => { e.preventDefault(); smoothScroll('onboarding'); }}
-            className="text-acme-gray-dark hover:text-acme-purple transition-colors duration-200"
+            className="text-midnight-navy hover:text-sky-blue transition-colors duration-200"
           >
             Getting Started
           </a>
           <a 
             href="#support" 
             onClick={(e) => { e.preventDefault(); smoothScroll('support'); }}
-            className="text-acme-gray-dark hover:text-acme-purple transition-colors duration-200"
+            className="text-midnight-navy hover:text-sky-blue transition-colors duration-200"
           >
             Getting Help
           </a>
           <a 
             href="#upsell" 
             onClick={(e) => { e.preventDefault(); smoothScroll('upsell'); }}
-            className="text-acme-gray-dark hover:text-acme-purple transition-colors duration-200"
+            className="text-midnight-navy hover:text-sky-blue transition-colors duration-200"
           >
             Getting More
           </a>
           <Button 
-            className="bg-acme-pink hover:bg-opacity-90 text-white w-full"
+            className="bg-sky-blue hover:bg-opacity-90 text-white w-full"
             data-pendo-id="mobile-nav-contact-sales"
             onClick={() => launchGuide('contact-sales')}
           >
-            Contact Sales
+            Start Exploring
           </Button>
           
           <Button
