@@ -51,7 +51,6 @@ const AppLayout = ({ children }: AppLayoutProps) => {
                     ? 'text-acme-purple border-b-2 border-acme-purple'
                     : 'text-gray-600 hover:text-acme-purple'
                 }`}
-                data-pendo-id={`nav-${item.label.toLowerCase().replace(' ', '-')}`}
               >
                 {item.label}
               </Link>
@@ -63,7 +62,6 @@ const AppLayout = ({ children }: AppLayoutProps) => {
               variant="outline" 
               size="sm"
               className="hidden md:flex text-gray-600"
-              data-pendo-id="need-help"
             >
               Need help?
             </Button>
@@ -108,7 +106,6 @@ const AppLayout = ({ children }: AppLayoutProps) => {
         <Button 
           size="icon"
           className="rounded-full w-12 h-12 bg-acme-pink hover:bg-opacity-90 text-white shadow-lg"
-          data-pendo-id="chat-with-travel-agent-mobile"
         >
           <MessageSquareIcon className="h-5 w-5" />
         </Button>
