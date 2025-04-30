@@ -51,8 +51,8 @@ const AppLayout = ({ children }: AppLayoutProps) => {
                 to={item.path} 
                 className={`py-1 px-2 text-sm font-medium ${
                   location.pathname === item.path
-                    ? 'text-acme-purple border-b-2 border-acme-purple'
-                    : 'text-gray-600 hover:text-acme-purple'
+                    ? 'text-sky-blue border-b-2 border-sky-blue'
+                    : 'text-gray-600 hover:text-sky-blue'
                 }`}
                 data-pendo-id={`nav-item-${item.label.toLowerCase().replace(/\s+/g, '-')}`}
               >
@@ -76,7 +76,7 @@ const AppLayout = ({ children }: AppLayoutProps) => {
               data-pendo-id="user-profile-avatar"
             >
               <Avatar className="h-6 w-6">
-                <AvatarFallback className="bg-acme-purple text-white text-xs">
+                <AvatarFallback className="bg-sky-blue text-white text-xs">
                   {user.initials}
                 </AvatarFallback>
               </Avatar>
@@ -96,7 +96,7 @@ const AppLayout = ({ children }: AppLayoutProps) => {
                 to={item.path} 
                 className={`flex flex-col items-center py-2 px-3 ${
                   location.pathname === item.path
-                    ? 'text-acme-purple'
+                    ? 'text-sky-blue'
                     : 'text-gray-600'
                 }`}
                 data-pendo-id={`mobile-nav-item-${item.label.toLowerCase().replace(/\s+/g, '-')}`}
@@ -118,7 +118,7 @@ const AppLayout = ({ children }: AppLayoutProps) => {
       <div className="md:hidden fixed right-4 bottom-20 z-50">
         <Button 
           size="icon"
-          className="rounded-full w-12 h-12 bg-acme-pink hover:bg-opacity-90 text-white shadow-lg"
+          className="rounded-full w-12 h-12 bg-sunset-coral hover:bg-opacity-90 text-white shadow-lg"
           data-pendo-id="mobile-chat-button"
         >
           <MessageSquareIcon className="h-5 w-5" />
