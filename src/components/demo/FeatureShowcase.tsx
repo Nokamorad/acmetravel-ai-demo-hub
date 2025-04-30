@@ -478,7 +478,7 @@ const FeatureShowcase = () => {
                             title: "Save 15% on Your Stay",
                             description: "Book your hotel through AcmeTravel and save up to 15% compared to booking directly.",
                             buttonText: "View Hotel Deals",
-                            buttonColor: "purple",
+                            buttonColor: "default", // Changed from "purple" to "default"
                             imageUrl: "https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&q=80"
                           },
                           {
@@ -486,7 +486,7 @@ const FeatureShowcase = () => {
                             title: "Complete Your Trip",
                             description: "Add a hotel to your San Francisco trip for a seamless travel experience.",
                             buttonText: "Find Hotels Nearby",
-                            buttonColor: "pink",
+                            buttonColor: "destructive", // Changed from "pink" to "destructive"
                             imageUrl: "https://images.unsplash.com/photo-1564501049412-61c2a3083791?auto=format&fit=crop&q=80"
                           }
                         ]}
