@@ -8,8 +8,9 @@ interface ExperimentVariant {
   title: string;
   description: string;
   buttonText: string;
-  buttonColor: "default" | "destructive";
+  buttonColor: "default" | "destructive" | "sky" | "sunset" | "navy";
   imageUrl?: string;
+  iconUrl?: string;
 }
 
 interface PendoExperimentProps {
@@ -51,6 +52,20 @@ const PendoExperiment = ({
   };
   
   const variant = variants[activeVariant];
+
+  // Map buttonColor to appropriate classes
+  const getButtonClasses = (color: string) => {
+    switch(color) {
+      case 'sky':
+        return 'bg-sky-blue hover:bg-sky-blue/90 text-white';
+      case 'sunset':
+        return 'bg-sunset-coral hover:bg-sunset-coral/90 text-white';
+      case 'navy':
+        return 'bg-midnight-navy hover:bg-midnight-navy/90 text-white';
+      default:
+        return '';
+    }
+  };
   
   return (
     <Card 
@@ -59,12 +74,25 @@ const PendoExperiment = ({
     >
       <CardContent className="p-0">
         <div className="p-6">
-          <h3 className="text-lg font-semibold mb-2">{variant.title}</h3>
+          <div className="flex items-center gap-3 mb-3">
+            {variant.iconUrl && (
+              <div className="w-8 h-8 flex-shrink-0">
+                <img 
+                  src={variant.iconUrl} 
+                  alt="" 
+                  className="w-full h-full object-contain"
+                  data-pendo-id={`experiment-${experimentId}-icon`}
+                />
+              </div>
+            )}
+            <h3 className="text-lg font-semibold">{variant.title}</h3>
+          </div>
+          
           <p className="text-gray-600 mb-4">{variant.description}</p>
           <Button 
             onClick={handleClick}
-            variant={variant.buttonColor}
-            className="w-full"
+            variant={variant.buttonColor === 'sky' || variant.buttonColor === 'sunset' || variant.buttonColor === 'navy' ? 'outline' : variant.buttonColor}
+            className={`w-full ${getButtonClasses(variant.buttonColor)}`}
             data-pendo-id={`experiment-${experimentId}-button`}
           >
             {hasInteracted ? 'Added to Itinerary' : variant.buttonText}
