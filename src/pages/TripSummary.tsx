@@ -1,8 +1,8 @@
-
 import React, { useState, useEffect } from 'react';
 import AppLayout from "@/components/layout/AppLayout";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { useUser } from "@/contexts/UserContext";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { 
   Plane as PlaneIcon, 
@@ -23,6 +23,7 @@ import { generateUniqueTrips } from '@/utils/dataGenerator';
 const TripSummary = () => {
   const [activeTab, setActiveTab] = useState('upcoming');
   const [trips, setTrips] = useState([]);
+  const { user } = useUser();
   
   useEffect(() => {
     const visitorId = localStorage.getItem('acmetravel_visitor') 
@@ -177,7 +178,7 @@ const TripSummary = () => {
                   <div className="flex flex-wrap items-center justify-between border-t border-gray-100 pt-3">
                     <div className="flex items-center text-sm text-gray-600">
                       <UserIcon className="h-3.5 w-3.5 mr-1" />
-                      <span>Alex Morgan</span>
+                      <span>{user.name}</span>
                     </div>
                     
                     <div className="flex space-x-2 mt-2 sm:mt-0">

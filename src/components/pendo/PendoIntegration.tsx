@@ -91,6 +91,7 @@ const PendoIntegration: React.FC = () => {
         (window as any).pendo.initialize({
           visitor: {
             id: metadata.visitor_id,
+            user_id: user.id,
             user_name: user.name,
             email: user.email,
             visitor_type: metadata.visitor_type,
@@ -138,6 +139,7 @@ const PendoIntegration: React.FC = () => {
         (window as any).pendo.updateOptions({ 
           visitor: {
             ...updatedMetadata,
+            user_id: user.id,
             user_name: user.name,
             email: user.email
           }

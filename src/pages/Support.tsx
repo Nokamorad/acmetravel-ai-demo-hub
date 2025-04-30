@@ -1,448 +1,363 @@
-import { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+
+import React, { useState, useEffect, useRef } from 'react';
+import AppLayout from "@/components/layout/AppLayout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { 
-  MessageSquare as MessageSquareIcon, 
-  Search as SearchIcon, 
-  HelpCircle as HelpCircleIcon, 
-  Play as PlayIcon, 
-  AlertCircle as AlertCircleIcon, 
-  Info as InfoIcon
-} from "lucide-react";
-import { format, addDays } from "date-fns";
-import AppLayout from "@/components/layout/AppLayout";
-import PendoSurvey from "@/components/pendo/PendoSurvey";
+import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { MessageSquare, FileQuestion, Phone, Mail, Send, Smile, Calendar, User } from "lucide-react";
+import { useUser } from "@/contexts/UserContext";
 
-interface ChatMessage {
-  sender: 'user' | 'agent';
+interface Message {
+  id: number;
   text: string;
-  timestamp: Date;
+  sender: 'user' | 'agent';
+  timestamp: string;
+  buttons?: {
+    text: string;
+    action: string;
+    pendoId?: string;
+  }[];
 }
 
 const Support = () => {
+  const [activeTab, setActiveTab] = useState('chat');
   const [message, setMessage] = useState('');
-  const [chatHistory, setChatHistory] = useState<ChatMessage[]>([
+  const [messages, setMessages] = useState<Message[]>([
     {
+      id: 1,
+      text: "Welcome to AcmeTravel support! How can I help you today?",
       sender: 'agent',
-      text: "Hello! I'm Travel Agent. How can I help with your travel plans today?",
-      timestamp: new Date()
+      timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
     }
   ]);
-  
-  // Function to generate travel dates within the next week
-  const generateTravelDates = () => {
-    const departDate = addDays(new Date(), Math.floor(Math.random() * 3) + 1); // 1-3 days from now
-    const returnDate = addDays(departDate, Math.floor(Math.random() * 4) + 2); // 2-5 days later
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const { user } = useUser();
+
+  // Function to generate a travel itinerary with dynamic dates
+  const generateItinerary = () => {
+    const today = new Date();
+    const travelDate = new Date(today);
+    travelDate.setDate(today.getDate() + 7); // Travel in a week
     
-    return {
-      depart: format(departDate, 'EEEE, MMMM d'),
-      return: format(returnDate, 'EEEE, MMMM d')
+    const returnDate = new Date(travelDate);
+    returnDate.setDate(travelDate.getDate() + 3); // 3-day trip
+    
+    const formatDate = (date: Date) => {
+      return date.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
     };
+    
+    return `Here's what I found for your trip from Chattanooga to New York:
+
+**Outbound: ${formatDate(travelDate)}**
+- Departure: Chattanooga (CHA) 7:15 AM
+- Arrival: New York (LGA) 9:45 AM
+- Flight: Delta DL4582
+- Duration: 2h 30m
+
+**Return: ${formatDate(returnDate)}**
+- Departure: New York (LGA) 5:30 PM
+- Arrival: Chattanooga (CHA) 8:05 PM
+- Flight: Delta DL3921
+- Duration: 2h 35m
+
+**Price: $387.42**`;
   };
 
-  // Handle sending a message to Travel Agent
-  const sendMessage = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!message.trim()) return;
-    
-    // Add user message to chat history
-    const userMessage: ChatMessage = {
-      sender: 'user',
-      text: message,
-      timestamp: new Date()
-    };
-    
-    setChatHistory(prev => [...prev, userMessage]);
-    setMessage('');
-    
-    // Process the message and generate response
-    setTimeout(() => {
-      if (message.toLowerCase().includes('hi') || message.toLowerCase().includes('hello')) {
-        // First response for greeting
-        const agentResponse: ChatMessage = {
-          sender: 'agent',
-          text: "Hi! I'd love to help you with that. What dates and which cities are you traveling to and from?",
-          timestamp: new Date()
-        };
-        setChatHistory(prev => [...prev, agentResponse]);
-        
-        // Auto-populate next user message after a delay
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
+
+  // Auto-responder for predefined messages
+  useEffect(() => {
+    const lastMessage = messages[messages.length - 1];
+    if (lastMessage?.sender === 'user') {
+      // If the message contains a greeting, respond with the travel question
+      if (lastMessage.text.toLowerCase().includes('hi') || 
+          lastMessage.text.toLowerCase().includes('hello')) {
         setTimeout(() => {
-          const dates = generateTravelDates();
-          const nextUserMessage: ChatMessage = {
-            sender: 'user',
-            text: `I need help booking travel for ${dates.depart} from Chattanooga to New York.`,
-            timestamp: new Date()
-          };
-          setChatHistory(prev => [...prev, nextUserMessage]);
-          
-          // Generate travel itinerary response
+          setMessages(prev => [...prev, {
+            id: prev.length + 1,
+            text: "Hi! I'd love to help you with that. What dates and which cities are you traveling to and from?",
+            sender: 'agent',
+            timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+          }]);
+        }, 500);
+      } 
+      // If message contains booking help or travel keywords
+      else if (lastMessage.text.toLowerCase().includes('help') && 
+               (lastMessage.text.toLowerCase().includes('book') || 
+                lastMessage.text.toLowerCase().includes('travel'))) {
+        
+        if (lastMessage.text.toLowerCase().includes('chattanooga') && 
+            lastMessage.text.toLowerCase().includes('new york')) {
           setTimeout(() => {
-            const price = Math.floor(Math.random() * 300) + 250;
-            const agentItinerary: ChatMessage = {
+            setMessages(prev => [...prev, {
+              id: prev.length + 1,
+              text: generateItinerary(),
               sender: 'agent',
-              text: `I found a great option for your trip from Chattanooga to New York on ${dates.depart} with a return on ${dates.return}!\n\n` +
-                    `✈️ Outbound: Chattanooga (CHA) to New York (LGA)\n` +
-                    `   Departure: ${dates.depart}, 8:15 AM\n` +
-                    `   Arrival: ${dates.depart}, 10:45 AM\n\n` +
-                    `✈️ Return: New York (LGA) to Chattanooga (CHA)\n` +
-                    `   Departure: ${dates.return}, 4:30 PM\n` +
-                    `   Arrival: ${dates.return}, 6:55 PM\n\n` +
-                    `💲 Total price: $${price}\n\n` +
-                    `Would you like to book this itinerary now?`,
-              timestamp: new Date()
-            };
-            setChatHistory(prev => [...prev, agentItinerary]);
-          }, 1500);
-        }, 3000);
-      } else {
-        // Generic response for other messages
-        const agentResponse: ChatMessage = {
-          sender: 'agent',
-          text: "I'm here to help with your travel plans. Can you provide more details about your trip?",
-          timestamp: new Date()
-        };
-        setChatHistory(prev => [...prev, agentResponse]);
+              timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+              buttons: [
+                {
+                  text: "Book Now",
+                  action: "book",
+                  pendoId: "chat-book-now-button"
+                }
+              ]
+            }]);
+          }, 800);
+        }
       }
-    }, 1000);
+    }
+  }, [messages]);
+
+  const handleSend = () => {
+    if (message.trim() === '') return;
+    
+    // Add the user message
+    setMessages(prev => [...prev, {
+      id: prev.length + 1,
+      text: message,
+      sender: 'user',
+      timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+    }]);
+    
+    setMessage('');
+  };
+
+  const handleExampleClick = (exampleText: string) => {
+    setMessages(prev => [...prev, {
+      id: prev.length + 1,
+      text: exampleText,
+      sender: 'user',
+      timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+    }]);
   };
   
-  // Sample FAQ data
-  const faqs = [
-    {
-      question: "How do I modify or cancel a booking?",
-      answer: "You can modify or cancel bookings directly from your trip summary page. Navigate to Dashboard > select the trip > click Modify or Cancel. Changes or cancellations may be subject to airline, hotel, or car rental policies."
-    },
-    {
-      question: "Is Travel Agent available 24/7?",
-      answer: "Yes! Travel Agent is available 24/7 to assist with booking needs, answer questions, or help troubleshoot issues with your travel arrangements."
-    },
-    {
-      question: "How can I get a receipt for my booking?",
-      answer: "Receipts are automatically sent to your email after booking. You can also access them by going to your Trip Summary page and clicking on 'Download' or 'Print' to get a PDF copy."
-    },
-    {
-      question: "What happens if my flight is delayed or cancelled?",
-      answer: "Travel Agent will automatically notify you of any changes to your itinerary. For flight delays or cancellations, you'll receive alternatives directly in the app, where you can select your preferred rebooking option."
-    },
-    {
-      question: "Can I book for multiple travelers?",
-      answer: "Yes, you can add multiple travelers during the booking process. You can save frequent travelers in your profile for quicker booking in the future."
-    }
+  const currentDate = new Date();
+  const nextWeek = new Date();
+  nextWeek.setDate(currentDate.getDate() + 7);
+  const formattedDate = nextWeek.toLocaleDateString('en-US', { month: 'long', day: 'numeric' });
+
+  // Show examples when chat starts
+  const chatExamples = [
+    { text: "Hi!" },
+    { text: `I need help booking travel for ${formattedDate} from Chattanooga to New York.` },
+    { text: "How do I cancel my booking?" }
   ];
-  
+
   return (
     <AppLayout>
-      <div className="max-w-6xl mx-auto">
-        <div className="mb-6">
-          <h1 className="text-2xl font-bold text-acme-gray-dark">Help & Support</h1>
-          <p className="text-gray-500">Get assistance with your travel needs</p>
-        </div>
+      <div className="max-w-6xl mx-auto px-4 py-6">
+        <h1 className="text-2xl font-bold text-acme-gray-dark mb-6">Help & Support</h1>
         
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Left Column - Help Resources */}
-          <div className="lg:col-span-2 space-y-6">
-            <Tabs defaultValue="faq" className="w-full" data-pendo-id="help-tabs">
-              <TabsList className="grid grid-cols-3 mb-4 w-full">
-                <TabsTrigger value="faq" data-pendo-id="tab-faq">
-                  <HelpCircleIcon className="h-4 w-4 mr-2" />
-                  FAQs
-                </TabsTrigger>
-                <TabsTrigger value="videos" data-pendo-id="tab-videos">
-                  <PlayIcon className="h-4 w-4 mr-2" />
-                  How-to Videos
-                </TabsTrigger>
-                <TabsTrigger value="troubleshoot" data-pendo-id="tab-troubleshoot">
-                  <AlertCircleIcon className="h-4 w-4 mr-2" />
-                  Troubleshooting
-                </TabsTrigger>
-              </TabsList>
+        <div className="lg:flex gap-6">
+          {/* Left sidebar */}
+          <div className="lg:w-1/4 mb-6 lg:mb-0">
+            <div className="bg-white p-4 rounded-lg border border-gray-200 shadow-sm">
+              <h2 className="font-semibold text-lg mb-4">Contact Options</h2>
               
-              {/* FAQ Tab Content */}
-              <TabsContent value="faq" data-pendo-id="faq-content">
-                <Card>
-                  <CardHeader className="pb-3">
-                    <CardTitle>Frequently Asked Questions</CardTitle>
-                    <CardDescription>
-                      Find quick answers to common questions
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-2">
-                      <div className="relative">
-                        <SearchIcon className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
-                        <Input 
-                          placeholder="Search FAQs..." 
-                          className="pl-9"
-                          data-pendo-id="faq-search"
-                        />
-                      </div>
-                      
-                      <Accordion type="single" collapsible className="mt-4 w-full">
-                        {faqs.map((faq, index) => (
-                          <AccordionItem key={index} value={`faq-${index}`}>
-                            <AccordionTrigger
-                              className="text-left hover:text-acme-purple"
-                              data-pendo-id={`faq-question-${index}`}
-                            >
-                              {faq.question}
-                            </AccordionTrigger>
-                            <AccordionContent className="text-gray-600">
-                              {faq.answer}
-                            </AccordionContent>
-                          </AccordionItem>
-                        ))}
-                      </Accordion>
-                    </div>
-                  </CardContent>
-                </Card>
-              </TabsContent>
-              
-              {/* Videos Tab Content */}
-              <TabsContent value="videos" data-pendo-id="videos-content">
-                <Card>
-                  <CardHeader>
-                    <CardTitle>How-to Videos</CardTitle>
-                    <CardDescription>Watch step-by-step guides</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    {/* Video Tutorials - Pendo Session Replay Simulation */}
-                    <div className="space-y-4">
-                      <Card className="overflow-hidden">
-                        <div className="aspect-video bg-gray-100 relative" data-pendo-id="video-rebooking">
-                          <div className="absolute inset-0 flex items-center justify-center">
-                            <div className="text-center px-4">
-                              <PlayIcon className="h-12 w-12 text-acme-purple mx-auto mb-2" />
-                              <h3 className="font-medium text-gray-800">
-                                How to Rebook a Flight
-                              </h3>
-                              <p className="text-sm text-gray-500 mt-1">
-                                This would be a session replay showing rebooking process
-                              </p>
-                            </div>
-                          </div>
-                        </div>
-                        <CardContent className="py-3">
-                          <div className="flex items-center justify-between">
-                            <span className="text-sm text-gray-500">2:45</span>
-                            <Button 
-                              variant="ghost" 
-                              size="sm" 
-                              className="text-acme-purple hover:text-acme-purple-dark"
-                              data-pendo-id="watch-video-rebooking"
-                            >
-                              Watch Video
-                            </Button>
-                          </div>
-                        </CardContent>
-                      </Card>
-                      
-                      <Card className="overflow-hidden">
-                        <div className="aspect-video bg-gray-100 relative" data-pendo-id="video-travel-agent">
-                          <div className="absolute inset-0 flex items-center justify-center">
-                            <div className="text-center px-4">
-                              <PlayIcon className="h-12 w-12 text-acme-purple mx-auto mb-2" />
-                              <h3 className="font-medium text-gray-800">
-                                Using Travel Agent to Plan Your Trip
-                              </h3>
-                              <p className="text-sm text-gray-500 mt-1">
-                                Learn how to get the most from our AI assistant
-                              </p>
-                            </div>
-                          </div>
-                        </div>
-                        <CardContent className="py-3">
-                          <div className="flex items-center justify-between">
-                            <span className="text-sm text-gray-500">3:12</span>
-                            <Button 
-                              variant="ghost" 
-                              size="sm" 
-                              className="text-acme-purple hover:text-acme-purple-dark"
-                              data-pendo-id="watch-video-travel-agent"
-                            >
-                              Watch Video
-                            </Button>
-                          </div>
-                        </CardContent>
-                      </Card>
-                    </div>
-                  </CardContent>
-                </Card>
-              </TabsContent>
-              
-              {/* Troubleshooting Tab Content */}
-              <TabsContent value="troubleshoot" data-pendo-id="troubleshoot-content">
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Common Issues</CardTitle>
-                    <CardDescription>Solve problems with your bookings</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-4">
-                      {/* Rage Click Test Area - Pendo Frustration Metric Target */}
-                      <Card className="border border-red-100" data-pendo-id="flight-rebooking-issue">
-                        <CardContent className="p-4">
-                          <div className="flex items-start gap-3">
-                            <div className="bg-red-50 p-2 rounded-full">
-                              <AlertCircleIcon className="h-5 w-5 text-red-500" />
-                            </div>
-                            <div>
-                              <h3 className="font-medium">Issues with Flight Rebooking</h3>
-                              <p className="text-sm text-gray-600 mt-1">
-                                Some users experience errors when trying to rebook flights within 24 hours of departure.
-                              </p>
-                              <div className="mt-3">
-                                <Button
-                                  variant="outline"
-                                  size="sm"
-                                  className="mr-2"
-                                  data-pendo-id="troubleshoot-rebooking"
-                                >
-                                  View Solution
-                                </Button>
-                                <Button
-                                  size="sm"
-                                  className="bg-acme-pink hover:bg-opacity-90 text-white"
-                                  data-pendo-id="contact-support-rebooking"
-                                >
-                                  Contact Support
-                                </Button>
-                              </div>
-                            </div>
-                          </div>
-                        </CardContent>
-                      </Card>
-                      
-                      <Card className="border border-amber-100" data-pendo-id="payment-processing-issue">
-                        <CardContent className="p-4">
-                          <div className="flex items-start gap-3">
-                            <div className="bg-amber-50 p-2 rounded-full">
-                              <InfoIcon className="h-5 w-5 text-amber-500" />
-                            </div>
-                            <div>
-                              <h3 className="font-medium">Payment Processing Delays</h3>
-                              <p className="text-sm text-gray-600 mt-1">
-                                Occasionally, payment confirmations may be delayed by up to 15 minutes.
-                              </p>
-                              <div className="mt-3">
-                                <Button
-                                  variant="outline"
-                                  size="sm"
-                                  className="mr-2"
-                                  data-pendo-id="troubleshoot-payment"
-                                >
-                                  View Solution
-                                </Button>
-                              </div>
-                            </div>
-                          </div>
-                        </CardContent>
-                      </Card>
-                    </div>
-                  </CardContent>
-                </Card>
-              </TabsContent>
-            </Tabs>
+              <div className="space-y-3">
+                <div className="flex items-center p-2 rounded-md hover:bg-gray-50 cursor-pointer">
+                  <div className="bg-acme-purple/10 p-2 rounded-full mr-3">
+                    <MessageSquare className="h-4 w-4 text-acme-purple" />
+                  </div>
+                  <div>
+                    <p className="font-medium text-sm">Live Chat</p>
+                    <p className="text-xs text-gray-500">Available 24/7</p>
+                  </div>
+                </div>
+                
+                <div className="flex items-center p-2 rounded-md hover:bg-gray-50 cursor-pointer">
+                  <div className="bg-blue-100 p-2 rounded-full mr-3">
+                    <Phone className="h-4 w-4 text-blue-600" />
+                  </div>
+                  <div>
+                    <p className="font-medium text-sm">Phone Support</p>
+                    <p className="text-xs text-gray-500">1-800-555-1234</p>
+                  </div>
+                </div>
+                
+                <div className="flex items-center p-2 rounded-md hover:bg-gray-50 cursor-pointer">
+                  <div className="bg-green-100 p-2 rounded-full mr-3">
+                    <Mail className="h-4 w-4 text-green-600" />
+                  </div>
+                  <div>
+                    <p className="font-medium text-sm">Email Support</p>
+                    <p className="text-xs text-gray-500">support@acmetravel.com</p>
+                  </div>
+                </div>
+                
+                <div className="flex items-center p-2 rounded-md hover:bg-gray-50 cursor-pointer">
+                  <div className="bg-amber-100 p-2 rounded-full mr-3">
+                    <FileQuestion className="h-4 w-4 text-amber-600" />
+                  </div>
+                  <div>
+                    <p className="font-medium text-sm">Help Center</p>
+                    <p className="text-xs text-gray-500">FAQs & guides</p>
+                  </div>
+                </div>
+              </div>
+            </div>
             
-            {/* CSAT Survey - Pendo Survey Target */}
-            <div data-pendo-id="support-satisfaction-survey">
-              <PendoSurvey 
-                type="csat" 
-                title="How was your support experience?" 
-                description="Please rate your recent experience with our support resources."
-                pendoId="support-csat-survey"
-              />
+            <div className="mt-4 bg-white p-4 rounded-lg border border-gray-200 shadow-sm">
+              <h2 className="font-semibold text-lg mb-2">Quick Links</h2>
+              <ul className="space-y-1 text-sm">
+                <li className="text-acme-purple hover:underline cursor-pointer">Cancellation Policy</li>
+                <li className="text-acme-purple hover:underline cursor-pointer">Baggage Information</li>
+                <li className="text-acme-purple hover:underline cursor-pointer">Travel Insurance</li>
+                <li className="text-acme-purple hover:underline cursor-pointer">COVID-19 Travel Updates</li>
+                <li className="text-acme-purple hover:underline cursor-pointer">Manage My Booking</li>
+              </ul>
             </div>
           </div>
           
-          {/* Right Column - Travel Agent Chat */}
-          <div className="space-y-4">
-            <Card className="h-[500px] flex flex-col" data-pendo-id="travel-agent-chat">
-              <CardHeader className="pb-3 border-b">
-                <CardTitle className="flex items-center">
-                  <MessageSquareIcon className="h-5 w-5 mr-2 text-acme-purple" />
-                  Chat with Travel Agent
-                </CardTitle>
-                <CardDescription>
-                  Ask questions or get help with your bookings
-                </CardDescription>
-              </CardHeader>
+          {/* Main chat area */}
+          <div className="lg:w-3/4">
+            <div className="bg-white rounded-lg border border-gray-200 shadow-sm h-[600px] flex flex-col">
+              <div className="border-b border-gray-200 p-4">
+                <Tabs defaultValue="chat" className="w-full" onValueChange={setActiveTab}>
+                  <TabsList className="grid w-full grid-cols-2">
+                    <TabsTrigger value="chat">Travel Agent Chat</TabsTrigger>
+                    <TabsTrigger value="faq">FAQ</TabsTrigger>
+                  </TabsList>
+                </Tabs>
+              </div>
               
-              <CardContent className="flex-grow p-4 overflow-auto flex flex-col">
-                {/* Chat history */}
-                <div className="flex-grow space-y-4">
-                  {chatHistory.map((chat, index) => (
-                    <div key={index} className="mb-4">
-                      <div className={`${
-                        chat.sender === 'agent' 
-                          ? 'bg-acme-purple/10 rounded-lg rounded-tl-none' 
-                          : 'bg-acme-pink/10 rounded-lg rounded-tr-none ml-auto'
-                        } p-3 max-w-[85%] inline-block`}
+              {activeTab === 'chat' && (
+                <>
+                  <div className="flex-1 overflow-y-auto p-4 space-y-4" data-pendo-id="support-chat-messages">
+                    {messages.map((msg) => (
+                      <div 
+                        key={msg.id} 
+                        className={`flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}
                       >
-                        <p className="text-sm whitespace-pre-line">
-                          {chat.text}
-                        </p>
-                        <div className="text-xs text-gray-500 mt-1">
-                          {format(chat.timestamp, 'h:mm a')}
+                        <div className={`max-w-[80%] ${msg.sender === 'user' ? 'bg-acme-purple text-white' : 'bg-gray-100'} rounded-lg px-4 py-3`}>
+                          {msg.sender === 'agent' && (
+                            <div className="flex items-center mb-2">
+                              <Avatar className="h-6 w-6 mr-2">
+                                <AvatarFallback className="bg-acme-pink text-white text-xs">AT</AvatarFallback>
+                              </Avatar>
+                              <span className="text-sm font-medium">AcmeTravel Agent</span>
+                            </div>
+                          )}
+                          <div className={`text-sm whitespace-pre-line ${msg.sender === 'user' ? 'text-white' : 'text-gray-800'}`}>
+                            {msg.text}
+                          </div>
+                          {msg.buttons && (
+                            <div className="mt-3 flex flex-wrap gap-2">
+                              {msg.buttons.map((button, index) => (
+                                <Button 
+                                  key={index}
+                                  data-pendo-id={button.pendoId || `chat-button-${index}`}
+                                  className="bg-acme-purple hover:bg-acme-purple-dark text-white"
+                                >
+                                  {button.text}
+                                </Button>
+                              ))}
+                            </div>
+                          )}
+                          <div className={`text-xs mt-1 ${msg.sender === 'user' ? 'text-white/70' : 'text-gray-500'}`}>
+                            {msg.timestamp}
+                          </div>
+                        </div>
+                        {msg.sender === 'user' && (
+                          <Avatar className="h-6 w-6 ml-2 mt-1">
+                            <AvatarFallback className="bg-gray-300 text-gray-800 text-xs">
+                              {user.initials}
+                            </AvatarFallback>
+                          </Avatar>
+                        )}
+                      </div>
+                    ))}
+                    
+                    {/* Chat examples shown when chat starts */}
+                    {messages.length < 3 && (
+                      <div className="mt-4">
+                        <p className="text-xs text-gray-500 mb-2">Try asking:</p>
+                        <div className="flex flex-wrap gap-2">
+                          {chatExamples.map((example, index) => (
+                            <Button 
+                              key={index}
+                              variant="outline"
+                              size="sm"
+                              className="text-xs"
+                              onClick={() => handleExampleClick(example.text)}
+                            >
+                              {example.text}
+                            </Button>
+                          ))}
                         </div>
                       </div>
-                    </div>
-                  ))}
-                </div>
-                
-                {/* Chat input */}
-                <form onSubmit={sendMessage} className="mt-auto">
-                  <div className="relative">
-                    <Input
-                      placeholder="Type your message..."
-                      value={message}
-                      onChange={(e) => setMessage(e.target.value)}
-                      className="pr-20"
-                      data-pendo-id="chat-input"
-                    />
-                    <Button
-                      type="submit"
-                      size="sm"
-                      className="absolute right-1 top-1 bg-acme-purple hover:bg-acme-purple-dark text-white h-8"
-                      data-pendo-id="send-message"
-                    >
-                      Send
-                    </Button>
+                    )}
+                    
+                    <div ref={messagesEndRef} />
                   </div>
-                </form>
-              </CardContent>
-            </Card>
-            
-            <Card data-pendo-id="contact-options">
-              <CardHeader>
-                <CardTitle className="text-base">Need More Help?</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-2">
-                <Button 
-                  variant="outline" 
-                  className="w-full justify-start"
-                  data-pendo-id="email-support"
-                >
-                  <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                  </svg>
-                  Email Support
-                </Button>
-                <Button 
-                  variant="outline" 
-                  className="w-full justify-start"
-                  data-pendo-id="phone-support"
-                >
-                  <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-                  </svg>
-                  Call Support
-                </Button>
-              </CardContent>
-            </Card>
+                  
+                  <div className="p-4 border-t border-gray-200">
+                    <div className="flex gap-2">
+                      <Input
+                        className="flex-1"
+                        placeholder="Type your message..."
+                        value={message}
+                        onChange={(e) => setMessage(e.target.value)}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter') handleSend();
+                        }}
+                      />
+                      <Button 
+                        onClick={handleSend}
+                        className="bg-acme-purple hover:bg-acme-purple-dark text-white"
+                      >
+                        <Send className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </div>
+                </>
+              )}
+              
+              {activeTab === 'faq' && (
+                <div className="flex-1 overflow-y-auto p-4">
+                  {/* FAQ content would go here */}
+                  <div className="space-y-4">
+                    <div>
+                      <h3 className="font-semibold mb-1">How do I change or cancel my reservation?</h3>
+                      <p className="text-sm text-gray-600">You can modify or cancel your reservation by visiting the "Trip Summary" page and selecting the reservation you wish to change. Fees may apply depending on your fare type and timing.</p>
+                    </div>
+                    
+                    <div>
+                      <h3 className="font-semibold mb-1">What is your baggage policy?</h3>
+                      <p className="text-sm text-gray-600">Baggage allowances vary by fare class and destination. Most economy tickets include one carry-on and one personal item. Checked baggage fees start at $30 for the first bag.</p>
+                    </div>
+                    
+                    <div>
+                      <h3 className="font-semibold mb-1">How do I apply travel credits or vouchers?</h3>
+                      <p className="text-sm text-gray-600">During checkout, select "Apply Credits or Vouchers" and enter your voucher code. The system will automatically apply any valid credits to your purchase.</p>
+                    </div>
+                    
+                    <div>
+                      <h3 className="font-semibold mb-1">What COVID-19 restrictions are in place?</h3>
+                      <p className="text-sm text-gray-600">COVID-19 restrictions vary by destination. Please check the travel requirements page for the most up-to-date information about your specific destination.</p>
+                    </div>
+                    
+                    <div className="mt-6 text-center" data-pendo-id="faq-pendo-guide-target">
+                      <p className="text-sm text-gray-500 mb-2">Can't find what you're looking for?</p>
+                      <Button 
+                        onClick={() => setActiveTab('chat')}
+                        className="bg-acme-purple hover:bg-acme-purple-dark text-white"
+                      >
+                        Chat with an Agent
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </div>
