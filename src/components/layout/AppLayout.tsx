@@ -41,7 +41,7 @@ const AppLayout = ({
         <div className="flex items-center justify-between">
           <div className="flex items-center">
             <Link to="/" className="flex items-center" data-pendo-id="header-logo">
-              <img alt="Voyagr Logo" src="/lovable-uploads/5318bb67-57bb-48c2-a971-4f5dd172859f.png" className="h-20 object-cover" />
+              <img alt="Voyagr Logo" className="h-50 object-fill" src="/lovable-uploads/9b2112ab-cd15-4128-b9ee-bed226acc140.png" />
             </Link>
           </div>
           
