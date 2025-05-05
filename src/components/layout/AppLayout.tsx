@@ -1,13 +1,14 @@
-
 import { ReactNode } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
 import { useUser } from "@/contexts/UserContext";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Home as HomeIcon, PlusCircle as PlusCircleIcon, Calendar as CalendarIcon, User as UserIcon, HelpCircle as HelpCircleIcon, MessageSquare as MessageSquareIcon, Briefcase } from "lucide-react";
+
 interface AppLayoutProps {
   children: ReactNode;
 }
+
 const AppLayout = ({
   children
 }: AppLayoutProps) => {
@@ -15,6 +16,7 @@ const AppLayout = ({
   const {
     user
   } = useUser();
+
   const navItems = [{
     path: '/',
     label: 'Dashboard',
@@ -36,6 +38,7 @@ const AppLayout = ({
     label: 'Help',
     icon: HelpCircleIcon
   }];
+
   return <div className="min-h-screen flex flex-col bg-gray-50" data-pendo-id="app-layout-container">
       {/* Top Navigation Bar */}
       <header className="bg-white border-b border-gray-200 py-2 px-4" data-pendo-id="app-header">
@@ -55,7 +58,7 @@ const AppLayout = ({
           <div className="flex items-center gap-3">
             <div className="hidden md:flex items-center gap-2 text-gray-600">
               <Briefcase className="h-4 w-4 text-sky-blue" />
-              <span className="text-sm font-medium">{user.company}</span>
+              <span className="text-sm font-medium">Voyagr by AcmeCorp</span>
             </div>
             
             <Button variant="outline" size="sm" className="hidden md:flex text-gray-600" data-pendo-id="header-help-button">Menu</Button>
@@ -97,4 +100,5 @@ const AppLayout = ({
       </div>
     </div>;
 };
+
 export default AppLayout;
