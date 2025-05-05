@@ -114,60 +114,87 @@ const DashboardContent = () => {
               {/* Trip 1 */}
               <div className="p-4 hover:bg-gray-50 transition-colors">
                 <div className="flex items-start justify-between mb-2">
-                  <div>
-                    <h4 className="font-medium mb-1">New York → San Francisco</h4>
-                    <div className="flex items-center text-sm text-gray-600">
-                      <Calendar className="h-3 w-3 mr-1" />
-                      May 15-19, 2025
+                  <div className="flex gap-3">
+                    <div className="w-16 h-16 rounded-md overflow-hidden flex-shrink-0">
+                      <img 
+                        src="https://images.unsplash.com/photo-1496442226666-8d4d0e62e6e9?auto=format&fit=crop&q=80&w=200&h=200" 
+                        alt="New York" 
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                    <div>
+                      <h4 className="font-medium mb-1">New York → San Francisco</h4>
+                      <div className="flex items-center text-sm text-gray-600">
+                        <Calendar className="h-3 w-3 mr-1" />
+                        May 15-19, 2025
+                      </div>
+                      <div className="flex items-center text-sm text-gray-600">
+                        <MapPin className="h-3 w-3 mr-1" />
+                        Marriott Union Square
+                      </div>
                     </div>
                   </div>
                   <span className="px-2 py-1 bg-sky-blue/10 text-sky-blue text-xs rounded-full">
                     Upcoming
                   </span>
                 </div>
-                <div className="flex items-center text-sm text-gray-600">
-                  <MapPin className="h-3 w-3 mr-1" />
-                  Marriott Union Square
-                </div>
               </div>
               
               {/* Trip 2 */}
               <div className="p-4 hover:bg-gray-50 transition-colors">
                 <div className="flex items-start justify-between mb-2">
-                  <div>
-                    <h4 className="font-medium mb-1">Chicago → Austin</h4>
-                    <div className="flex items-center text-sm text-gray-600">
-                      <Calendar className="h-3 w-3 mr-1" />
-                      June 3-7, 2025
+                  <div className="flex gap-3">
+                    <div className="w-16 h-16 rounded-md overflow-hidden flex-shrink-0">
+                      <img 
+                        src="https://images.unsplash.com/photo-1602969565011-0df3eb0bde22?auto=format&fit=crop&q=80&w=200&h=200" 
+                        alt="Chicago" 
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                    <div>
+                      <h4 className="font-medium mb-1">Chicago → Austin</h4>
+                      <div className="flex items-center text-sm text-gray-600">
+                        <Calendar className="h-3 w-3 mr-1" />
+                        June 3-7, 2025
+                      </div>
+                      <div className="flex items-center text-sm text-gray-600">
+                        <MapPin className="h-3 w-3 mr-1" />
+                        Hilton Downtown Austin
+                      </div>
                     </div>
                   </div>
                   <span className="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded-full">
                     Pending Approval
                   </span>
                 </div>
-                <div className="flex items-center text-sm text-gray-600">
-                  <MapPin className="h-3 w-3 mr-1" />
-                  Hilton Downtown Austin
-                </div>
               </div>
               
               {/* Trip 3 */}
               <div className="p-4 hover:bg-gray-50 transition-colors">
                 <div className="flex items-start justify-between mb-2">
-                  <div>
-                    <h4 className="font-medium mb-1">Seattle → Denver</h4>
-                    <div className="flex items-center text-sm text-gray-600">
-                      <Calendar className="h-3 w-3 mr-1" />
-                      June 22-25, 2025
+                  <div className="flex gap-3">
+                    <div className="w-16 h-16 rounded-md overflow-hidden flex-shrink-0">
+                      <img 
+                        src="https://images.unsplash.com/photo-1499856871958-5b9357976b82?auto=format&fit=crop&q=80&w=200&h=200" 
+                        alt="Seattle" 
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                    <div>
+                      <h4 className="font-medium mb-1">Seattle → Denver</h4>
+                      <div className="flex items-center text-sm text-gray-600">
+                        <Calendar className="h-3 w-3 mr-1" />
+                        June 22-25, 2025
+                      </div>
+                      <div className="flex items-center text-sm text-gray-600">
+                        <MapPin className="h-3 w-3 mr-1" />
+                        The Crawford Hotel
+                      </div>
                     </div>
                   </div>
                   <span className="px-2 py-1 bg-sky-blue/10 text-sky-blue text-xs rounded-full">
                     Booked
                   </span>
-                </div>
-                <div className="flex items-center text-sm text-gray-600">
-                  <MapPin className="h-3 w-3 mr-1" />
-                  The Crawford Hotel
                 </div>
               </div>
             </div>
@@ -186,27 +213,96 @@ const DashboardContent = () => {
             <CardDescription>Common tasks and shortcuts</CardDescription>
           </CardHeader>
           <CardContent className="grid grid-cols-2 gap-4">
-            <Button variant="outline" className="h-24 flex flex-col items-center justify-center space-y-2">
-              <Plane className="h-6 w-6 text-sky-blue" />
-              <span>Book Flight</span>
+            <Button variant="outline" className="h-24 flex flex-col items-center justify-center space-y-2 relative overflow-hidden group">
+              <div className="absolute inset-0 opacity-10 group-hover:opacity-20 transition-opacity">
+                <img 
+                  src="https://images.unsplash.com/photo-1436491865332-7a61a109cc05?auto=format&fit=crop&q=80&w=300" 
+                  alt="Airplane" 
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              <Plane className="h-6 w-6 text-sky-blue relative z-10" />
+              <span className="relative z-10">Book Flight</span>
             </Button>
             
-            <Button variant="outline" className="h-24 flex flex-col items-center justify-center space-y-2">
-              <MapPin className="h-6 w-6 text-sunset-coral" />
-              <span>Book Hotel</span>
+            <Button variant="outline" className="h-24 flex flex-col items-center justify-center space-y-2 relative overflow-hidden group">
+              <div className="absolute inset-0 opacity-10 group-hover:opacity-20 transition-opacity">
+                <img 
+                  src="https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?auto=format&fit=crop&q=80&w=300" 
+                  alt="Hotel" 
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              <MapPin className="h-6 w-6 text-sunset-coral relative z-10" />
+              <span className="relative z-10">Book Hotel</span>
             </Button>
             
-            <Button variant="outline" className="h-24 flex flex-col items-center justify-center space-y-2">
-              <Calendar className="h-6 w-6 text-midnight-navy" />
-              <span>Schedule Meeting</span>
+            <Button variant="outline" className="h-24 flex flex-col items-center justify-center space-y-2 relative overflow-hidden group">
+              <div className="absolute inset-0 opacity-10 group-hover:opacity-20 transition-opacity">
+                <img 
+                  src="https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&q=80&w=300" 
+                  alt="Calendar" 
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              <Calendar className="h-6 w-6 text-midnight-navy relative z-10" />
+              <span className="relative z-10">Schedule Meeting</span>
             </Button>
             
-            <Button variant="outline" className="h-24 flex flex-col items-center justify-center space-y-2">
-              <Users className="h-6 w-6 text-green-500" />
-              <span>Team Travel</span>
+            <Button variant="outline" className="h-24 flex flex-col items-center justify-center space-y-2 relative overflow-hidden group">
+              <div className="absolute inset-0 opacity-10 group-hover:opacity-20 transition-opacity">
+                <img 
+                  src="https://images.unsplash.com/photo-1600880292089-90a7e086ee0c?auto=format&fit=crop&q=80&w=300" 
+                  alt="Team" 
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              <Users className="h-6 w-6 text-green-500 relative z-10" />
+              <span className="relative z-10">Team Travel</span>
             </Button>
           </CardContent>
         </Card>
+      </div>
+
+      {/* Featured Destinations */}
+      <div>
+        <h2 className="text-xl font-semibold text-midnight-navy mb-4">Featured Destinations</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+          {[
+            { 
+              city: "Tokyo", 
+              country: "Japan", 
+              image: "https://images.unsplash.com/photo-1513407030348-c983a97b98d8?auto=format&fit=crop&q=80&w=300&h=200"
+            },
+            { 
+              city: "Paris", 
+              country: "France", 
+              image: "https://images.unsplash.com/photo-1499856871958-5b9357976b82?auto=format&fit=crop&q=80&w=300&h=200"
+            },
+            { 
+              city: "Barcelona", 
+              country: "Spain", 
+              image: "https://images.unsplash.com/photo-1583422409516-2895a77efded?auto=format&fit=crop&q=80&w=300&h=200"
+            },
+            { 
+              city: "Sydney", 
+              country: "Australia", 
+              image: "https://images.unsplash.com/photo-1506973035872-a4ec16b8e8d9?auto=format&fit=crop&q=80&w=300&h=200"
+            }
+          ].map((destination, index) => (
+            <div key={index} className="relative rounded-lg overflow-hidden group h-48 shadow-md">
+              <img 
+                src={destination.image} 
+                alt={destination.city} 
+                className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex flex-col justify-end p-3">
+                <h3 className="text-white font-semibold">{destination.city}</h3>
+                <p className="text-white/80 text-sm">{destination.country}</p>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );
