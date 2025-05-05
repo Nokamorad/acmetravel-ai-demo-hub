@@ -1,9 +1,8 @@
-
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
-import { Calendar, MapPin, Plane, Plus, TrendingUp, User, Users } from "lucide-react";
+import { Calendar, ChevronRight, MapPin, Plane, Plus, TrendingUp, User, Users } from "lucide-react";
 
 const DashboardContent = () => {
   return (
@@ -20,8 +19,11 @@ const DashboardContent = () => {
           </Button>
           <Sheet>
             <SheetTrigger asChild>
-              <Button variant="outline" className="border-sky-blue text-sky-blue hover:bg-sky-blue/10">
-                <User className="h-4 w-4 mr-2" /> Travel Profile
+              <Button variant="outline" className="border-sky-blue text-sky-blue hover:bg-sky-blue/10 flex justify-between">
+                <span className="flex items-center">
+                  <User className="h-4 w-4 mr-2" /> Travel Profile
+                </span>
+                <ChevronRight className="h-4 w-4 ml-2" />
               </Button>
             </SheetTrigger>
             <SheetContent>
