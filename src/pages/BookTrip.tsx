@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import AppLayout from "@/components/layout/AppLayout";
 import { Button } from "@/components/ui/button";
@@ -175,7 +174,7 @@ const BookTrip = () => {
               
               <div className="mt-6 flex justify-end">
                 <Button 
-                  className="bg-acme-purple hover:bg-acme-purple-dark text-white px-8"
+                  className="bg-sky-blue hover:bg-sky-blue/90 text-white px-8"
                   data-pendo-id="search-flights"
                 >
                   <SearchIcon className="mr-2 h-4 w-4" />
@@ -201,18 +200,45 @@ const BookTrip = () => {
           <TabsContent value="hotels">
             <Card className="border shadow-sm p-6">
               <p className="text-center text-gray-500">Hotel booking functionality would be implemented here.</p>
+              <div className="mt-6 flex justify-end">
+                <Button 
+                  className="bg-sky-blue hover:bg-sky-blue/90 text-white px-8"
+                  data-pendo-id="search-hotels"
+                >
+                  <SearchIcon className="mr-2 h-4 w-4" />
+                  Search hotels
+                </Button>
+              </div>
             </Card>
           </TabsContent>
           
           <TabsContent value="trains">
             <Card className="border shadow-sm p-6">
               <p className="text-center text-gray-500">Train booking functionality would be implemented here.</p>
+              <div className="mt-6 flex justify-end">
+                <Button 
+                  className="bg-sky-blue hover:bg-sky-blue/90 text-white px-8"
+                  data-pendo-id="search-trains"
+                >
+                  <SearchIcon className="mr-2 h-4 w-4" />
+                  Search trains
+                </Button>
+              </div>
             </Card>
           </TabsContent>
           
           <TabsContent value="cars">
             <Card className="border shadow-sm p-6">
               <p className="text-center text-gray-500">Car rental functionality would be implemented here.</p>
+              <div className="mt-6 flex justify-end">
+                <Button 
+                  className="bg-sky-blue hover:bg-sky-blue/90 text-white px-8"
+                  data-pendo-id="search-cars"
+                >
+                  <SearchIcon className="mr-2 h-4 w-4" />
+                  Search cars
+                </Button>
+              </div>
             </Card>
           </TabsContent>
         </Tabs>
