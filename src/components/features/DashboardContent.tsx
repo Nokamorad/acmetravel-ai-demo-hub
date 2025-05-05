@@ -19,10 +19,10 @@ const DashboardContent = () => {
           </Button>
           <Sheet>
             <SheetTrigger asChild>
-              <Button variant="outline" className="border-sky-blue text-sky-blue hover:bg-sky-blue/10 flex justify-between">
-                <span className="flex items-center">
+              <Button variant="outline" className="border-sky-blue text-sky-blue hover:bg-sky-blue/10 flex items-center justify-between">
+                <div className="flex items-center">
                   <User className="h-4 w-4 mr-2" /> Travel Profile
-                </span>
+                </div>
                 <ChevronRight className="h-4 w-4 ml-2" />
               </Button>
             </SheetTrigger>
