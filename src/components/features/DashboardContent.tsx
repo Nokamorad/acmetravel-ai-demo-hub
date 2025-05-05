@@ -1,3 +1,4 @@
+
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
@@ -279,14 +280,14 @@ const DashboardContent = () => {
               image: "https://plus.unsplash.com/premium_photo-1661919210043-fd847a58522d?q=80&w=2071&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
             },
             { 
-              city: "Barcelona", 
-              country: "Spain", 
-              image: "https://images.unsplash.com/photo-1583422409516-2895a77efded?auto=format&fit=crop&q=80&w=300&h=200"
+              city: "Austin", 
+              country: "USA", 
+              image: "https://www.istockphoto.com/photo/downtown-austin-texas-with-capital-and-riverfront-gm1359349109-432722861"
             },
             { 
-              city: "Sydney", 
-              country: "Australia", 
-              image: "https://images.unsplash.com/photo-1506973035872-a4ec16b8e8d9?auto=format&fit=crop&q=80&w=300&h=200"
+              city: "Denver", 
+              country: "USA", 
+              image: "https://stock.adobe.com/images/panorama-downtown-denver/220840556"
             }
           ].map((destination, index) => (
             <div key={index} className="relative rounded-lg overflow-hidden group h-48 shadow-md">
