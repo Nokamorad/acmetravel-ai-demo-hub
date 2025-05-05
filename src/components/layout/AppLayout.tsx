@@ -52,9 +52,7 @@ const AppLayout = ({
           </nav>
           
           <div className="flex items-center gap-3">
-            <Button variant="outline" size="sm" className="hidden md:flex text-gray-600" data-pendo-id="header-help-button">
-              Need help?
-            </Button>
+            <Button variant="outline" size="sm" className="hidden md:flex text-gray-600" data-pendo-id="header-help-button">Menu</Button>
             
             <div className="flex items-center gap-2 border rounded-full px-2 py-1 bg-gray-50" data-pendo-id="user-profile-avatar">
               <Avatar className="h-6 w-6">
