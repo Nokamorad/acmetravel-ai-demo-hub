@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button";
 
 const Footer = () => {
@@ -9,7 +8,7 @@ const Footer = () => {
           <div>
             <div className="mb-4">
               <img 
-                src="https://imgur.com/g5i69y7" 
+                src="/placeholder.svg" 
                 alt="Voyagr Logo" 
                 className="h-8"
               />

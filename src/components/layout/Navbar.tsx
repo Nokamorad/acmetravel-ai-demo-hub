@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Menu, Compass } from "lucide-react";
@@ -57,7 +56,7 @@ const Navbar = () => {
         <div className="flex items-center">
           <a href="#" className="flex items-center" data-pendo-id="nav-logo">
             <img 
-              src="https://imgur.com/g5i69y7" 
+              src="/placeholder.svg" 
               alt="Voyagr Logo" 
               className="h-8"
             />
