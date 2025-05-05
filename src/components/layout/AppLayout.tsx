@@ -1,9 +1,10 @@
+
 import { ReactNode } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
 import { useUser } from "@/contexts/UserContext";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Home as HomeIcon, PlusCircle as PlusCircleIcon, Calendar as CalendarIcon, User as UserIcon, HelpCircle as HelpCircleIcon, MessageSquare as MessageSquareIcon } from "lucide-react";
+import { Home as HomeIcon, PlusCircle as PlusCircleIcon, Calendar as CalendarIcon, User as UserIcon, HelpCircle as HelpCircleIcon, MessageSquare as MessageSquareIcon, Briefcase } from "lucide-react";
 interface AppLayoutProps {
   children: ReactNode;
 }
@@ -52,6 +53,11 @@ const AppLayout = ({
           </nav>
           
           <div className="flex items-center gap-3">
+            <div className="hidden md:flex items-center gap-2 text-gray-600">
+              <Briefcase className="h-4 w-4 text-sky-blue" />
+              <span className="text-sm font-medium">{user.company}</span>
+            </div>
+            
             <Button variant="outline" size="sm" className="hidden md:flex text-gray-600" data-pendo-id="header-help-button">Menu</Button>
             
             <div className="flex items-center gap-2 border rounded-full px-2 py-1 bg-gray-50" data-pendo-id="user-profile-avatar">
