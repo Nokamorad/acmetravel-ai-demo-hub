@@ -43,9 +43,19 @@ const AppLayout = ({
       {/* Top Navigation Bar */}
       <header className="bg-white border-b border-gray-200 py-2 px-4" data-pendo-id="app-header">
         <div className="flex items-center justify-between">
-          <div className="flex items-center">
+          <div className="flex items-center space-x-2">
             <Link to="/" className="flex items-center" data-pendo-id="header-logo">
-              <img alt="Voyagr Logo" src="/lovable-uploads/9b2112ab-cd15-4128-b9ee-bed226acc140.png" className="h-12 object-fill" />
+              <div className="h-10 w-10 flex items-center justify-center rounded-md border border-gray-200 bg-white mr-2">
+                {/* Logo Placeholder */}
+                <img 
+                  src="/lovable-uploads/9b2112ab-cd15-4128-b9ee-bed226acc140.png" 
+                  alt="Company Logo" 
+                  className="h-8 w-8 object-contain" 
+                />
+              </div>
+              <span className="text-lg font-header font-medium text-midnight-navy hidden sm:inline-block">
+                Voyagr
+              </span>
             </Link>
           </div>
           
@@ -75,6 +85,7 @@ const AppLayout = ({
         </div>
       </header>
       
+      {/* Mobile Navigation and Main Content */}
       <div className="flex flex-1 overflow-hidden">
         {/* Mobile Navigation */}
         <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-50" data-pendo-id="mobile-navigation">
