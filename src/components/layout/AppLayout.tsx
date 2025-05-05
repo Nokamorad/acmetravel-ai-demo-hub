@@ -4,11 +4,9 @@ import { Button } from "@/components/ui/button";
 import { useUser } from "@/contexts/UserContext";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Home as HomeIcon, PlusCircle as PlusCircleIcon, Calendar as CalendarIcon, User as UserIcon, HelpCircle as HelpCircleIcon, MessageSquare as MessageSquareIcon, Briefcase } from "lucide-react";
-
 interface AppLayoutProps {
   children: ReactNode;
 }
-
 const AppLayout = ({
   children
 }: AppLayoutProps) => {
@@ -16,7 +14,6 @@ const AppLayout = ({
   const {
     user
   } = useUser();
-
   const navItems = [{
     path: '/',
     label: 'Dashboard',
@@ -38,7 +35,6 @@ const AppLayout = ({
     label: 'Help',
     icon: HelpCircleIcon
   }];
-
   return <div className="min-h-screen flex flex-col bg-gray-50" data-pendo-id="app-layout-container">
       {/* Top Navigation Bar */}
       <header className="bg-white border-b border-gray-200 py-2 px-4" data-pendo-id="app-header">
@@ -47,15 +43,9 @@ const AppLayout = ({
             <Link to="/" className="flex items-center" data-pendo-id="header-logo">
               <div className="h-10 w-10 flex items-center justify-center rounded-md border border-gray-200 bg-white mr-2">
                 {/* Logo Placeholder */}
-                <img 
-                  src="/lovable-uploads/9b2112ab-cd15-4128-b9ee-bed226acc140.png" 
-                  alt="Company Logo" 
-                  className="h-8 w-8 object-contain" 
-                />
+                <img src="/lovable-uploads/9b2112ab-cd15-4128-b9ee-bed226acc140.png" alt="Company Logo" className="h-8 w-8 object-contain" />
               </div>
-              <span className="text-lg font-header font-medium text-midnight-navy hidden sm:inline-block">
-                Voyagr
-              </span>
+              <span className="text-lg font-header font-medium text-midnight-navy hidden sm:inline-block">Voyagr by AcmeCorp</span>
             </Link>
           </div>
           
@@ -68,7 +58,7 @@ const AppLayout = ({
           <div className="flex items-center gap-3">
             <div className="hidden md:flex items-center gap-2 text-gray-600">
               <Briefcase className="h-4 w-4 text-sky-blue" />
-              <span className="text-sm font-medium">Voyagr by AcmeCorp</span>
+              <span className="text-sm font-medium">Business Travel</span>
             </div>
             
             <Button variant="outline" size="sm" className="hidden md:flex text-gray-600" data-pendo-id="header-help-button">Menu</Button>
@@ -111,5 +101,4 @@ const AppLayout = ({
       </div>
     </div>;
 };
-
 export default AppLayout;
