@@ -146,8 +146,8 @@ const DashboardContent = () => {
                   <div className="flex gap-3">
                     <div className="w-16 h-16 rounded-md overflow-hidden flex-shrink-0">
                       <img 
-                        src="https://images.unsplash.com/photo-1602969565011-0df3eb0bde22?auto=format&fit=crop&q=80&w=200&h=200" 
-                        alt="Chicago" 
+                        src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/0b/Austin_Downtown_2024_%28cropped%29_%28cropped%29.jpg/330px-Austin_Downtown_2024_%28cropped%29_%28cropped%29.jpg" 
+                        alt="Austin" 
                         className="w-full h-full object-cover"
                       />
                     </div>
@@ -175,8 +175,8 @@ const DashboardContent = () => {
                   <div className="flex gap-3">
                     <div className="w-16 h-16 rounded-md overflow-hidden flex-shrink-0">
                       <img 
-                        src="https://images.unsplash.com/photo-1499856871958-5b9357976b82?auto=format&fit=crop&q=80&w=200&h=200" 
-                        alt="Seattle" 
+                        src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/Denver_skyline.jpg/960px-Denver_skyline.jpg?20121103225711" 
+                        alt="Denver" 
                         className="w-full h-full object-cover"
                       />
                     </div>
