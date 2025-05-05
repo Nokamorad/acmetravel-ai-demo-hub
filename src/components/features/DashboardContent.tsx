@@ -277,7 +277,7 @@ const DashboardContent = () => {
             { 
               city: "Munich", 
               country: "Germany", 
-              image: "https://images.unsplash.com/photo-1599982890963-3aabd60b27b9?auto=format&fit=crop&q=80&w=300&h=200"
+              image: "https://images.unsplash.com/photo-1595867818082-083862f3d630?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
             },
             { 
               city: "Tokyo", 
