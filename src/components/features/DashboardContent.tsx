@@ -270,6 +270,16 @@ const DashboardContent = () => {
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
           {[
             { 
+              city: "New York", 
+              country: "USA", 
+              image: "https://images.unsplash.com/photo-1496442226666-8d4d0e62e6e9?auto=format&fit=crop&q=80&w=300&h=200"
+            },
+            { 
+              city: "Munich", 
+              country: "Germany", 
+              image: "https://images.unsplash.com/photo-1599982890963-3aabd60b27b9?auto=format&fit=crop&q=80&w=300&h=200"
+            },
+            { 
               city: "Tokyo", 
               country: "Japan", 
               image: "https://images.unsplash.com/photo-1513407030348-c983a97b98d8?auto=format&fit=crop&q=80&w=300&h=200"
@@ -278,16 +288,6 @@ const DashboardContent = () => {
               city: "Paris", 
               country: "France", 
               image: "https://plus.unsplash.com/premium_photo-1661919210043-fd847a58522d?q=80&w=2071&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-            },
-            { 
-              city: "Austin", 
-              country: "USA", 
-              image: "https://www.istockphoto.com/photo/downtown-austin-texas-with-capital-and-riverfront-gm1359349109-432722861"
-            },
-            { 
-              city: "Denver", 
-              country: "USA", 
-              image: "https://stock.adobe.com/images/panorama-downtown-denver/220840556"
             }
           ].map((destination, index) => (
             <div key={index} className="relative rounded-lg overflow-hidden group h-48 shadow-md">
