@@ -2,7 +2,6 @@
 import WelcomeHeader from "./dashboard/WelcomeHeader";
 import StatCards from "./dashboard/StatCards";
 import UpcomingTrips from "./dashboard/UpcomingTrips";
-import QuickActions from "./dashboard/QuickActions";
 import FeaturedDestinations from "./dashboard/FeaturedDestinations";
 
 const DashboardContent = () => {
@@ -15,12 +14,9 @@ const DashboardContent = () => {
       <StatCards />
       
       {/* Recent and Upcoming Trips */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 gap-6">
         {/* Upcoming Trips */}
         <UpcomingTrips />
-        
-        {/* Quick Actions */}
-        <QuickActions />
       </div>
 
       {/* Featured Destinations */}
