@@ -76,16 +76,6 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ onSignUpSuccess }) => {
         localStorage.setItem("signupFrequency", data.frequency);
         localStorage.setItem("signupCompany", data.company);
         
-        // Update Pendo visitor properties if available
-        if (window && (window as any).updatePendoVisitor) {
-          (window as any).updatePendoVisitor({
-            visitor_type: data.role === "Travel Manager" ? "manager" : 
-                          data.frequency === "Weekly" ? "commuter" : "occasional",
-            travel_frequency: data.frequency === "Weekly" ? "frequent" : 
-                              data.frequency === "Monthly" ? "regular" : "occasional",
-          });
-        }
-        
         // Call the success callback
         onSignUpSuccess();
       }, 1500);
@@ -126,155 +116,123 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ onSignUpSuccess }) => {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-        <div className="grid grid-cols-2 gap-6">
-          {/* First Row */}
-          <div>
-            <FormField
-              control={form.control}
-              name="name"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Full Name</FormLabel>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <FormField
+            control={form.control}
+            name="name"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Full Name</FormLabel>
+                <FormControl>
+                  <Input placeholder="Full Name" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="email"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Work Email</FormLabel>
+                <FormControl>
+                  <Input type="email" placeholder="Work Email" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="role"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Role</FormLabel>
+                <Select onValueChange={field.onChange} defaultValue={field.value}>
                   <FormControl>
-                    <Input placeholder="Full Name" {...field} data-pendo-id="signup-name-input" />
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select Role" />
+                    </SelectTrigger>
                   </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
+                  <SelectContent>
+                    {roleOptions.map((role) => (
+                      <SelectItem key={role} value={role}>
+                        {role}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-          <div>
-            <FormField
-              control={form.control}
-              name="email"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Work Email</FormLabel>
+          <FormField
+            control={form.control}
+            name="frequency"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Travel Frequency</FormLabel>
+                <Select onValueChange={field.onChange} defaultValue={field.value}>
                   <FormControl>
-                    <Input 
-                      type="email" 
-                      placeholder="Work Email" 
-                      {...field} 
-                      data-pendo-id="signup-email-input" 
-                    />
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select Frequency" />
+                    </SelectTrigger>
                   </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
+                  <SelectContent>
+                    {frequencyOptions.map((frequency) => (
+                      <SelectItem key={frequency} value={frequency}>
+                        {frequency}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-          {/* Second Row */}
-          <div>
-            <FormField
-              control={form.control}
-              name="role"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Role</FormLabel>
-                  <Select 
-                    onValueChange={field.onChange} 
-                    defaultValue={field.value}
-                    data-pendo-id="signup-role-select"
-                  >
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Admin" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {roleOptions.map((role) => (
-                        <SelectItem key={role} value={role}>
-                          {role}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
+          <FormField
+            control={form.control}
+            name="company"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Company Name</FormLabel>
+                <FormControl>
+                  <Input placeholder="Company Name" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-          <div>
-            <FormField
-              control={form.control}
-              name="frequency"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Travel Frequency</FormLabel>
-                  <Select 
-                    onValueChange={field.onChange} 
-                    defaultValue={field.value}
-                    data-pendo-id="signup-frequency-select"
-                  >
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Rarely" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {frequencyOptions.map((frequency) => (
-                        <SelectItem key={frequency} value={frequency}>
-                          {frequency}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
-
-          {/* Third Row */}
-          <div>
-            <FormField
-              control={form.control}
-              name="company"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Company Name</FormLabel>
+          <FormField
+            control={form.control}
+            name="teamSize"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Team Size</FormLabel>
+                <Select onValueChange={field.onChange} defaultValue={field.value}>
                   <FormControl>
-                    <Input placeholder="Company Name" {...field} data-pendo-id="signup-company-input" />
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select Team Size" />
+                    </SelectTrigger>
                   </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
-
-          <div>
-            <FormField
-              control={form.control}
-              name="teamSize"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Team Size</FormLabel>
-                  <Select 
-                    onValueChange={field.onChange} 
-                    defaultValue={field.value}
-                    data-pendo-id="signup-teamsize-select"
-                  >
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Team Size" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {teamSizeOptions.map((size) => (
-                        <SelectItem key={size} value={size}>
-                          {size}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
+                  <SelectContent>
+                    {teamSizeOptions.map((size) => (
+                      <SelectItem key={size} value={size}>
+                        {size}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
         </div>
 
         <FormField
@@ -286,7 +244,6 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ onSignUpSuccess }) => {
                 <Checkbox
                   checked={field.value}
                   onCheckedChange={field.onChange}
-                  data-pendo-id="signup-personalized-checkbox"
                 />
               </FormControl>
               <div className="space-y-1 leading-none">
@@ -299,11 +256,10 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ onSignUpSuccess }) => {
         <div className="flex justify-center pt-4">
           <Button
             type="submit"
-            className="w-1/2 bg-sunset-coral hover:bg-sunset-coral/90 text-white py-6"
+            className="w-full md:w-1/2 bg-sky-blue hover:bg-sky-blue/90 text-white py-6 rounded-md shadow-md hover:shadow-lg transition-all"
             disabled={form.formState.isSubmitting}
-            data-pendo-id="signup-submit-button"
           >
-            {form.formState.isSubmitting ? "Creating Account..." : "Sign Up"}
+            {form.formState.isSubmitting ? "Creating Account..." : "Create Your Free Account"}
           </Button>
         </div>
       </form>

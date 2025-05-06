@@ -6,11 +6,11 @@ import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "@/lib/utils"
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
   {
     variants: {
       variant: {
-        default: "bg-sky-blue text-white hover:bg-sky-blue/90",
+        default: "bg-sky-blue text-white hover:bg-sky-blue/90 shadow-sm hover:shadow-md",
         destructive:
           "bg-sunset-coral text-white hover:bg-sunset-coral/90",
         outline:
@@ -38,34 +38,17 @@ export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement>,
     VariantProps<typeof buttonVariants> {
   asChild?: boolean
-  pendoId?: string
 }
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant, size, asChild = false, pendoId, children, ...props }, ref) => {
+  ({ className, variant, size, asChild = false, ...props }, ref) => {
     const Comp = asChild ? Slot : "button"
-    
-    // Generate a Pendo ID if one isn't provided
-    const generatedPendoId = pendoId || 
-      (typeof children === 'string' ? 
-        `btn-${children.toString().toLowerCase().replace(/\s+/g, '-')}` : 
-        undefined);
-    
-    // Ensure buttons always have content
-    let buttonContent = children;
-    if (!buttonContent || (React.Children.count(buttonContent) === 0)) {
-      buttonContent = "Submit"; // Default text for empty buttons
-    }
-    
     return (
       <Comp
         className={cn(buttonVariants({ variant, size, className }))}
         ref={ref}
-        data-pendo-id={generatedPendoId}
         {...props}
-      >
-        {buttonContent}
-      </Comp>
+      />
     )
   }
 )

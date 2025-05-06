@@ -62,11 +62,11 @@ export default {
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
 				},
-				// Voyagr brand colors with correct hex values from the design
+				// Voyagr brand colors with correct values
 				"sky-blue": "#4F75FF",
-				"midnight-navy": "#1B1F3B", // Corrected from #1BF13B to a proper navy color
-				"cloud-gray": "#E1E3E6", // Corrected from #E13EE6 to a proper gray color
-				"sunset-coral": "#FF6F61", // Corrected from #FFF61 to a proper coral color
+				"midnight-navy": "#1B1F3B",
+				"cloud-gray": "#E1E3E6",
+				"sunset-coral": "#FF6F61",
 				// Legacy Acme colors (keep for backward compatibility)
 				acme: {
 					purple: '#9b87f5',
