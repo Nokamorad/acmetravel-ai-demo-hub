@@ -73,7 +73,7 @@ const SignUp = () => {
                 </div>
                 <div className="grid gap-4">
                   <div className="rounded-lg overflow-hidden shadow-md bg-green-100 p-4">
-                    <img src="/public/lovable-uploads/fda73ea9-637d-41ff-af9e-014a4cf51064.png" alt="Dashboard" className="w-full h-auto rounded-lg" />
+                    <img alt="Dashboard" className="w-full h-auto rounded-lg" src="/lovable-uploads/9f5098a3-c876-45be-a035-b556bfc2b4d1.png" />
                   </div>
                   <div className="rounded-lg overflow-hidden shadow-md bg-orange-100 p-4 transform translate-y-4">
                     <img src="/public/lovable-uploads/9b2112ab-cd15-4128-b9ee-bed226acc140.png" alt="Mobile app" className="w-full h-auto rounded-lg" />
