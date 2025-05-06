@@ -2,12 +2,15 @@
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { ChevronRight, Plus, User } from "lucide-react";
+import { useUser } from "@/contexts/UserContext";
 
 const WelcomeHeader = () => {
+  const { user } = useUser();
+
   return (
     <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
       <div>
-        <h1 className="text-2xl md:text-3xl font-semibold text-midnight-navy mb-1">Welcome back, Taylor</h1>
+        <h1 className="text-2xl md:text-3xl font-semibold text-midnight-navy mb-1">Welcome back, {user.name.split(' ')[0]}</h1>
         <p className="text-gray-600">Your upcoming trips and travel information</p>
       </div>
       <div className="flex gap-3">
