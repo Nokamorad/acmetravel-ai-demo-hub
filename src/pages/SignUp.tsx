@@ -1,31 +1,26 @@
-
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import SignUpForm from "@/components/auth/SignUpForm";
 import { Star } from "lucide-react";
-
 const SignUp = () => {
   const navigate = useNavigate();
-
   const handleSignUpSuccess = () => {
     // Redirect to dashboard after successful signup
     navigate("/dashboard");
   };
-
-  return (
-    <div className="min-h-screen flex flex-col bg-white">
+  return <div className="min-h-screen flex flex-col bg-white">
       {/* Promo Banner */}
       <div className="bg-midnight-navy text-white py-3 px-4 text-center">
         <div className="container mx-auto flex items-center justify-center gap-2 text-sm md:text-base">
           <span className="inline-flex items-center">
             <svg className="w-5 h-5 mr-2" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M20 12V22H4V12" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-              <path d="M22 7H2V12H22V7Z" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-              <path d="M12 22V7" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-              <path d="M12 7H16.5C17.163 7 17.7989 6.73661 18.2678 6.26777C18.7366 5.79893 19 5.16304 19 4.5C19 3.83696 18.7366 3.20107 18.2678 2.73223C17.7989 2.26339 17.163 2 16.5 2C14 2 12 4 12 7Z" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-              <path d="M12 7H7.5C6.83696 7 6.20107 6.73661 5.73223 6.26777C5.26339 5.79893 5 5.16304 5 4.5C5 3.83696 5.26339 3.20107 5.73223 2.73223C6.20107 2.26339 6.83696 2 7.5 2C10 2 12 4 12 7Z" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              <path d="M20 12V22H4V12" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+              <path d="M22 7H2V12H22V7Z" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+              <path d="M12 22V7" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+              <path d="M12 7H16.5C17.163 7 17.7989 6.73661 18.2678 6.26777C18.7366 5.79893 19 5.16304 19 4.5C19 3.83696 18.7366 3.20107 18.2678 2.73223C17.7989 2.26339 17.163 2 16.5 2C14 2 12 4 12 7Z" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+              <path d="M12 7H7.5C6.83696 7 6.20107 6.73661 5.73223 6.26777C5.26339 5.79893 5 5.16304 5 4.5C5 3.83696 5.26339 3.20107 5.73223 2.73223C6.20107 2.26339 6.83696 2 7.5 2C10 2 12 4 12 7Z" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
             Get $200 credit when your company joins Voyagr
           </span>
@@ -60,10 +55,9 @@ const SignUp = () => {
                   Book, manage, and optimize company travel—tailored to how you work.
                 </p>
                 
-                <button 
-                  onClick={() => document.getElementById('signup-form')?.scrollIntoView({ behavior: 'smooth' })}
-                  className="bg-sky-blue text-white py-3 px-8 rounded-full shadow-lg hover:shadow-xl transition-all font-medium text-lg"
-                >
+                <button onClick={() => document.getElementById('signup-form')?.scrollIntoView({
+                behavior: 'smooth'
+              })} className="bg-sky-blue text-white py-3 px-8 rounded-full shadow-lg hover:shadow-xl transition-all font-medium text-lg">
                   Create Your Free Account
                 </button>
               </div>
@@ -71,34 +65,18 @@ const SignUp = () => {
               <div className="hidden lg:grid grid-cols-2 gap-4">
                 <div className="grid gap-4">
                   <div className="rounded-lg overflow-hidden shadow-md bg-purple-100 p-4 transform translate-y-4">
-                    <img 
-                      src="/public/lovable-uploads/15eaa874-0e0c-4dfa-875f-648b3561e5db.png" 
-                      alt="Business traveler" 
-                      className="w-full h-auto rounded-lg"
-                    />
+                    <img alt="Business traveler" className="w-full h-auto rounded-lg" src="/lovable-uploads/69a3f64c-82fb-45e8-8f36-d41f563e9c9b.png" />
                   </div>
                   <div className="rounded-lg overflow-hidden shadow-md bg-sky-100 p-4">
-                    <img 
-                      src="/public/lovable-uploads/f2812308-776f-41b1-8b83-d0ead1af1f3a.png" 
-                      alt="Travel management" 
-                      className="w-full h-auto rounded-lg"
-                    />
+                    <img src="/public/lovable-uploads/f2812308-776f-41b1-8b83-d0ead1af1f3a.png" alt="Travel management" className="w-full h-auto rounded-lg" />
                   </div>
                 </div>
                 <div className="grid gap-4">
                   <div className="rounded-lg overflow-hidden shadow-md bg-green-100 p-4">
-                    <img 
-                      src="/public/lovable-uploads/fda73ea9-637d-41ff-af9e-014a4cf51064.png" 
-                      alt="Dashboard" 
-                      className="w-full h-auto rounded-lg"
-                    />
+                    <img src="/public/lovable-uploads/fda73ea9-637d-41ff-af9e-014a4cf51064.png" alt="Dashboard" className="w-full h-auto rounded-lg" />
                   </div>
                   <div className="rounded-lg overflow-hidden shadow-md bg-orange-100 p-4 transform translate-y-4">
-                    <img 
-                      src="/public/lovable-uploads/9b2112ab-cd15-4128-b9ee-bed226acc140.png" 
-                      alt="Mobile app" 
-                      className="w-full h-auto rounded-lg"
-                    />
+                    <img src="/public/lovable-uploads/9b2112ab-cd15-4128-b9ee-bed226acc140.png" alt="Mobile app" className="w-full h-auto rounded-lg" />
                   </div>
                 </div>
               </div>
@@ -135,8 +113,6 @@ const SignUp = () => {
       </main>
       
       <Footer />
-    </div>
-  );
+    </div>;
 };
-
 export default SignUp;
