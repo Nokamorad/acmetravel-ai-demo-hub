@@ -131,4 +131,9 @@
     font-family: 'Satoshi', sans-serif;
     font-weight: 700;
   }
+  
+  /* Signup page styles */
+  .signup-gradient {
+    background: linear-gradient(135deg, rgba(79, 117, 255, 0.05) 0%, rgba(255, 111, 97, 0.05) 100%);
+  }
 }
