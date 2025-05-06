@@ -1,8 +1,11 @@
 
 import { Button } from "@/components/ui/button";
 import { MessageSquare } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const Hero = () => {
+  const navigate = useNavigate();
+  
   return (
     <section className="pt-28 pb-16 md:pt-32 md:pb-24 hero-gradient">
       <div className="container mx-auto px-4 md:px-6">
@@ -23,9 +26,9 @@ const Hero = () => {
                 size="lg" 
                 className="bg-sky-blue hover:bg-sky-blue/90 text-white"
                 data-pendo-id="hero-primary-cta"
-                onClick={() => document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' })}
+                onClick={() => navigate('/signup')}
               >
-                Explore Use Cases
+                Sign Up Now
               </Button>
               <Button 
                 size="lg" 

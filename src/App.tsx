@@ -11,6 +11,7 @@ import BookTrip from "./pages/BookTrip";
 import TripSummary from "./pages/TripSummary";
 import Profile from "./pages/Profile";
 import Support from "./pages/Support";
+import SignUp from "./pages/SignUp";
 import NotFound from "./pages/NotFound";
 import PendoIntegration from "@/components/pendo/PendoIntegration";
 import { UserProvider } from "@/contexts/UserContext";
@@ -35,6 +36,7 @@ const App = () => (
               <Route path="/trip" element={<TripSummary />} />
               <Route path="/profile" element={<Profile />} />
               <Route path="/support" element={<Support />} />
+              <Route path="/signup" element={<SignUp />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>
