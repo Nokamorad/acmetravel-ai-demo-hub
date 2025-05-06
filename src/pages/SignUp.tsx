@@ -10,7 +10,7 @@ const SignUp = () => {
 
   const handleSignUpSuccess = () => {
     // Redirect to dashboard after successful signup
-    navigate("/");
+    navigate("/dashboard");
   };
 
   return (

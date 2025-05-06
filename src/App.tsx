@@ -30,7 +30,8 @@ const App = () => (
             {/* Pendo Integration at the app level ensures it's available on all routes */}
             <PendoIntegration />
             <Routes>
-              <Route path="/" element={<Dashboard />} />
+              <Route path="/" element={<SignUp />} />
+              <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/landing" element={<Index />} />
               <Route path="/book" element={<BookTrip />} />
               <Route path="/trip" element={<TripSummary />} />
