@@ -65,7 +65,7 @@ const SignUp = () => {
               <div className="hidden lg:grid grid-cols-2 gap-4">
                 <div className="grid gap-4">
                   <div className="rounded-lg overflow-hidden shadow-md bg-purple-100 p-4 transform translate-y-4">
-                    <img alt="Business traveler" className="w-full h-auto rounded-lg" src="/lovable-uploads/69a3f64c-82fb-45e8-8f36-d41f563e9c9b.png" />
+                    <img alt="Business traveler" src="/lovable-uploads/5fca89a7-a786-4dc9-9d05-eb6f3d3a3041.png" className="w-full h-auto rounded-lg object-cover" />
                   </div>
                   <div className="rounded-lg overflow-hidden shadow-md bg-sky-100 p-4">
                     <img src="/public/lovable-uploads/f2812308-776f-41b1-8b83-d0ead1af1f3a.png" alt="Travel management" className="w-full h-auto rounded-lg" />
