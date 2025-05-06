@@ -51,13 +51,21 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         `btn-${children.toString().toLowerCase().replace(/\s+/g, '-')}` : 
         undefined);
     
+    // Ensure buttons always have content
+    let buttonContent = children;
+    if (!buttonContent || (React.Children.count(buttonContent) === 0)) {
+      buttonContent = "Submit"; // Default text for empty buttons
+    }
+    
     return (
       <Comp
         className={cn(buttonVariants({ variant, size, className }))}
         ref={ref}
         data-pendo-id={generatedPendoId}
         {...props}
-      />
+      >
+        {buttonContent}
+      </Comp>
     )
   }
 )

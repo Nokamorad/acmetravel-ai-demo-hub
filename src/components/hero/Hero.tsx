@@ -1,5 +1,6 @@
 
 import { Button } from "@/components/ui/button";
+import { MessageSquare } from "lucide-react";
 
 const Hero = () => {
   return (
@@ -96,7 +97,8 @@ const Hero = () => {
                     }
                   }}
                 >
-                  Experience Travel Agent
+                  <MessageSquare className="h-4 w-4 mr-2" />
+                  Chat with Travel Agent
                 </Button>
               </div>
             </div>
