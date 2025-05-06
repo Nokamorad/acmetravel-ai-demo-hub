@@ -22,6 +22,7 @@ import {
 } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useToast } from "@/hooks/use-toast";
+import { ArrowRight } from "lucide-react";
 
 const DEFAULT_EMAIL = "demo.engineering+voyagr@pendo.io";
 
@@ -33,6 +34,9 @@ const formSchema = z.object({
   company: z.string().min(2, { message: "Company must be at least 2 characters." }),
   teamSize: z.string().min(1, { message: "Please enter team size." }),
   personalized: z.boolean().optional(),
+  terms: z.boolean().refine(val => val === true, {
+    message: "You must accept the terms and conditions."
+  }),
 });
 
 type FormData = z.infer<typeof formSchema>;
@@ -54,6 +58,7 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ onSignUpSuccess }) => {
       company: "",
       teamSize: "",
       personalized: true,
+      terms: false,
     },
   });
 
@@ -124,7 +129,7 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ onSignUpSuccess }) => {
               <FormItem>
                 <FormLabel>Full Name</FormLabel>
                 <FormControl>
-                  <Input placeholder="Full Name" {...field} />
+                  <Input placeholder="Enter your full name" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -138,7 +143,7 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ onSignUpSuccess }) => {
               <FormItem>
                 <FormLabel>Work Email</FormLabel>
                 <FormControl>
-                  <Input type="email" placeholder="Work Email" {...field} />
+                  <Input type="email" placeholder="your.name@company.com" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -153,8 +158,8 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ onSignUpSuccess }) => {
                 <FormLabel>Role</FormLabel>
                 <Select onValueChange={field.onChange} defaultValue={field.value}>
                   <FormControl>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select Role" />
+                    <SelectTrigger className="h-10">
+                      <SelectValue placeholder="Select your role" />
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
@@ -178,8 +183,8 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ onSignUpSuccess }) => {
                 <FormLabel>Travel Frequency</FormLabel>
                 <Select onValueChange={field.onChange} defaultValue={field.value}>
                   <FormControl>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select Frequency" />
+                    <SelectTrigger className="h-10">
+                      <SelectValue placeholder="How often do you travel?" />
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
@@ -202,7 +207,7 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ onSignUpSuccess }) => {
               <FormItem>
                 <FormLabel>Company Name</FormLabel>
                 <FormControl>
-                  <Input placeholder="Company Name" {...field} />
+                  <Input placeholder="Your company name" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -217,8 +222,8 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ onSignUpSuccess }) => {
                 <FormLabel>Team Size</FormLabel>
                 <Select onValueChange={field.onChange} defaultValue={field.value}>
                   <FormControl>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select Team Size" />
+                    <SelectTrigger className="h-10">
+                      <SelectValue placeholder="How large is your team?" />
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
@@ -237,6 +242,27 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ onSignUpSuccess }) => {
 
         <FormField
           control={form.control}
+          name="terms"
+          render={({ field }) => (
+            <FormItem className="flex flex-row items-start space-x-3 space-y-0">
+              <FormControl>
+                <Checkbox
+                  checked={field.value}
+                  onCheckedChange={field.onChange}
+                />
+              </FormControl>
+              <div className="space-y-1 leading-none">
+                <FormLabel className="font-normal">
+                  I agree to the <a href="#" className="text-sky-blue hover:underline">Terms of Service</a> and <a href="#" className="text-sky-blue hover:underline">Privacy Policy</a>
+                </FormLabel>
+                <FormMessage />
+              </div>
+            </FormItem>
+          )}
+        />
+        
+        <FormField
+          control={form.control}
           name="personalized"
           render={({ field }) => (
             <FormItem className="flex flex-row items-start space-x-3 space-y-0">
@@ -247,7 +273,7 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ onSignUpSuccess }) => {
                 />
               </FormControl>
               <div className="space-y-1 leading-none">
-                <FormLabel>I want a personalized onboarding experience</FormLabel>
+                <FormLabel className="font-normal">I want a personalized onboarding experience</FormLabel>
               </div>
             </FormItem>
           )}
@@ -256,10 +282,11 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ onSignUpSuccess }) => {
         <div className="flex justify-center pt-4">
           <Button
             type="submit"
-            className="w-full md:w-1/2 bg-sky-blue hover:bg-sky-blue/90 text-white py-6 rounded-md shadow-md hover:shadow-lg transition-all"
+            className="w-full md:w-auto px-8 bg-sky-blue hover:bg-sky-blue/90 text-white py-6 rounded-full shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2 text-lg font-medium"
             disabled={form.formState.isSubmitting}
           >
             {form.formState.isSubmitting ? "Creating Account..." : "Create Your Free Account"}
+            {!form.formState.isSubmitting && <ArrowRight className="h-5 w-5" />}
           </Button>
         </div>
       </form>
