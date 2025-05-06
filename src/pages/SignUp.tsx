@@ -17,53 +17,70 @@ const SignUp = () => {
   // Onboarding steps for the process visualization
   const onboardingSteps = [
     {
-      title: "Personalized Walkthrough",
-      description: "Get a guided tour of features relevant to your role"
+      title: "Account Created",
+      description: "Welcome to Voyagr!",
+      icon: "🎉"
     },
     {
-      title: "Welcome Email",
-      description: "Receive tailored resources based on your preferences"
+      title: "Email Sent",
+      description: "Your tailored tips are on the way",
+      icon: "📧"
     },
     {
-      title: "Embedded Guides",
-      description: "In-app assistance customized to your workflow"
+      title: "Embedded Guide",
+      description: "Personalized help based on your role",
+      icon: "📝"
     },
     {
-      title: "Product Feedback",
-      description: "Share insights to help shape Voyagr's roadmap"
+      title: "Experiment",
+      description: "You're helping us text improvements",
+      icon: "🧪"
+    },
+    {
+      title: "CSAT Survey",
+      description: "Rate your support experience",
+      icon: "⭐"
     }
   ];
 
   // Trust logos
   const trustLogos = [
-    "American Express",
-    "Deloitte",
-    "Slack",
-    "Zoom",
-    "Adobe"
+    { name: "Google", abbreviation: "g" },
+    { name: "Microsoft", abbreviation: "m" },
+    { name: "Amazon", abbreviation: "a" },
+    { name: "Salesforce", abbreviation: "s" }
   ];
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col bg-white">
       <Navbar />
       <main className="flex-grow">
         {/* Hero Section */}
-        <section className="bg-gradient-to-br from-white via-sky-blue/5 to-sunset-coral/5 py-16 md:py-24">
+        <section className="py-16 md:py-24">
           <div className="container mx-auto px-4">
-            <div className="max-w-3xl mx-auto text-center">
-              <h1 className="font-header font-bold text-4xl md:text-5xl text-midnight-navy mb-4">
-                Smarter Business Travel Starts Here
-              </h1>
-              <p className="text-lg md:text-xl text-gray-600 mb-8">
-                Book, manage, and optimize company travel—tailored to how you work.
-              </p>
-              <button 
-                onClick={() => document.getElementById('signup-form')?.scrollIntoView({ behavior: 'smooth' })}
-                className="bg-sky-blue text-white py-3 px-8 rounded-lg shadow-lg hover:shadow-xl transition-all font-medium"
-                data-pendo-id="hero-cta-button"
-              >
-                Create Your Free Account
-              </button>
+            <div className="flex flex-col md:flex-row items-center justify-between">
+              <div className="max-w-xl mb-10 md:mb-0">
+                <h1 className="font-header font-bold text-4xl md:text-5xl text-midnight-navy mb-4">
+                  Smarter Business Travel Starts Here
+                </h1>
+                <p className="text-lg md:text-xl text-gray-600 mb-8">
+                  Book, manage, and optimize company travel—tailored to how you work.
+                </p>
+                <button 
+                  onClick={() => document.getElementById('signup-form')?.scrollIntoView({ behavior: 'smooth' })}
+                  className="bg-sky-blue text-white py-3 px-8 rounded-md shadow-lg hover:shadow-xl transition-all font-medium"
+                  data-pendo-id="hero-cta-button"
+                >
+                  Create Your Free Account
+                </button>
+              </div>
+              <div className="w-full md:w-2/5">
+                <img 
+                  src="/public/lovable-uploads/f2812308-776f-41b1-8b83-d0ead1af1f3a.png" 
+                  alt="Business traveler using Voyagr" 
+                  className="w-full h-auto"
+                />
+              </div>
             </div>
           </div>
         </section>
@@ -71,44 +88,23 @@ const SignUp = () => {
         {/* Form Section */}
         <section className="py-16 bg-white" id="signup-form">
           <div className="container mx-auto px-4">
-            <div className="max-w-2xl mx-auto">
-              <div className="bg-white shadow-xl rounded-2xl p-8 border border-gray-100">
-                <div className="mb-6 text-center">
-                  <h2 className="text-2xl font-header font-semibold text-midnight-navy mb-2">
-                    Join thousands of business travelers
-                  </h2>
-                  <p className="text-gray-600">
-                    Create your account and start optimizing your company's travel
-                  </p>
-                </div>
-                
+            <div className="max-w-4xl mx-auto">
+              <div className="bg-white shadow-md rounded-lg p-8 border border-gray-100">
                 <SignUpForm onSignUpSuccess={handleSignUpSuccess} />
               </div>
 
               {/* Onboarding Process Visualization */}
               <div className="mt-16">
-                <h3 className="text-xl font-header font-semibold text-center mb-8 text-midnight-navy">
-                  Your Personalized Onboarding Journey
-                </h3>
-                
-                <div className="relative">
-                  {/* Progress bar */}
-                  <div className="hidden md:block absolute top-1/2 left-0 right-0 h-1 bg-gray-200 -translate-y-1/2 z-0"></div>
-                  
-                  {/* Steps */}
-                  <div className="grid md:grid-cols-4 gap-8 relative z-10">
-                    {onboardingSteps.map((step, index) => (
-                      <div key={index} className="flex flex-col items-center text-center">
-                        <div className="w-12 h-12 rounded-full bg-sky-blue/10 flex items-center justify-center mb-4">
-                          <span className="w-8 h-8 rounded-full bg-sky-blue text-white flex items-center justify-center font-medium">
-                            {index + 1}
-                          </span>
-                        </div>
-                        <h4 className="font-medium text-midnight-navy mb-2">{step.title}</h4>
-                        <p className="text-sm text-gray-600">{step.description}</p>
+                <div className="grid grid-cols-5 gap-4">
+                  {onboardingSteps.map((step, index) => (
+                    <div key={index} className="flex flex-col items-center text-center">
+                      <div className="w-16 h-16 rounded-full bg-sky-blue/10 flex items-center justify-center mb-4 text-2xl">
+                        {step.icon}
                       </div>
-                    ))}
-                  </div>
+                      <h4 className="font-medium text-midnight-navy mb-2">{step.title}</h4>
+                      <p className="text-sm text-gray-600">{step.description}</p>
+                    </div>
+                  ))}
                 </div>
               </div>
             </div>
@@ -120,30 +116,20 @@ const SignUp = () => {
           <div className="container mx-auto px-4">
             <div className="max-w-3xl mx-auto text-center">
               <h3 className="text-xl font-header font-semibold text-midnight-navy mb-6">
-                Trusted by Industry Leaders
+                Trusted by
               </h3>
               
-              <div className="flex flex-wrap justify-center gap-8 items-center opacity-70">
+              <div className="flex justify-center gap-12 items-center mb-12">
                 {trustLogos.map((logo, index) => (
-                  <div key={index} className="text-gray-500 font-medium">
-                    {logo}
+                  <div key={index} className="text-4xl text-gray-400 font-bold">
+                    {logo.abbreviation}
                   </div>
                 ))}
               </div>
               
-              <div className="mt-12 flex flex-col items-center justify-center space-y-4">
-                <div className="flex items-center space-x-2">
-                  <CheckCircle className="h-5 w-5 text-sky-blue" />
-                  <span className="text-gray-600">SOC 2 Type II Compliant</span>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <CheckCircle className="h-5 w-5 text-sky-blue" />
-                  <span className="text-gray-600">GDPR & CCPA Compliant</span>
-                </div>
-                <p className="text-sm text-gray-500 mt-4">
-                  By signing up, you agree to our <a href="#" className="text-sky-blue hover:underline">Terms of Service</a> and <a href="#" className="text-sky-blue hover:underline">Privacy Policy</a>
-                </p>
-              </div>
+              <p className="text-sm text-gray-500 mt-8">
+                This site is protected by reCAPTCHA and the Google <a href="#" className="text-sky-blue hover:underline">Privacy Policy</a> and <a href="#" className="text-sky-blue hover:underline">Terms of Service</a> apply.
+              </p>
             </div>
           </div>
         </section>
