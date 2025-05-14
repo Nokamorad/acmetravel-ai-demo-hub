@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -7,8 +8,8 @@ const Homepage = () => {
       {/* Navigation Bar */}
       <header className="bg-white py-4 px-6 shadow-sm border-b border-gray-100">
         <div className="container mx-auto flex justify-between items-center">
-          <div className="flex items-center">
-            <img src="/lovable-uploads/1a2f8468-c534-45e8-ae60-9db9f6b71303.png" alt="Voyagr Logo" className="h-20 w-auto mr-2\n" />
+          <div className="flex items-center h-20">
+            <img src="/lovable-uploads/f345156a-d089-4d2e-a5c1-793bf54fad80.png" alt="Voyagr Logo" className="h-16 w-auto mr-2" />
           </div>
           <div className="flex items-center gap-6">
             <a href="#features" className="text-gray-700 hover:text-sky-blue transition-colors">Features</a>
@@ -102,7 +103,7 @@ const Homepage = () => {
         <div className="container mx-auto px-4">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <div className="flex items-center mb-4 md:mb-0">
-              <img src="/lovable-uploads/1a2f8468-c534-45e8-ae60-9db9f6b71303.png" alt="Voyagr Logo" className="h-8 w-auto mr-2" />
+              <img src="/lovable-uploads/f345156a-d089-4d2e-a5c1-793bf54fad80.png" alt="Voyagr Logo" className="h-8 w-auto mr-2" />
               <span className="text-lg font-bold">by AcmeCorp</span>
             </div>
             
