@@ -80,10 +80,14 @@ const Homepage = () => {
               <p className="text-gray-600">Automatically capture and categorize travel expenses for seamless reporting.</p>
             </div>
             
-            {/* Feature 3 */}
+            {/* Feature 3 - Updated with 24/7 support icon */}
             <div className="bg-white p-6 rounded-lg shadow-md">
               <div className="bg-sky-blue/10 w-12 h-12 rounded-full flex items-center justify-center mb-4">
-                <Navigation className="h-6 w-6 text-sky-blue" />
+                <img 
+                  src="https://img.icons8.com/plasticine/100/24-hours-day-support.png" 
+                  alt="24-hours-support" 
+                  className="h-8 w-8" 
+                />
               </div>
               <h3 className="text-xl font-bold mb-2 text-midnight-navy">24/7 Support</h3>
               <p className="text-gray-600">Access live support anytime, anywhere during your business trips.</p>
