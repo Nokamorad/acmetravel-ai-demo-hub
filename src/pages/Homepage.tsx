@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -41,11 +40,7 @@ const Homepage = () => {
             <div className="lg:w-1/2">
               <div className="rounded-lg overflow-hidden shadow-xl bg-white p-2 md:p-4">
                 <div className="w-[85%] mx-auto p-4 bg-indigo-50 rounded-xl shadow-lg">
-                  <img 
-                    alt="Travel booking interface" 
-                    className="w-full h-auto rounded-lg transform transition-transform duration-300 hover:scale-105" 
-                    src="/lovable-uploads/b323a2e6-b90d-414a-a61b-a6c7ae258253.png" 
-                  />
+                  <img alt="Travel booking interface" src="/lovable-uploads/b323a2e6-b90d-414a-a61b-a6c7ae258253.png" className="w-full h-auto rounded-lg transform transition-transform duration-300 hover:scale-120" />
                 </div>
               </div>
             </div>
