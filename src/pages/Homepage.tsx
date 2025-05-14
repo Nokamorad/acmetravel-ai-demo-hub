@@ -49,10 +49,35 @@ const Homepage = () => {
       {/* Features Section */}
       <section id="features" className="py-16 bg-gray-50">
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold text-center mb-12">Features</h2>
-          <div className="relative max-w-3xl mx-auto p-8 rounded-xl bg-gradient-to-r from-indigo-100 to-purple-100 shadow-lg hover:shadow-2xl transition-all duration-300">
-            <img alt="Travel booking interface" className="w-full h-auto rounded-lg" src="/lovable-uploads/65a50e17-873b-4448-83cf-d441e83e15dc.png" />
-            <img alt="Travel booking interface" className="w-full h-auto rounded-lg mt-6" src="/lovable-uploads/b323a2e6-b90d-414a-a61b-a6c7ae258253.png" />
+          <h2 className="text-3xl font-bold text-center mb-12 text-midnight-navy">Simplify Your Business Travel</h2>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {/* Feature 1 - Updated with the custom itinerary icon */}
+            <div className="bg-white p-6 rounded-lg shadow-md">
+              <div className="bg-sky-blue/10 w-12 h-12 rounded-full flex items-center justify-center mb-4">
+                <img src="https://img.icons8.com/pulsar-color/48/itinerary.png" alt="itinerary" className="h-8 w-8" />
+              </div>
+              <h3 className="text-xl font-bold mb-2 text-midnight-navy">Smart Itineraries</h3>
+              <p className="text-gray-600">AI-powered recommendations that match your travel preferences and company policies.</p>
+            </div>
+            
+            {/* Feature 2 - Updated with credit card expense tracking icon */}
+            <div className="bg-white p-6 rounded-lg shadow-md">
+              <div className="bg-sky-blue/10 w-12 h-12 rounded-full flex items-center justify-center mb-4">
+                <img src="https://img.icons8.com/pulsar-color/48/card-in-use-1.png" alt="expense-tracking" className="h-8 w-8" />
+              </div>
+              <h3 className="text-xl font-bold mb-2 text-midnight-navy">Expense Tracking</h3>
+              <p className="text-gray-600">Automatically capture and categorize travel expenses for seamless reporting.</p>
+            </div>
+            
+            {/* Feature 3 - Updated with 24/7 support icon */}
+            <div className="bg-white p-6 rounded-lg shadow-md">
+              <div className="bg-sky-blue/10 w-12 h-12 rounded-full flex items-center justify-center mb-4">
+                <img src="https://img.icons8.com/plasticine/100/24-hours-day-support.png" alt="24-hours-support" className="h-8 w-8" />
+              </div>
+              <h3 className="text-xl font-bold mb-2 text-midnight-navy">24/7 Support</h3>
+              <p className="text-gray-600">Access live support anytime, anywhere during your business trips.</p>
+            </div>
           </div>
         </div>
       </section>
