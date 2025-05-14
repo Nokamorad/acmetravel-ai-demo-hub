@@ -9,6 +9,7 @@ import Homepage from "./pages/Homepage";
 import Dashboard from "./pages/Dashboard";
 import SignUp from "./pages/SignUp";
 import NotFound from "./pages/NotFound";
+import IconSettings from "./pages/IconSettings";
 import PendoIntegration from "@/components/pendo/PendoIntegration";
 import { UserProvider } from "@/contexts/UserContext";
 
@@ -29,6 +30,7 @@ const App = () => (
               <Route path="/" element={<Homepage />} />
               <Route path="/signup" element={<SignUp />} />
               <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/icon-settings" element={<IconSettings />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>

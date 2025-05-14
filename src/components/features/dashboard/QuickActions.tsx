@@ -2,6 +2,7 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Calendar, MapPin, Plane, Users } from "lucide-react";
+import CustomIcon from "@/components/ui/custom-icon";
 
 const QuickActions = () => {
   return (
@@ -19,7 +20,7 @@ const QuickActions = () => {
               className="w-full h-full object-cover"
             />
           </div>
-          <Plane className="h-6 w-6 text-sky-blue relative z-10" />
+          <CustomIcon iconId="plane" icon={Plane} className="h-6 w-6 text-sky-blue relative z-10" />
           <span className="relative z-10">Book Flight</span>
         </Button>
         
@@ -31,7 +32,7 @@ const QuickActions = () => {
               className="w-full h-full object-cover"
             />
           </div>
-          <MapPin className="h-6 w-6 text-sunset-coral relative z-10" />
+          <CustomIcon iconId="hotel" icon={MapPin} className="h-6 w-6 text-sunset-coral relative z-10" />
           <span className="relative z-10">Book Hotel</span>
         </Button>
         
@@ -43,7 +44,7 @@ const QuickActions = () => {
               className="w-full h-full object-cover"
             />
           </div>
-          <Calendar className="h-6 w-6 text-midnight-navy relative z-10" />
+          <CustomIcon iconId="calendar" icon={Calendar} className="h-6 w-6 text-midnight-navy relative z-10" />
           <span className="relative z-10">Schedule Meeting</span>
         </Button>
         
@@ -55,7 +56,7 @@ const QuickActions = () => {
               className="w-full h-full object-cover"
             />
           </div>
-          <Users className="h-6 w-6 text-green-500 relative z-10" />
+          <CustomIcon iconId="users" icon={Users} className="h-6 w-6 text-green-500 relative z-10" />
           <span className="relative z-10">Team Travel</span>
         </Button>
       </CardContent>

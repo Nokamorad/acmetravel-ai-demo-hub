@@ -1,10 +1,15 @@
+
 import { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
-import { Menu, Compass } from "lucide-react";
+import { Menu, Compass, Settings } from "lucide-react";
+import { Link } from 'react-router-dom';
+import CustomIcon from '@/components/ui/custom-icon';
+
 const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [demoMode, setDemoMode] = useState(false);
+
   useEffect(() => {
     const handleScroll = () => {
       if (window.scrollY > 10) {
@@ -16,6 +21,7 @@ const Navbar = () => {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
   const smoothScroll = (id: string) => {
     document.getElementById(id)?.scrollIntoView({
       behavior: 'smooth'
@@ -40,12 +46,13 @@ const Navbar = () => {
     }
     console.log(`Launch guide: ${guideId}`);
   };
+
   return <nav className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${scrolled ? 'bg-white/90 shadow-md backdrop-blur-md py-4' : 'bg-transparent py-7'}`} data-pendo-id="main-navigation">
       <div className="container mx-auto flex items-center justify-between px-4 md:px-6">
         <div className="flex items-center">
-          <a href="#" className="flex items-center" data-pendo-id="nav-logo">
+          <Link to="/" className="flex items-center" data-pendo-id="nav-logo">
             <img alt="Voyagr Logo" src="/lovable-uploads/5d5e89c6-4666-47d6-bbbe-131b296eaf20.png" className="h-8 object-fill" />
-          </a>
+          </Link>
           
           {/* Demo mode indicator */}
           {demoMode && <div className="ml-3 px-2 py-1 bg-sunset-coral/20 rounded text-xs text-sunset-coral font-medium">
@@ -73,6 +80,13 @@ const Navbar = () => {
         }} className="text-midnight-navy hover:text-sky-blue transition-colors duration-200" data-pendo-id="nav-upsell">
             Getting More
           </a>
+          
+          {/* Icon Settings Link */}
+          <Link to="/icon-settings" className="text-midnight-navy hover:text-sky-blue transition-colors duration-200 flex items-center gap-1" data-pendo-id="nav-icon-settings">
+            <CustomIcon iconId="settings" icon={Settings} size={16} />
+            <span>Customize Icons</span>
+          </Link>
+          
           <Button className="text-white" data-pendo-id="nav-contact-sales" onClick={() => launchGuide('contact-sales')}>
             Start Exploring
           </Button>
@@ -86,7 +100,7 @@ const Navbar = () => {
         {/* Mobile Menu Button */}
         <div className="md:hidden">
           <Button variant="ghost" size="icon" onClick={() => setMobileMenuOpen(!mobileMenuOpen)} aria-label="Toggle menu" data-pendo-id="mobile-menu-toggle">
-            <Menu className="h-6 w-6" />
+            <CustomIcon iconId="menu" icon={Menu} className="h-6 w-6" />
           </Button>
         </div>
       </div>
@@ -111,6 +125,12 @@ const Navbar = () => {
       }} className="text-midnight-navy hover:text-sky-blue transition-colors duration-200" data-pendo-id="mobile-nav-upsell">
             Getting More
           </a>
+          
+          <Link to="/icon-settings" className="text-midnight-navy hover:text-sky-blue transition-colors duration-200 flex items-center gap-1" data-pendo-id="mobile-nav-icon-settings">
+            <CustomIcon iconId="settings" icon={Settings} size={16} />
+            <span>Customize Icons</span>
+          </Link>
+          
           <Button className="text-white w-full" data-pendo-id="mobile-nav-contact-sales" onClick={() => launchGuide('contact-sales')}>
             Start Exploring
           </Button>
@@ -121,4 +141,5 @@ const Navbar = () => {
         </div>}
     </nav>;
 };
+
 export default Navbar;
