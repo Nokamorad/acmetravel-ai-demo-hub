@@ -39,11 +39,11 @@ const Homepage = () => {
               </Link>
             </div>
             <div className="lg:w-1/2">
-              <div className="flex justify-center px-4">
-                <div className="w-full max-w-md sm:max-w-lg md:max-w-xl lg:max-w-2xl p-4 sm:p-6 bg-indigo-50 rounded-xl shadow-lg">
+              <div className="flex justify-center px-4 lg:bg-gradient-to-r lg:from-indigo-50 lg:via-white lg:to-indigo-50">
+                <div className="w-full max-w-7xl p-0">
                   <img 
                     alt="Travel booking interface" 
-                    className="w-full h-auto rounded-lg transform transition-transform duration-300 hover:scale-105" 
+                    className="w-full h-auto rounded-xl shadow-2xl transform transition-transform duration-300 hover:scale-105" 
                     src="/lovable-uploads/b323a2e6-b90d-414a-a61b-a6c7ae258253.png" 
                   />
                 </div>
