@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -9,11 +8,7 @@ const Homepage = () => {
       <header className="bg-white py-4 px-6 shadow-sm border-b border-gray-100">
         <div className="container mx-auto flex justify-between items-center">
           <div className="flex items-center">
-            <img 
-              src="/lovable-uploads/1a2f8468-c534-45e8-ae60-9db9f6b71303.png" 
-              alt="Voyagr Logo" 
-              className="h-10 w-auto mr-2" 
-            />
+            <img src="/lovable-uploads/1a2f8468-c534-45e8-ae60-9db9f6b71303.png" alt="Voyagr Logo" className="h-20 w-auto mr-2\n" />
           </div>
           <div className="flex items-center gap-6">
             <a href="#features" className="text-gray-700 hover:text-sky-blue transition-colors">Features</a>
@@ -60,11 +55,7 @@ const Homepage = () => {
             {/* Feature 1 - Updated with the custom itinerary icon */}
             <div className="bg-white p-6 rounded-lg shadow-md">
               <div className="bg-sky-blue/10 w-12 h-12 rounded-full flex items-center justify-center mb-4">
-                <img 
-                  src="https://img.icons8.com/pulsar-color/48/itinerary.png" 
-                  alt="itinerary" 
-                  className="h-8 w-8" 
-                />
+                <img src="https://img.icons8.com/pulsar-color/48/itinerary.png" alt="itinerary" className="h-8 w-8" />
               </div>
               <h3 className="text-xl font-bold mb-2 text-midnight-navy">Smart Itineraries</h3>
               <p className="text-gray-600">AI-powered recommendations that match your travel preferences and company policies.</p>
@@ -73,11 +64,7 @@ const Homepage = () => {
             {/* Feature 2 - Updated with credit card expense tracking icon */}
             <div className="bg-white p-6 rounded-lg shadow-md">
               <div className="bg-sky-blue/10 w-12 h-12 rounded-full flex items-center justify-center mb-4">
-                <img 
-                  src="https://img.icons8.com/pulsar-color/48/card-in-use-1.png" 
-                  alt="expense-tracking" 
-                  className="h-8 w-8" 
-                />
+                <img src="https://img.icons8.com/pulsar-color/48/card-in-use-1.png" alt="expense-tracking" className="h-8 w-8" />
               </div>
               <h3 className="text-xl font-bold mb-2 text-midnight-navy">Expense Tracking</h3>
               <p className="text-gray-600">Automatically capture and categorize travel expenses for seamless reporting.</p>
@@ -86,11 +73,7 @@ const Homepage = () => {
             {/* Feature 3 - Updated with 24/7 support icon */}
             <div className="bg-white p-6 rounded-lg shadow-md">
               <div className="bg-sky-blue/10 w-12 h-12 rounded-full flex items-center justify-center mb-4">
-                <img 
-                  src="https://img.icons8.com/plasticine/100/24-hours-day-support.png" 
-                  alt="24-hours-support" 
-                  className="h-8 w-8" 
-                />
+                <img src="https://img.icons8.com/plasticine/100/24-hours-day-support.png" alt="24-hours-support" className="h-8 w-8" />
               </div>
               <h3 className="text-xl font-bold mb-2 text-midnight-navy">24/7 Support</h3>
               <p className="text-gray-600">Access live support anytime, anywhere during your business trips.</p>
@@ -119,11 +102,7 @@ const Homepage = () => {
         <div className="container mx-auto px-4">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <div className="flex items-center mb-4 md:mb-0">
-              <img 
-                src="/lovable-uploads/1a2f8468-c534-45e8-ae60-9db9f6b71303.png" 
-                alt="Voyagr Logo" 
-                className="h-8 w-auto mr-2" 
-              />
+              <img src="/lovable-uploads/1a2f8468-c534-45e8-ae60-9db9f6b71303.png" alt="Voyagr Logo" className="h-8 w-auto mr-2" />
               <span className="text-lg font-bold">by AcmeCorp</span>
             </div>
             
