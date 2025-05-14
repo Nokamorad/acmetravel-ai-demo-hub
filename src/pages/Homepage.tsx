@@ -9,8 +9,11 @@ const Homepage = () => {
       <header className="bg-white py-4 px-6 shadow-sm border-b border-gray-100">
         <div className="container mx-auto flex justify-between items-center">
           <div className="flex items-center">
-            <Navigation className="h-8 w-8 text-sky-blue mr-2" />
-            <span className="text-2xl font-bold logo-voyagr text-midnight-navy">Voyagr</span>
+            <img 
+              src="/lovable-uploads/1a2f8468-c534-45e8-ae60-9db9f6b71303.png" 
+              alt="Voyagr Logo" 
+              className="h-10 w-auto mr-2" 
+            />
           </div>
           <div className="flex items-center gap-6">
             <a href="#features" className="text-gray-700 hover:text-sky-blue transition-colors">Features</a>
@@ -116,8 +119,12 @@ const Homepage = () => {
         <div className="container mx-auto px-4">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <div className="flex items-center mb-4 md:mb-0">
-              <Navigation className="h-6 w-6 text-sky-blue mr-2" />
-              <span className="text-lg font-bold">Voyagr by AcmeCorp</span>
+              <img 
+                src="/lovable-uploads/1a2f8468-c534-45e8-ae60-9db9f6b71303.png" 
+                alt="Voyagr Logo" 
+                className="h-8 w-auto mr-2" 
+              />
+              <span className="text-lg font-bold">by AcmeCorp</span>
             </div>
             
             <div className="flex gap-6">
