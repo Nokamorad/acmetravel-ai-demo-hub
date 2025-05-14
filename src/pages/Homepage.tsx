@@ -7,7 +7,7 @@ const Homepage = () => {
       {/* Navigation Bar */}
       <header className="bg-white py-4 px-6 shadow-sm border-b border-gray-100">
         <div className="container mx-auto flex justify-between items-center">
-          <div className="flex items-center h-24">
+          <div className="flex items-left h-100">
             <img src="/lovable-uploads/f345156a-d089-4d2e-a5c1-793bf54fad80.png" alt="Voyagr Logo" className="h-20 w-auto mr-2" />
           </div>
           <div className="flex items-center gap-6">
