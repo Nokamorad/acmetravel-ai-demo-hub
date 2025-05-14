@@ -1,12 +1,9 @@
-
 import React from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Navigation } from "lucide-react";
-
 const Homepage = () => {
-  return (
-    <div className="min-h-screen flex flex-col bg-white">
+  return <div className="min-h-screen flex flex-col bg-white">
       {/* Navigation Bar */}
       <header className="bg-white py-4 px-6 shadow-sm border-b border-gray-100">
         <div className="container mx-auto flex justify-between items-center">
@@ -43,11 +40,7 @@ const Homepage = () => {
             </div>
             <div className="lg:w-1/2">
               <div className="rounded-lg overflow-hidden shadow-xl bg-white p-2 md:p-4">
-                <img 
-                  src="/lovable-uploads/5fca89a7-a786-4dc9-9d05-eb6f3d3a3041.png" 
-                  alt="Travel booking interface" 
-                  className="w-full h-auto rounded-lg"
-                />
+                <img alt="Travel booking interface" className="w-full h-auto rounded-lg" src="/lovable-uploads/65a50e17-873b-4448-83cf-d441e83e15dc.png" />
               </div>
             </div>
           </div>
@@ -126,8 +119,6 @@ const Homepage = () => {
           </div>
         </div>
       </footer>
-    </div>
-  );
+    </div>;
 };
-
 export default Homepage;
