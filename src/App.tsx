@@ -16,29 +16,31 @@ import { UserProvider } from "@/contexts/UserContext";
 // Create a client
 const queryClient = new QueryClient();
 
-const App = () => (
-  <React.StrictMode>
+const App = () => {
+  return (
     <QueryClientProvider client={queryClient}>
-      <TooltipProvider>
-        <UserProvider>
-          <Toaster />
-          <Sonner />
-          <BrowserRouter>
-            {/* Pendo Integration at the app level ensures it's available on all routes */}
-            <PendoIntegration />
-            <Routes>
-              <Route path="/" element={<Homepage />} />
-              <Route path="/signup" element={<SignUp />} />
-              <Route path="/dashboard" element={<Dashboard />} />
-              <Route path="/icon-settings" element={<IconSettings />} />
-              {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </BrowserRouter>
-        </UserProvider>
-      </TooltipProvider>
+      <React.StrictMode>
+        <TooltipProvider>
+          <UserProvider>
+            <Toaster />
+            <Sonner />
+            <BrowserRouter>
+              {/* Pendo Integration at the app level ensures it's available on all routes */}
+              <PendoIntegration />
+              <Routes>
+                <Route path="/" element={<Homepage />} />
+                <Route path="/signup" element={<SignUp />} />
+                <Route path="/dashboard" element={<Dashboard />} />
+                <Route path="/icon-settings" element={<IconSettings />} />
+                {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </BrowserRouter>
+          </UserProvider>
+        </TooltipProvider>
+      </React.StrictMode>
     </QueryClientProvider>
-  </React.StrictMode>
-);
+  );
+};
 
 export default App;
