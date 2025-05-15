@@ -5,10 +5,10 @@ import { v4 as uuidv4 } from 'uuid';
 interface UserProfile {
   id: string;
   name: string;
-  email: string;
-  company: string;
-  phone: string;
-  initials: string;
+  email?: string;
+  company?: string;
+  phone?: string;
+  initials?: string;
   preferences?: {
     travelFrequency?: string;
     planLevel?: string;
@@ -64,17 +64,6 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
     
     setUser(updatedUser);
     localStorage.setItem('acmetravel_user', JSON.stringify(updatedUser));
-    
-    // If Pendo is initialized, update the visitor information
-    if ((window as any).pendo && (window as any).pendo.updateOptions) {
-      (window as any).pendo.updateOptions({
-        visitor: {
-          user_id: updatedUser.id,
-          user_name: updatedUser.name,
-          email: updatedUser.email
-        }
-      });
-    }
   };
 
   return (

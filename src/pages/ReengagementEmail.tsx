@@ -8,21 +8,13 @@ const ReengagementEmail = () => {
   const navigate = useNavigate();
 
   const handleResumeBooking = () => {
-    // Track email CTA click in Pendo
-    if ((window as any).pendo && (window as any).pendo.track) {
-      (window as any).pendo.track('Email Opened', {
-        email_type: 'booking_reengagement',
-        action: 'resume_booking'
-      });
-    }
-    
     // Navigate to booking page
     navigate('/book');
   };
 
   return (
     <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
-      <div className="bg-white max-w-2xl w-full rounded-lg shadow-lg overflow-hidden" data-pendo-id="reengagement-email">
+      <div className="bg-white max-w-2xl w-full rounded-lg shadow-lg overflow-hidden">
         {/* Email Header */}
         <div className="bg-sky-blue p-6 text-center text-white">
           <div className="flex items-center justify-center mb-2">
@@ -57,7 +49,6 @@ const ReengagementEmail = () => {
               size="lg" 
               className="bg-sunset-coral hover:bg-sunset-coral/90 text-white font-semibold px-8 py-6 rounded-lg shadow hover:shadow-lg transition-all"
               onClick={handleResumeBooking}
-              data-pendo-id="resume-booking-button"
             >
               Resume Your Booking
             </Button>

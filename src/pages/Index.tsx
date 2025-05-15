@@ -5,7 +5,6 @@ import FeatureSection from "@/components/features/FeatureSection";
 import UseCaseDetails from "@/components/features/UseCaseDetails";
 import FeatureShowcase from "@/components/demo/FeatureShowcase";
 import Footer from "@/components/layout/Footer";
-import PendoIntegration from "@/components/pendo/PendoIntegration";
 
 const Index = () => {
   return (
@@ -23,9 +22,6 @@ const Index = () => {
         <UseCaseDetails />
         
         <FeatureShowcase />
-        
-        {/* Pendo Integration Component */}
-        <PendoIntegration />
       </main>
       
       <Footer />

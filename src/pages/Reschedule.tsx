@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import AppLayout from "@/components/layout/AppLayout";
 import { Button } from "@/components/ui/button";
@@ -53,19 +52,11 @@ const Reschedule = () => {
     setLoading(true);
     setError(null);
     
-    // Track attempt with Pendo
-    if ((window as any).pendo && (window as any).pendo.track) {
-      (window as any).pendo.track('Reschedule Attempt', {
-        attempt_number: attempts + 1,
-        depart_date: newDepartDate,
-        return_date: newReturnDate
-      });
-    }
+    setAttempts(prev => prev + 1);
     
     // Simulate API call
     setTimeout(() => {
       setLoading(false);
-      setAttempts(prev => prev + 1);
       
       // Generate errors based on attempt number to cause frustration
       if (attempts === 0) {
@@ -75,13 +66,6 @@ const Reschedule = () => {
       } else if (attempts === 2) {
         setError("Error code 5023: Session timeout. Please refresh and try again.");
       } else {
-        // Track rage click with Pendo
-        if ((window as any).pendo && (window as any).pendo.track) {
-          (window as any).pendo.track('Reschedule Rage Click', {
-            attempts_before_success: attempts + 1
-          });
-        }
-        
         // Success on 4th attempt
         toast({
           title: "Flight successfully rescheduled!",
@@ -96,15 +80,6 @@ const Reschedule = () => {
   
   const handleBugReport = () => {
     setShowDialog(true);
-    
-    // Track bug report with Pendo
-    if ((window as any).pendo && (window as any).pendo.track) {
-      (window as any).pendo.track('Bug Report Opened', {
-        screen: 'reschedule',
-        error_message: error,
-        attempts: attempts
-      });
-    }
   };
   
   return (

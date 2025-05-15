@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -36,11 +35,7 @@ const Inbox: React.FC = () => {
               size="sm" 
               onClick={() => {
                 setSelectedEmail('reengagement');
-                if ((window as any).trackEmailViewed) {
-                  (window as any).trackEmailViewed();
-                }
               }}
-              data-pendo-id="reengagement-email-notification-button"
             >
               View Email
             </Button>
@@ -202,19 +197,6 @@ const Inbox: React.FC = () => {
   const handleEmailClick = (emailId: string) => {
     setSelectedEmail(emailId);
     
-    // Track email open with Pendo
-    if ((window as any).pendo && (window as any).pendo.track) {
-      (window as any).pendo.track('Email Opened', { 
-        email_id: emailId,
-        subject: emails.find(email => email.id === emailId)?.subject
-      });
-    }
-    
-    // If it's the re-engagement email, mark it as viewed
-    if (emailId === 'reengagement' && (window as any).trackEmailViewed) {
-      (window as any).trackEmailViewed();
-    }
-    
     // If it's the welcome email, mark it as viewed
     if (emailId === 'welcome') {
       setViewedWelcome(true);
@@ -227,11 +209,6 @@ const Inbox: React.FC = () => {
       description: "Taking you to your dashboard",
     });
     
-    // Track sign in click with Pendo
-    if ((window as any).pendo && (window as any).pendo.track) {
-      (window as any).pendo.track('Welcome Email Sign In Clicked');
-    }
-    
     // Navigate to dashboard after a short delay
     setTimeout(() => {
       navigate('/dashboard');
@@ -243,11 +220,6 @@ const Inbox: React.FC = () => {
       title: "Finding hotels...",
       description: "Checking availability near your destination",
     });
-    
-    // Track hotel booking click with Pendo
-    if ((window as any).pendo && (window as any).pendo.track) {
-      (window as any).pendo.track('Book Hotel Email Button Clicked');
-    }
     
     // Navigate to upsell page after a short delay
     setTimeout(() => {
