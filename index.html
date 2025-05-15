@@ -29,32 +29,9 @@
         y.src='https://cdn.pendo.io/agent/static/'+apiKey+'/pendo.js';
         z=e.getElementsByTagName(n)[0];
         z.parentNode.insertBefore(y,z);
-    })(window,document,'script','pendo');
+    })(window,document,'script','pendo')
 
-    // On initial page load: Anonymous Visitor
-    pendo.initialize({
-        visitor: {
-            id: "anonymous-" + Math.floor(Math.random() * 1000000) // Unique random ID
-        },
-        account: {
-            id: "demo-account"
-        }
-    });
 
-    // Later after signup, reinitialize with real user data
-    function onUserSignup(name, email) {
-        const cleanName = name.toLowerCase().replace(/\s+/g, '');
-        pendo.initialize({
-            visitor: {
-                id: `demo-${cleanName}`,
-                email: email,
-                full_name: name
-            },
-            account: {
-                id: "demo-account"
-            }
-        });
-    }
     })('2d9ca49c-d4fd-4132-59ea-72018c9e5d77');
     </script>
   </head>
