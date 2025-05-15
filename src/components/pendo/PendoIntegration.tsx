@@ -50,9 +50,7 @@ const PendoIntegration: React.FC = () => {
           return names[randomIndex];
         };
         
-        // Initialize anonymous visitor on page load
-        const anonymousVisitorId = generateAnonymousId();
-        console.log('Initializing Pendo with anonymous visitor ID:', anonymousVisitorId);
+        
         
         (window as any).pendo.initialize({
           visitor: {
@@ -122,7 +120,7 @@ const PendoIntegration: React.FC = () => {
               
             },
             account: {
-              id: "demo-account"
+              id: ''
             }
           });
           
@@ -139,25 +137,25 @@ const PendoIntegration: React.FC = () => {
         // Track booking events
         (window as any).trackBookingStarted = () => {
           (window as any).pendo.track('Started Booking', {
-            timestamp: new Date().toISOString()
+           
           });
         };
         
         (window as any).trackBookingAbandoned = () => {
           (window as any).pendo.track('Booking Abandoned', {
-            timestamp: new Date().toISOString()
+           
           });
         };
         
         (window as any).trackEmailViewed = () => {
           (window as any).pendo.track('Viewed Re-Engagement Email', {
-            timestamp: new Date().toISOString()
+           
           });
         };
         
         (window as any).trackBookingCompleted = () => {
           (window as any).pendo.track('Booking Completed', {
-            timestamp: new Date().toISOString(),
+           
             destination: 'Munich'
           });
         };
@@ -169,16 +167,7 @@ const PendoIntegration: React.FC = () => {
     // Initialize Pendo when the component mounts
     initPendo();
 
-    // Track page views for Pendo analytics
-    const trackPageView = () => {
-      if ((window as any).pendo && (window as any).pendo.track) {
-        console.log(`Pendo track page view: ${location.pathname}`);
-        (window as any).pendo.track('Page View', { page: location.pathname });
-      }
-    };
-    
-    // Track page view when location changes
-    trackPageView();
+   
     
     return () => {
       // Cleanup if necessary
@@ -192,9 +181,9 @@ const PendoIntegration: React.FC = () => {
         className="text-xs bg-white border border-gray-200 rounded py-1 px-2 shadow-sm"
         value={user.preferences?.travelFrequency || 'occasional'}
         onChange={(e) => {
-          if ((window as any).onUserSignup) {
+        
             (window as any).onUserSignup(e.target.value);
-          }
+          
         }}
         data-pendo-id="user-segment-toggle"
       >
