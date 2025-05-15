@@ -6,7 +6,6 @@ import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import CitySearchInput from "@/components/BookTrip/CitySearchInput";
-import SignUpModal from "@/components/modals/SignUpModal";
 import { useUser } from "@/contexts/UserContext";
 import { 
   PlaneIcon, 
@@ -188,34 +187,17 @@ const BookTrip = () => {
       return;
     }
     
-    // If final step, complete booking
+    // If final step, complete booking - now we just redirect to confirmation
     if (bookingStep === 3) {
-      // If user is not logged in, open signup modal
-      if (!isUserLoggedIn) {
-        setIsSignUpModalOpen(true);
-      } else {
-        // User is logged in, show confirmation
-        navigate("/booking-confirmation");
-        
-        if ((window as any).trackBookingCompleted) {
-          (window as any).trackBookingCompleted();
-        }
+      // User is always considered logged in now that we removed signup functionality
+      navigate("/booking-confirmation");
+      
+      if ((window as any).trackBookingCompleted) {
+        (window as any).trackBookingCompleted();
       }
     }
   };
 
-  // Handle successful signup
-  const handleSignupSuccess = () => {
-    setIsUserLoggedIn(true);
-    setIsSignUpModalOpen(false);
-    // Show confirmation after successful signup
-    navigate("/booking-confirmation");
-    
-    if ((window as any).trackBookingCompleted) {
-      (window as any).trackBookingCompleted();
-    }
-  };
-  
   const resetSearch = () => {
     setShowConfirmation(false);
     setBookingStep(1);
@@ -594,15 +576,7 @@ const BookTrip = () => {
             {getButtonText()}
           </Button>
         </div>
-        
       </div>
-      
-      {/* Signup Modal */}
-      <SignUpModal 
-        isOpen={isSignUpModalOpen} 
-        onClose={() => setIsSignUpModalOpen(false)}
-        onSuccess={handleSignupSuccess}
-      />
     </AppLayout>
   );
 };
