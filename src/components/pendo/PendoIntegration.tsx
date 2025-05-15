@@ -5,7 +5,7 @@ import { useUser } from '@/contexts/UserContext';
 
 const PendoIntegration: React.FC = () => {
   const location = useLocation();
-  const { user, setUser } = useUser();
+  const { user, updateUser } = useUser();
   
   // Track if Pendo has been initialized
   const [initialized, setInitialized] = useState(false);
@@ -116,12 +116,11 @@ const PendoIntegration: React.FC = () => {
           });
           
           // Update user context
-          if (setUser) {
-            setUser({
+          if (updateUser) {
+            updateUser({
               id: `demo-${cleanName}`,
               email: `demo.engineering+${cleanName}@pendo.io`,
               name: name,
-              isLoggedIn: true,
               preferences: {
                 travelFrequency: travelFrequency,
                 planLevel: planLevel
@@ -179,7 +178,7 @@ const PendoIntegration: React.FC = () => {
     return () => {
       // Cleanup if necessary
     };
-  }, [location, setUser]);
+  }, [location, updateUser]);
 
   // Create a dropdown to toggle user segments for demo purposes
   return (

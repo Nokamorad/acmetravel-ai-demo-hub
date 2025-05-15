@@ -9,6 +9,10 @@ interface UserProfile {
   company: string;
   phone: string;
   initials: string;
+  preferences?: {
+    travelFrequency?: string;
+    planLevel?: string;
+  };
 }
 
 interface UserContextType {
@@ -33,7 +37,11 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
       email: "alex@example.com",
       company: "Acme Corporation",
       phone: "+1 (555) 123-4567",
-      initials: "AJ"
+      initials: "AJ",
+      preferences: {
+        travelFrequency: "Monthly",
+        planLevel: "Free"
+      }
     };
     
     // Save to localStorage

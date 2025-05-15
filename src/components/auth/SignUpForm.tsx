@@ -30,6 +30,7 @@ const DEFAULT_EMAIL = "demo.engineering+voyagr@pendo.io";
 const formSchema = z.object({
   name: z.string().min(2, { message: "Name must be at least 2 characters." }),
   email: z.string().email({ message: "Please enter a valid email address." }),
+  company: z.string().min(2, { message: "Company must be at least 2 characters." }),
   frequency: z.string().min(1, { message: "Please select travel frequency." }),
 });
 
@@ -42,12 +43,14 @@ interface SignUpFormProps {
 const SignUpForm: React.FC<SignUpFormProps> = ({ onSignUpSuccess }) => {
   const { toast } = useToast();
   const { updateUser } = useUser();
+  const navigate = useNavigate();
   
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: "",
+      name: "Alex Johnson",
       email: DEFAULT_EMAIL,
+      company: "Acme Corporation",
       frequency: "",
     },
   });
@@ -59,21 +62,31 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ onSignUpSuccess }) => {
       // Update the user in context
       updateUser({
         name: data.name,
-        email: data.email
+        email: data.email,
+        company: data.company
       });
       
       // Reinitialize Pendo visitor with real user data
       const cleanName = data.name.toLowerCase().replace(/\s+/g, '');
       if ((window as any).pendo) {
-        console.log('Reinitializing Pendo with user data:', { id: `demo-${cleanName}`, email: data.email, name: data.name });
+        console.log('Reinitializing Pendo with user data:', { 
+          id: `demo-${cleanName}`, 
+          email: data.email, 
+          name: data.name,
+          company: data.company,
+          travel_frequency: data.frequency
+        });
+        
         (window as any).pendo.initialize({
           visitor: {
             id: `demo-${cleanName}`,
             email: data.email,
-            full_name: data.name
+            full_name: data.name,
+            travel_frequency: data.frequency
           },
           account: {
-            id: "demo-account"
+            id: data.company.toLowerCase().replace(/\s+/g, '-'),
+            name: data.company
           }
         });
       }
@@ -83,16 +96,27 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ onSignUpSuccess }) => {
         (window as any).pendo.track('Signup Completed');
       }
       
-      // Show success toast
-      toast({
-        title: "Sign up successful!",
-        description: "You're now ready to book your trip!",
-      });
-      
       // Store user data for Pendo tracking
       localStorage.setItem("signupEmail", data.email);
       localStorage.setItem("signupName", data.name);
+      localStorage.setItem("signupCompany", data.company);
       localStorage.setItem("signupFrequency", data.frequency);
+      
+      // Show notification toast for email
+      toast({
+        title: "New Email Received",
+        description: "You have a welcome email from Voyagr",
+        action: (
+          <Button 
+            variant="outline" 
+            size="sm" 
+            onClick={() => navigate("/inbox")}
+            data-pendo-id="email-notification-button"
+          >
+            View Email
+          </Button>
+        ),
+      });
       
       // Call the success callback
       setTimeout(() => {
@@ -112,12 +136,14 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ onSignUpSuccess }) => {
   const frequencyOptions = [
     "Daily", 
     "Weekly", 
-    "Monthly"
+    "Monthly",
+    "Quarterly",
+    "Yearly"
   ];
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6" data-pendo-id="signup-form">
         <FormField
           control={form.control}
           name="name"
@@ -125,7 +151,7 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ onSignUpSuccess }) => {
             <FormItem>
               <FormLabel>Full Name</FormLabel>
               <FormControl>
-                <Input placeholder="Enter your full name" {...field} />
+                <Input placeholder="Enter your full name" {...field} data-pendo-id="signup-name-input" />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -139,7 +165,21 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ onSignUpSuccess }) => {
             <FormItem>
               <FormLabel>Work Email</FormLabel>
               <FormControl>
-                <Input type="email" placeholder="your.name@company.com" {...field} />
+                <Input type="email" placeholder="your.name@company.com" {...field} data-pendo-id="signup-email-input" />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="company"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Company</FormLabel>
+              <FormControl>
+                <Input placeholder="Enter your company name" {...field} data-pendo-id="signup-company-input" />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -152,7 +192,7 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ onSignUpSuccess }) => {
           render={({ field }) => (
             <FormItem>
               <FormLabel>Travel Frequency</FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
+              <Select onValueChange={field.onChange} defaultValue={field.value} data-pendo-id="signup-frequency-select">
                 <FormControl>
                   <SelectTrigger className="h-10">
                     <SelectValue placeholder="How often do you travel?" />
@@ -176,6 +216,7 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ onSignUpSuccess }) => {
             type="submit"
             className="w-full bg-sky-blue hover:bg-sky-blue/90 text-white py-6 rounded-md shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2 text-lg font-medium"
             disabled={form.formState.isSubmitting}
+            data-pendo-id="signup-submit-button"
           >
             {form.formState.isSubmitting ? "Creating Account..." : "Create Account"}
             {!form.formState.isSubmitting && <ArrowRight className="h-5 w-5" />}

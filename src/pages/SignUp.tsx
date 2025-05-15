@@ -10,14 +10,17 @@ const SignUp = () => {
   const location = useLocation();
   
   const handleSignUpSuccess = () => {
-    // Get the redirect URL from state or default to book page
-    const redirectTo = location.state?.from || "/book";
-    // Redirect to book page after successful signup
-    navigate(redirectTo);
+    // Track signup success with Pendo
+    if ((window as any).pendo && (window as any).pendo.track) {
+      (window as any).pendo.track('Signup Success');
+    }
+    
+    // Redirect to inbox after successful signup
+    navigate('/inbox');
   };
   
   return (
-    <div className="min-h-screen flex flex-col bg-gray-50">
+    <div className="min-h-screen flex flex-col bg-gray-50" data-pendo-id="signup-page">
       {/* Navigation Bar */}
       <header className="bg-white py-4 px-6 shadow-sm">
         <div className="container mx-auto flex justify-between items-center">
