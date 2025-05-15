@@ -16,9 +16,10 @@ import { useToast } from "@/hooks/use-toast";
 interface SignUpModalProps {
   isOpen: boolean;
   onClose: () => void;
+  onSuccess?: () => void;
 }
 
-const SignUpModal: React.FC<SignUpModalProps> = ({ isOpen, onClose }) => {
+const SignUpModal: React.FC<SignUpModalProps> = ({ isOpen, onClose, onSuccess }) => {
   const navigate = useNavigate();
   const { updateUser } = useUser();
   const { toast } = useToast();
@@ -72,7 +73,11 @@ const SignUpModal: React.FC<SignUpModalProps> = ({ isOpen, onClose }) => {
       
       setLoading(false);
       onClose();
-      navigate('/dashboard');
+      
+      // If onSuccess callback is provided, use it, otherwise navigate to book page
+      if (onSuccess) {
+        onSuccess();
+      }
     }, 1500);
   };
   

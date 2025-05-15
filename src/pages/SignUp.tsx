@@ -1,16 +1,19 @@
 
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { Navigation } from "lucide-react";
 import SignUpForm from "@/components/auth/SignUpForm";
 
 const SignUp = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   
   const handleSignUpSuccess = () => {
-    // Redirect to dashboard after successful signup
-    navigate("/dashboard");
+    // Get the redirect URL from state or default to book page
+    const redirectTo = location.state?.from || "/book";
+    // Redirect to book page after successful signup
+    navigate(redirectTo);
   };
   
   return (

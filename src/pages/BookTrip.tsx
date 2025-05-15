@@ -1,4 +1,6 @@
+
 import React, { useState, useEffect } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import AppLayout from "@/components/layout/AppLayout";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -6,6 +8,8 @@ import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import CitySearchInput from "@/components/BookTrip/CitySearchInput";
 import SignUpModal from "@/components/modals/SignUpModal";
+import BookingConfirmation from "@/components/features/BookingConfirmation";
+import { useUser } from "@/contexts/UserContext";
 import { 
   PlaneIcon, 
   HotelIcon, 
@@ -36,14 +40,25 @@ const US_CITIES = [
 ];
 
 const BookTrip = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const { user } = useUser();
+  
   const [tripType, setTripType] = useState('business');
   const [originCity, setOriginCity] = useState<CityData | null>(null);
   const [destinationCity, setDestinationCity] = useState<CityData | null>(null);
   const [isSignUpModalOpen, setIsSignUpModalOpen] = useState(false);
+  const [showConfirmation, setShowConfirmation] = useState(false);
   const [departDate, setDepartDate] = useState("");
   const [returnDate, setReturnDate] = useState("");
+  const [isUserLoggedIn, setIsUserLoggedIn] = useState(false);
   
   useEffect(() => {
+    // Check if user is logged in (has name other than default)
+    if (user && user.name !== "Alex Johnson") {
+      setIsUserLoggedIn(true);
+    }
+    
     // Set random origin city
     const randomOriginCity = US_CITIES[Math.floor(Math.random() * US_CITIES.length)];
     setOriginCity(randomOriginCity);
@@ -61,7 +76,32 @@ const BookTrip = () => {
     
     setDepartDate(departureDate.toISOString().split('T')[0]);
     setReturnDate(returnDateObj.toISOString().split('T')[0]);
-  }, []);
+    
+    // Parse UTM parameters if they exist
+    const searchParams = new URLSearchParams(location.search);
+    const utmSource = searchParams.get('utm_source');
+    const utmMedium = searchParams.get('utm_medium');
+    const utmCampaign = searchParams.get('utm_campaign');
+    const utmTerm = searchParams.get('utm_term');
+    const utmContent = searchParams.get('utm_content');
+    
+    // If UTM parameters exist, track them in Pendo
+    if (utmSource || utmMedium || utmCampaign) {
+      console.log('UTM Parameters detected:', { utmSource, utmMedium, utmCampaign, utmTerm, utmContent });
+      // Update Pendo visitor metadata with UTM params
+      if ((window as any).pendo && (window as any).pendo.updateOptions) {
+        (window as any).pendo.updateOptions({
+          visitor: {
+            utm_source: utmSource,
+            utm_medium: utmMedium,
+            utm_campaign: utmCampaign,
+            utm_term: utmTerm,
+            utm_content: utmContent
+          }
+        });
+      }
+    }
+  }, [location.search, user]);
   
   const handleSearchFlights = () => {
     // Track flight search submitted
@@ -75,9 +115,43 @@ const BookTrip = () => {
       });
     }
     
-    // Open signup modal
-    setIsSignUpModalOpen(true);
+    // If user is not logged in, open signup modal
+    if (!isUserLoggedIn) {
+      setIsSignUpModalOpen(true);
+    } else {
+      // User is logged in, show confirmation
+      setShowConfirmation(true);
+    }
   };
+
+  // Handle successful signup
+  const handleSignupSuccess = () => {
+    setIsUserLoggedIn(true);
+    setIsSignUpModalOpen(false);
+    // Show confirmation after successful signup
+    setShowConfirmation(true);
+  };
+  
+  const resetSearch = () => {
+    setShowConfirmation(false);
+  };
+  
+  // If showing booking confirmation, render that instead
+  if (showConfirmation) {
+    return (
+      <AppLayout>
+        <div className="max-w-5xl mx-auto px-4 py-6">
+          <BookingConfirmation
+            origin={originCity?.city ? `${originCity.city} (${originCity.code})` : undefined}
+            destination={destinationCity?.city ? `${destinationCity.city} (${destinationCity.code})` : undefined}
+            departDate={departDate}
+            returnDate={returnDate}
+            onClose={resetSearch}
+          />
+        </div>
+      </AppLayout>
+    );
+  }
   
   return (
     <AppLayout>
@@ -382,6 +456,7 @@ const BookTrip = () => {
       <SignUpModal 
         isOpen={isSignUpModalOpen} 
         onClose={() => setIsSignUpModalOpen(false)}
+        onSuccess={handleSignupSuccess}
       />
     </AppLayout>
   );

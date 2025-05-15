@@ -3,6 +3,7 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { 
@@ -22,6 +23,7 @@ import {
 } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 import { ArrowRight } from "lucide-react";
+import { useUser } from "@/contexts/UserContext";
 
 const DEFAULT_EMAIL = "demo.engineering+voyagr@pendo.io";
 
@@ -39,6 +41,7 @@ interface SignUpFormProps {
 
 const SignUpForm: React.FC<SignUpFormProps> = ({ onSignUpSuccess }) => {
   const { toast } = useToast();
+  const { updateUser } = useUser();
   
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
@@ -53,22 +56,48 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ onSignUpSuccess }) => {
     try {
       console.log("Form submitted with:", data);
       
+      // Update the user in context
+      updateUser({
+        name: data.name,
+        email: data.email
+      });
+      
+      // Reinitialize Pendo visitor with real user data
+      const cleanName = data.name.toLowerCase().replace(/\s+/g, '');
+      if ((window as any).pendo) {
+        console.log('Reinitializing Pendo with user data:', { id: `demo-${cleanName}`, email: data.email, name: data.name });
+        (window as any).pendo.initialize({
+          visitor: {
+            id: `demo-${cleanName}`,
+            email: data.email,
+            full_name: data.name
+          },
+          account: {
+            id: "demo-account"
+          }
+        });
+      }
+      
+      // Track signup completed
+      if ((window as any).pendo && (window as any).pendo.track) {
+        (window as any).pendo.track('Signup Completed');
+      }
+      
       // Show success toast
       toast({
         title: "Sign up successful!",
-        description: "Redirecting to your dashboard...",
+        description: "You're now ready to book your trip!",
       });
       
-      // Simulate API call with a short delay
+      // Store user data for Pendo tracking
+      localStorage.setItem("signupEmail", data.email);
+      localStorage.setItem("signupName", data.name);
+      localStorage.setItem("signupFrequency", data.frequency);
+      
+      // Call the success callback
       setTimeout(() => {
-        // Store user data for Pendo tracking
-        localStorage.setItem("signupEmail", data.email);
-        localStorage.setItem("signupName", data.name);
-        localStorage.setItem("signupFrequency", data.frequency);
-        
-        // Call the success callback
         onSignUpSuccess();
-      }, 1500);
+      }, 1000);
       
     } catch (error) {
       console.error("Signup error:", error);
