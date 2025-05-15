@@ -82,45 +82,9 @@ const DashboardContent = () => {
         </Card>
       </div>
       
-      {/* Recommended Hotels Section */}
-      <div>
-        <h2 className="text-xl font-bold mb-4">Recommended Hotels</h2>
-        
-        {loading ? (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {[1, 2, 3].map((i) => (
-              <Card key={i} className="h-64 animate-pulse">
-                <CardContent className="p-0 h-full bg-gray-100 rounded-md"></CardContent>
-              </Card>
-            ))}
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {[
-              { name: "Grand Hotel", location: "New York", price: "$199", image: "/lovable-uploads/9f5098a3-c876-45be-a035-b556bfc2b4d1.png" },
-              { name: "Ocean View Resort", location: "Miami", price: "$249", image: "/lovable-uploads/f2812308-776f-41b1-8b83-d0ead1af1f3a.png" },
-              { name: "Mountain Retreat", location: "Denver", price: "$179", image: "/lovable-uploads/9b2112ab-cd15-4128-b9ee-bed226acc140.png" }
-            ].map((hotel) => (
-              <Card key={hotel.name} className="overflow-hidden">
-                <div className="h-40 relative">
-                  <img 
-                    src={hotel.image} 
-                    alt={hotel.name}
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-                <CardContent className="pt-4">
-                  <h3 className="font-bold">{hotel.name}</h3>
-                  <p className="text-gray-600 text-sm">{hotel.location}</p>
-                  <div className="flex justify-between items-center mt-2">
-                    <span className="font-bold text-sky-blue">{hotel.price}/night</span>
-                    <Button size="sm" variant="outline">View Details</Button>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        )}
+      {/* Placeholder for Pendo guide */}
+      <div data-pendo-id="recommended-hotels-section" className="mt-4">
+        {/* This empty div with a specific pendo-id will be used as an anchor for the Pendo guide */}
       </div>
     </div>
   );
