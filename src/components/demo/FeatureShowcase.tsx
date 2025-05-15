@@ -3,18 +3,13 @@ import { useState } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import PendoSurvey from '../pendo/PendoSurvey';
-import PendoExperiment from '../pendo/PendoExperiment';
 
 const FeatureShowcase = () => {
   const [activeTab, setActiveTab] = useState<string>("dashboard");
   
-  // Simulate a Pendo guide launch
+  // Simulate a guide launch (functionality kept for future implementation)
   const launchGuide = (guideId: string) => {
-    if ((window as any).simulatePendoGuide) {
-      (window as any).simulatePendoGuide(guideId);
-    }
-    console.log(`Launch Pendo guide: ${guideId}`);
+    console.log(`Launch guide: ${guideId}`);
   };
   
   return (
@@ -26,7 +21,7 @@ const FeatureShowcase = () => {
           </h2>
           <p className="text-acme-gray text-lg max-w-3xl mx-auto">
             Explore a simulated version of the AcmeTravel platform with Travel Agent integrated. 
-            Click around to experience different features and Pendo-powered elements.
+            Click around to experience different features.
           </p>
         </div>
         
@@ -38,28 +33,24 @@ const FeatureShowcase = () => {
                   <TabsTrigger 
                     value="dashboard" 
                     className="data-[state=active]:border-acme-purple data-[state=active]:text-acme-purple"
-                    data-pendo-id="showcase-tab-dashboard"
                   >
                     Dashboard
                   </TabsTrigger>
                   <TabsTrigger 
                     value="onboarding" 
                     className="data-[state=active]:border-acme-purple data-[state=active]:text-acme-purple"
-                    data-pendo-id="showcase-tab-onboarding"
                   >
                     Onboarding
                   </TabsTrigger>
                   <TabsTrigger 
                     value="support" 
                     className="data-[state=active]:border-acme-purple data-[state=active]:text-acme-purple"
-                    data-pendo-id="showcase-tab-support"
                   >
                     Support
                   </TabsTrigger>
                   <TabsTrigger 
                     value="upsell" 
                     className="data-[state=active]:border-acme-purple data-[state=active]:text-acme-purple"
-                    data-pendo-id="showcase-tab-upsell"
                   >
                     Cross-sell
                   </TabsTrigger>
@@ -77,7 +68,6 @@ const FeatureShowcase = () => {
                         <Button 
                           variant="outline" 
                           size="sm"
-                          data-pendo-id="dashboard-new-trip"
                           onClick={() => launchGuide('new-trip-guide')}
                         >
                           + New Trip
@@ -85,7 +75,7 @@ const FeatureShowcase = () => {
                       </div>
                       
                       <div className="space-y-4">
-                        <Card className="relative" data-pendo-id="trip-card-sf">
+                        <Card className="relative">
                           <div className="absolute -right-2 -top-2 bg-green-500 text-white text-xs px-2 py-1 rounded-full">
                             Upcoming
                           </div>
@@ -106,7 +96,6 @@ const FeatureShowcase = () => {
                                 variant="outline" 
                                 size="sm"
                                 className="text-xs"
-                                data-pendo-id="trip-modify"
                               >
                                 Modify Trip
                               </Button>
@@ -114,7 +103,6 @@ const FeatureShowcase = () => {
                                 variant="outline" 
                                 size="sm"
                                 className="text-xs"
-                                data-pendo-id="trip-cancel"
                               >
                                 Cancel
                               </Button>
@@ -124,7 +112,7 @@ const FeatureShowcase = () => {
                       </div>
                     </div>
                     
-                    <div className="glass-card p-5 rounded-lg" data-pendo-id="travel-agent-chat">
+                    <div className="glass-card p-5 rounded-lg">
                       <div className="flex items-center justify-between mb-4">
                         <div className="flex items-center gap-2">
                           <div className="w-8 h-8 bg-acme-purple rounded-full flex items-center justify-center">
@@ -152,14 +140,12 @@ const FeatureShowcase = () => {
                         <Button 
                           size="sm" 
                           className="bg-acme-purple hover:bg-acme-purple-dark"
-                          data-pendo-id="quick-book-flight"
                         >
                           Book a Flight
                         </Button>
                         <Button 
                           size="sm" 
                           variant="outline"
-                          data-pendo-id="quick-book-hotel"
                         >
                           Book a Hotel
                         </Button>
@@ -202,7 +188,6 @@ const FeatureShowcase = () => {
                           variant="ghost" 
                           size="sm" 
                           className="text-xs"
-                          data-pendo-id="dismiss-tip"
                         >
                           Got it
                         </Button>
@@ -211,7 +196,6 @@ const FeatureShowcase = () => {
                     
                     <Button 
                       className="w-full bg-acme-purple hover:bg-acme-purple-dark"
-                      data-pendo-id="explore-features"
                       onClick={() => launchGuide('feature-tour')}
                     >
                       Explore All Features
@@ -232,8 +216,7 @@ const FeatureShowcase = () => {
                     </p>
                     
                     <div className="space-y-4 mb-8">
-                      <Card className="border-l-4 border-acme-purple cursor-pointer hover:shadow-md transition-shadow"
-                        data-pendo-id="onboard-frequent-traveler">
+                      <Card className="border-l-4 border-acme-purple cursor-pointer hover:shadow-md transition-shadow">
                         <CardContent className="p-4">
                           <h4 className="font-medium">Frequent Business Traveler</h4>
                           <p className="text-sm text-gray-500">
@@ -242,8 +225,7 @@ const FeatureShowcase = () => {
                         </CardContent>
                       </Card>
                       
-                      <Card className="border-l-4 border-acme-pink cursor-pointer hover:shadow-md transition-shadow"
-                        data-pendo-id="onboard-occasional-traveler">
+                      <Card className="border-l-4 border-acme-pink cursor-pointer hover:shadow-md transition-shadow">
                         <CardContent className="p-4">
                           <h4 className="font-medium">Occasional Traveler</h4>
                           <p className="text-sm text-gray-500">
@@ -252,8 +234,7 @@ const FeatureShowcase = () => {
                         </CardContent>
                       </Card>
                       
-                      <Card className="border-l-4 border-gray-300 cursor-pointer hover:shadow-md transition-shadow"
-                        data-pendo-id="onboard-travel-admin">
+                      <Card className="border-l-4 border-gray-300 cursor-pointer hover:shadow-md transition-shadow">
                         <CardContent className="p-4">
                           <h4 className="font-medium">Travel Administrator</h4>
                           <p className="text-sm text-gray-500">
@@ -265,7 +246,6 @@ const FeatureShowcase = () => {
                     
                     <Button 
                       className="w-full bg-acme-purple hover:bg-acme-purple-dark"
-                      data-pendo-id="launch-onboarding-demo"
                       onClick={() => launchGuide('onboarding-journey')}
                     >
                       Launch Onboarding Demo
@@ -275,7 +255,7 @@ const FeatureShowcase = () => {
                   <div className="bg-gray-50 p-6 rounded-lg">
                     <h3 className="text-lg font-medium mb-2">Orchestrate Branching Demo</h3>
                     <p className="text-sm text-gray-600 mb-4">
-                      This showcases how Pendo's Orchestrate creates different user journeys based on 
+                      This showcases how different user journeys are created based on 
                       behavior and attributes.
                     </p>
                     
@@ -287,19 +267,16 @@ const FeatureShowcase = () => {
                       <div className="space-y-2">
                         <button 
                           className="text-left w-full bg-gray-50 hover:bg-gray-100 p-2 rounded text-sm"
-                          data-pendo-id="view-email-frequent"
                         >
                           View Frequent Traveler Email
                         </button>
                         <button 
                           className="text-left w-full bg-gray-50 hover:bg-gray-100 p-2 rounded text-sm"
-                          data-pendo-id="view-email-occasional"
                         >
                           View Occasional Traveler Email
                         </button>
                         <button 
                           className="text-left w-full bg-gray-50 hover:bg-gray-100 p-2 rounded text-sm"
-                          data-pendo-id="view-email-admin"
                         >
                           View Administrator Email
                         </button>
@@ -337,8 +314,7 @@ const FeatureShowcase = () => {
                       Proactive Support Experience
                     </h3>
                     <p className="text-gray-600 mb-6">
-                      See how Travel Agent detects and resolves issues before they escalate
-                      using Pendo's frustration detection and replay capabilities.
+                      See how Travel Agent detects and resolves issues before they escalate.
                     </p>
                     
                     <div className="bg-white border rounded-lg p-5 mb-6">
@@ -377,7 +353,6 @@ const FeatureShowcase = () => {
                       <div className="mt-4">
                         <Button 
                           className="w-full bg-acme-pink hover:bg-opacity-90 text-white"
-                          data-pendo-id="view-session-replay"
                           onClick={() => launchGuide('session-replay-demo')}
                         >
                           View Session Replay
@@ -385,12 +360,22 @@ const FeatureShowcase = () => {
                       </div>
                     </div>
                     
-                    <PendoSurvey 
-                      type="csat"
-                      title="Support Experience Feedback"
-                      description="Please rate your recent experience with our support team."
-                      pendoId="support-csat-survey"
-                    />
+                    <div className="bg-gray-50 p-4 rounded-lg">
+                      <h4 className="font-medium mb-2">Support Experience Feedback</h4>
+                      <p className="text-sm text-gray-600 mb-3">
+                        Please rate your recent experience with our support team.
+                      </p>
+                      <div className="flex items-center gap-2">
+                        {[1, 2, 3, 4, 5].map((rating) => (
+                          <button 
+                            key={rating}
+                            className="w-8 h-8 rounded-full bg-white border border-gray-300 hover:bg-acme-purple hover:text-white transition-colors flex items-center justify-center"
+                          >
+                            {rating}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
                   </div>
                   
                   <div className="bg-gray-50 p-6 rounded-lg">
@@ -407,14 +392,12 @@ const FeatureShowcase = () => {
                         <Button 
                           size="sm" 
                           variant="outline"
-                          data-pendo-id="prev-replay-point"
                         >
                           Previous
                         </Button>
                         <Button 
                           size="sm" 
                           className="bg-acme-pink hover:bg-opacity-90"
-                          data-pendo-id="next-replay-point"
                         >
                           Next Issue
                         </Button>
@@ -443,7 +426,6 @@ const FeatureShowcase = () => {
                       <Button 
                         size="sm"
                         className="w-full bg-acme-pink hover:bg-opacity-90 text-white"
-                        data-pendo-id="create-jira-ticket"
                       >
                         Create JIRA Ticket
                       </Button>
@@ -470,35 +452,51 @@ const FeatureShowcase = () => {
                         The system will show you one variant based on your user profile.
                       </p>
                       
-                      <PendoExperiment
-                        experimentId="hotel-upsell"
-                        variants={[
-                          {
-                            id: "discount",
-                            title: "Save 15% on Your Stay",
-                            description: "Book your hotel through AcmeTravel and save up to 15% compared to booking directly.",
-                            buttonText: "View Hotel Deals",
-                            buttonColor: "default", // Changed from "purple" to "default"
-                            imageUrl: "https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&q=80"
-                          },
-                          {
-                            id: "convenience",
-                            title: "Complete Your Trip",
-                            description: "Add a hotel to your San Francisco trip for a seamless travel experience.",
-                            buttonText: "Find Hotels Nearby",
-                            buttonColor: "destructive", // Changed from "pink" to "destructive"
-                            imageUrl: "https://images.unsplash.com/photo-1564501049412-61c2a3083791?auto=format&fit=crop&q=80"
-                          }
-                        ]}
-                      />
+                      <div className="grid grid-cols-1 gap-4">
+                        <Card className="overflow-hidden">
+                          <div className="h-48 bg-gray-200">
+                            <img 
+                              src="https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&q=80" 
+                              alt="Hotel room" 
+                              className="w-full h-full object-cover"
+                            />
+                          </div>
+                          <CardContent className="p-4">
+                            <h4 className="font-medium mb-2">Save 15% on Your Stay</h4>
+                            <p className="text-sm text-gray-600 mb-3">
+                              Book your hotel through AcmeTravel and save up to 15% compared to booking directly.
+                            </p>
+                            <Button className="w-full">
+                              View Hotel Deals
+                            </Button>
+                          </CardContent>
+                        </Card>
+                      </div>
                     </div>
                     
-                    <PendoSurvey 
-                      type="pmf"
-                      title="Product Market Fit Survey"
-                      description="Help us understand how valuable AcmeTravel is to you."
-                      pendoId="pmf-survey"
-                    />
+                    <div className="bg-gray-50 p-4 rounded-lg">
+                      <h4 className="font-medium mb-2">Product Market Fit Survey</h4>
+                      <p className="text-sm text-gray-600 mb-3">
+                        Help us understand how valuable AcmeTravel is to you.
+                      </p>
+                      <div className="space-y-2">
+                        <div className="flex items-center">
+                          <input type="radio" id="very" name="pmf" className="mr-2" />
+                          <label htmlFor="very" className="text-sm">Very disappointed</label>
+                        </div>
+                        <div className="flex items-center">
+                          <input type="radio" id="somewhat" name="pmf" className="mr-2" />
+                          <label htmlFor="somewhat" className="text-sm">Somewhat disappointed</label>
+                        </div>
+                        <div className="flex items-center">
+                          <input type="radio" id="not" name="pmf" className="mr-2" />
+                          <label htmlFor="not" className="text-sm">Not disappointed</label>
+                        </div>
+                      </div>
+                      <Button size="sm" className="mt-3 w-full">
+                        Submit Feedback
+                      </Button>
+                    </div>
                   </div>
                   
                   <div className="bg-gray-50 p-6 rounded-lg">
@@ -564,7 +562,6 @@ const FeatureShowcase = () => {
                       <Button 
                         className="w-full mt-4 bg-acme-purple hover:bg-acme-purple-dark text-white"
                         size="sm"
-                        data-pendo-id="view-pmf-details"
                       >
                         View Detailed PMF Results
                       </Button>

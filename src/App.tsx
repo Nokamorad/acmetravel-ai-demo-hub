@@ -14,7 +14,6 @@ import HelpCenter from "./pages/HelpCenter";
 import BoogleSearch from "./pages/BoogleSearch";
 import SearchResults from "./pages/SearchResults";
 import RecommendedHotels from "./pages/RecommendedHotels";
-import PendoIntegration from "@/components/pendo/PendoIntegration";
 import { UserProvider } from "@/contexts/UserContext";
 import Inbox from "./pages/Inbox";
 import Reschedule from "./pages/Reschedule";
@@ -37,8 +36,6 @@ const App = () => {
             <Toaster />
             <Sonner />
             <BrowserRouter>
-              {/* Pendo Integration at the app level ensures it's available on all routes */}
-              <PendoIntegration />
               <Routes>
                 <Route path="/" element={<BoogleSearch />} />
                 <Route path="/search" element={<BoogleSearch />} />
