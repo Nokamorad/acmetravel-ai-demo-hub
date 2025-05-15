@@ -1,77 +1,14 @@
 
 import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import { v4 as uuidv4 } from 'uuid';
 import { useUser } from '@/contexts/UserContext';
 
-// Interface for visitor metadata types
-interface VisitorMetadata {
-  visitor_id: string;
-  visitor_type: 'commuter' | 'occasional' | 'manager';
-  utm_source: string | null;
-  first_booking_complete: boolean;
-  language: string;
-  travel_frequency: string;
-  tier: 'standard' | 'premium' | 'executive';
-  annual_travel_spend: number;
-  full_name?: string;
-  email?: string;
-}
-
-// This component handles the Pendo script integration
 const PendoIntegration: React.FC = () => {
   const location = useLocation();
-  const { user } = useUser();
+  const { user, setUser } = useUser();
   
-  const [metadata, setMetadata] = useState<VisitorMetadata>(() => {
-    // Try to load existing metadata from localStorage
-    const savedMetadata = localStorage.getItem('acmetravel_visitor');
-    if (savedMetadata) {
-      return JSON.parse(savedMetadata);
-    }
-    
-    // Generate anonymous visitor ID for initial visit
-    const anonymousId = `anonymous-${Math.floor(Math.random() * 1000000)}`;
-    console.log('Generated anonymous visitor ID:', anonymousId);
-    
-    // Generate new visitor metadata if none exists
-    const visitorType = Math.random() < 0.33 ? 'commuter' : 
-                        Math.random() < 0.66 ? 'occasional' : 'manager';
-    
-    // Determine tier and spend based on visitor type
-    let tier: 'standard' | 'premium' | 'executive';
-    let annualSpend: number;
-    
-    switch (visitorType) {
-      case 'commuter':
-        tier = Math.random() < 0.7 ? 'premium' : 'executive';
-        annualSpend = Math.floor(Math.random() * 50000) + 30000;
-        break;
-      case 'manager':
-        tier = 'executive';
-        annualSpend = Math.floor(Math.random() * 100000) + 75000;
-        break;
-      default: // occasional
-        tier = 'standard';
-        annualSpend = Math.floor(Math.random() * 15000) + 5000;
-    }
-    
-    const newMetadata: VisitorMetadata = {
-      visitor_id: anonymousId, // Anonymous visitor ID
-      visitor_type: visitorType,
-      utm_source: new URLSearchParams(window.location.search).get('utm_source'),
-      first_booking_complete: false,
-      language: navigator.language || 'en-US',
-      travel_frequency: visitorType === 'commuter' ? 'frequent' : 
-                        visitorType === 'occasional' ? 'occasional' : 'regular',
-      tier: tier,
-      annual_travel_spend: annualSpend
-    };
-    
-    // Save to localStorage
-    localStorage.setItem('acmetravel_visitor', JSON.stringify(newMetadata));
-    return newMetadata;
-  });
+  // Track if Pendo has been initialized
+  const [initialized, setInitialized] = useState(false);
   
   useEffect(() => {
     // Initialize Pendo with visitor and account data
@@ -85,9 +22,6 @@ const PendoIntegration: React.FC = () => {
         return;
       }
       
-      console.log('Initializing Pendo with visitor data:', metadata);
-      console.log('User data:', user);
-      
       // Pendo snippet
       (function(apiKey){
         (function(p,e,n,d,o){var v,w,x,y,z;o=p[d]=p[d]||{};o._q=o._q||[];
@@ -95,33 +29,137 @@ const PendoIntegration: React.FC = () => {
             o[m]=o[m]||function(){o._q[m===v[0]?'unshift':'push']([m].concat([].slice.call(arguments,0)));};})(v[w]);
             y=e.createElement(n);y.async=!0;y.src='https://cdn.pendo.io/agent/static/'+apiKey+'/pendo.js';
             z=e.getElementsByTagName(n)[0];z.parentNode.insertBefore(y,z);})(window,document,'script','pendo');
-            
-        // Initialize Pendo with visitor data
+        
+        // Helper to pull UTMs from URL
+        const getUTMs = () => {
+          const params = new URLSearchParams(window.location.search);
+          return {
+            utm_source: params.get('utm_source') || null,
+            utm_medium: params.get('utm_medium') || null,
+            utm_campaign: params.get('utm_campaign') || null,
+            utm_term: params.get('utm_term') || null,
+            utm_content: params.get('utm_content') || null
+          };
+        };
+        
+        // Helper to generate a random anonymous ID
+        const generateAnonymousId = () => {
+          return "anonymous-" + Math.floor(Math.random() * 1000000000);
+        };
+        
+        // Helper to generate a random demo user name
+        const generateRandomName = () => {
+          const names = [
+            "Alex Johnson",
+            "Taylor Smith",
+            "Jordan Lee",
+            "Casey Morgan",
+            "Sam Cameron",
+            "Jamie Parker",
+            "Drew Adams",
+            "Skyler Reese",
+            "Riley Quinn",
+            "Avery Blake"
+          ];
+          const randomIndex = Math.floor(Math.random() * names.length);
+          return names[randomIndex];
+        };
+        
+        // Initialize anonymous visitor on page load
+        const anonymousVisitorId = generateAnonymousId();
+        console.log('Initializing Pendo with anonymous visitor ID:', anonymousVisitorId);
+        
         (window as any).pendo.initialize({
           visitor: {
-            id: metadata.visitor_id,
-            user_id: user.id,
-            user_name: user.name,
-            email: user.email || metadata.email,
-            full_name: metadata.full_name || user.name,
-            visitor_type: metadata.visitor_type,
-            utm_source: metadata.utm_source,
-            first_booking_complete: metadata.first_booking_complete,
-            language: metadata.language,
-            travel_frequency: metadata.travel_frequency,
-            tier: metadata.tier,
-            annual_travel_spend: metadata.annual_travel_spend
+            id: anonymousVisitorId,
+            ...getUTMs()
           },
           account: {
-            id: 'demo-account',
-            name: 'AcmeTravel Demo',
-            is_paying: true,
-            plan_level: 'enterprise',
-            total_users: 150,
-            industry: 'Travel'
+            id: "demo-account"
           }
         });
+        
+        // Make functions available globally
+        (window as any).getUTMs = getUTMs;
+        (window as any).generateAnonymousId = generateAnonymousId;
+        (window as any).generateRandomName = generateRandomName;
+        
+        // On signup, reinitialize with permanent visitor metadata
+        (window as any).onUserSignup = (travelFrequency: string) => {
+          const name = generateRandomName();
+          const cleanName = name.toLowerCase().replace(/\s+/g, '');
+          let planLevel = 'Free';
+          
+          switch (travelFrequency.toLowerCase()) {
+            case 'daily':
+              planLevel = 'Platinum';
+              break;
+            case 'weekly':
+              planLevel = 'Gold';
+              break;
+            case 'monthly':
+              planLevel = 'Silver';
+              break;
+            case 'quarterly':
+              planLevel = 'Bronze';
+              break;
+            default:
+              planLevel = 'Free';
+          }
+          
+          console.log('Reinitializing Pendo with user data:', {
+            id: `demo-${cleanName}`,
+            email: `demo.engineering+${cleanName}@pendo.io`,
+            name: name,
+            travel_frequency: travelFrequency,
+            plan_level: planLevel
+          });
+          
+          // Update user context
+          if (setUser) {
+            setUser({
+              id: `demo-${cleanName}`,
+              email: `demo.engineering+${cleanName}@pendo.io`,
+              name: name,
+              isLoggedIn: true,
+              preferences: {
+                travelFrequency: travelFrequency,
+                planLevel: planLevel
+              }
+            });
+          }
+          
+          (window as any).pendo.initialize({
+            visitor: {
+              id: `demo-${cleanName}`,
+              email: `demo.engineering+${cleanName}@pendo.io`,
+              full_name: name,
+              travel_frequency: travelFrequency,
+              plan_level: planLevel,
+              ...getUTMs()
+            },
+            account: {
+              id: "demo-account"
+            }
+          });
+          
+          // Track signup event
+          (window as any).pendo.track('User Signed Up', {
+            name: name,
+            travel_frequency: travelFrequency,
+            plan_level: planLevel
+          });
+          
+          return {
+            name,
+            email: `demo.engineering+${cleanName}@pendo.io`,
+            id: `demo-${cleanName}`,
+            planLevel
+          };
+        };
       })(PENDO_API_KEY);
+      
+      setInitialized(true);
     };
 
     // Initialize Pendo when the component mounts
@@ -131,122 +169,36 @@ const PendoIntegration: React.FC = () => {
     const trackPageView = () => {
       if ((window as any).pendo && (window as any).pendo.track) {
         console.log(`Pendo track page view: ${location.pathname}`);
-        (window as any).pendo.track('page_view', { page: location.pathname });
+        (window as any).pendo.track('Page View', { page: location.pathname });
       }
     };
     
     // Track page view when location changes
     trackPageView();
     
-    // Expose function to update anonymous visitor to identified visitor
-    (window as any).onUserSignup = (name: string, email: string) => {
-      const cleanName = name.toLowerCase().replace(/\s+/g, '');
-      const visitorId = `demo-${cleanName}`;
-      
-      // Update metadata with user info
-      const updatedMetadata = { 
-        ...metadata, 
-        visitor_id: visitorId,
-        full_name: name,
-        email: email
-      };
-      
-      setMetadata(updatedMetadata);
-      localStorage.setItem('acmetravel_visitor', JSON.stringify(updatedMetadata));
-      
-      // Update Pendo visitor
-      if ((window as any).pendo) {
-        console.log('Reinitializing Pendo with user data:', updatedMetadata);
-        (window as any).pendo.initialize({
-          visitor: {
-            id: visitorId,
-            email: email,
-            full_name: name,
-            visitor_type: metadata.visitor_type,
-            utm_source: metadata.utm_source,
-            first_booking_complete: metadata.first_booking_complete,
-            language: metadata.language,
-            travel_frequency: metadata.travel_frequency,
-            tier: metadata.tier,
-            annual_travel_spend: metadata.annual_travel_spend
-          },
-          account: {
-            id: 'demo-account'
-          }
-        });
-      }
-      
-      // Track signup completed event
-      if ((window as any).pendo && (window as any).pendo.track) {
-        (window as any).pendo.track('Signup Completed', {
-          user_name: name,
-          user_email: email
-        });
-      }
-      
-      console.log('Updated visitor metadata after signup:', updatedMetadata);
-      return updatedMetadata;
-    };
-    
-    // Helper for simulating Pendo guide launches (for demo purposes)
-    (window as any).simulatePendoGuide = (guideId: string) => {
-      console.log(`Launching Pendo guide: ${guideId}`);
-      // In production, this would trigger a specific Pendo guide
-    };
-    
     return () => {
       // Cleanup if necessary
     };
-  }, [location, metadata, user]);
+  }, [location, setUser]);
 
   // Create a dropdown to toggle user segments for demo purposes
   return (
     <div className="fixed bottom-2 right-2 z-50 opacity-50 hover:opacity-100 transition-opacity">
       <select 
         className="text-xs bg-white border border-gray-200 rounded py-1 px-2 shadow-sm"
-        value={metadata.visitor_type}
+        value={user.preferences?.travelFrequency || 'occasional'}
         onChange={(e) => {
-          const value = e.target.value as 'commuter' | 'occasional' | 'manager';
-          let tier: 'standard' | 'premium' | 'executive';
-          let annualSpend: number;
-          
-          switch (value) {
-            case 'commuter':
-              tier = 'premium';
-              annualSpend = 45000;
-              break;
-            case 'manager':
-              tier = 'executive';
-              annualSpend = 120000;
-              break;
-            default: // occasional
-              tier = 'standard';
-              annualSpend = 8000;
-          }
-          
-          const updatedMetadata = {
-            ...metadata,
-            visitor_type: value,
-            travel_frequency: value === 'commuter' ? 'frequent' : 
-                              (value === 'occasional' ? 'occasional' : 'regular'),
-            tier: tier,
-            annual_travel_spend: annualSpend
-          };
-          
-          setMetadata(updatedMetadata);
-          localStorage.setItem('acmetravel_visitor', JSON.stringify(updatedMetadata));
-          
-          // Update Pendo visitor metadata
-          if ((window as any).pendo && (window as any).pendo.updateOptions) {
-            (window as any).pendo.updateOptions({ 
-              visitor: updatedMetadata
-            });
+          if ((window as any).onUserSignup) {
+            (window as any).onUserSignup(e.target.value);
           }
         }}
+        data-pendo-id="user-segment-toggle"
       >
-        <option value="commuter">Frequent Traveler (Premium)</option>
-        <option value="occasional">Occasional Traveler (Standard)</option>
-        <option value="manager">Travel Manager (Executive)</option>
+        <option value="daily">Frequent Traveler (Platinum)</option>
+        <option value="weekly">Regular Traveler (Gold)</option>
+        <option value="monthly">Semi-Regular Traveler (Silver)</option>
+        <option value="quarterly">Occasional Traveler (Bronze)</option>
+        <option value="yearly">Rare Traveler (Free)</option>
       </select>
     </div>
   );

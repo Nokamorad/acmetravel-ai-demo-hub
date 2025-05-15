@@ -1,145 +1,288 @@
 
-import React, { useState } from 'react';
-import AppLayout from "@/components/layout/AppLayout";
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useUser } from "@/contexts/UserContext";
-import { useNavigate } from "react-router-dom";
-import { Inbox as InboxIcon, Clock, Mail, ArrowRight, Hotel, Calendar } from "lucide-react";
+import { Inbox as InboxIcon, Mail, Trash, ChevronRight } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
+import AppLayout from "@/components/layout/AppLayout";
+
+// Email interface for type safety
+interface Email {
+  id: string;
+  subject: string;
+  sender: string;
+  senderEmail: string;
+  content: string;
+  time: string;
+  read: boolean;
+  actionLink?: string;
+  viewOnly?: boolean;
+}
 
 const Inbox = () => {
   const { user } = useUser();
   const navigate = useNavigate();
-  const [emails, setEmails] = useState([
+  const location = useLocation();
+  const [selectedEmail, setSelectedEmail] = useState<Email | null>(null);
+  const [emails, setEmails] = useState<Email[]>([
     {
       id: 'welcome-email',
-      subject: 'Welcome to Voyagr!',
-      sender: 'Voyagr Team',
-      content: 'Thanks for signing up! Click to Sign In.',
-      time: '2 hours ago',
+      subject: 'Welcome to Voyagr — Start Your Journey!',
+      sender: 'Voyagr Travel',
+      senderEmail: 'noreply@voyagr.acme.com',
+      content: `
+        <div>
+          <p>Hi ${user.name || 'Traveler'},</p>
+          <p>Thanks for signing up for Voyagr. We're excited to help you plan and book your travel stress-free.</p>
+          <p>Ready to find your next adventure?</p>
+          <p>The Voyagr Team</p>
+        </div>
+      `,
+      time: '2 minutes ago',
       read: false,
-      action: 'Sign In',
       actionLink: '/dashboard'
     },
     {
       id: 'booking-confirmed',
-      subject: 'Your Booking is Confirmed!',
+      subject: 'Your Flight to New York is Confirmed! Book a Hotel?',
       sender: 'Voyagr Bookings',
-      content: 'Booking Confirmed! Ready to add a hotel?',
-      time: '1 hour ago',
+      senderEmail: 'bookings@voyagr.acme.com',
+      content: `
+        <div>
+          <p>Hi ${user.name || 'Traveler'},</p>
+          <p>Great news! Your flight to New York has been confirmed.</p>
+          <p>Would you like to complete your trip by booking a hotel near your destination?</p>
+          <p>The Voyagr Bookings Team</p>
+        </div>
+      `,
+      time: '1 minute ago',
       read: false,
-      action: 'Book Hotel',
       actionLink: '/hotels'
+    },
+    {
+      id: 'travel-deals',
+      subject: 'Travel Deals: Save 30% on Hotels',
+      sender: 'Travel Weekly',
+      senderEmail: 'deals@travelweekly.com',
+      content: `
+        <div>
+          <p>Hi ${user.name || 'Traveler'},</p>
+          <p>Check out these amazing hotel deals for your next trip!</p>
+          <p>- Luxury in Paris: 30% off</p>
+          <p>- Beach Resort in Bali: 25% off</p>
+          <p>- City Center in Tokyo: 20% off</p>
+          <p>Travel Weekly Deals Team</p>
+        </div>
+      `,
+      time: 'Today',
+      read: true,
+      viewOnly: true
+    },
+    {
+      id: 'lounge-promo',
+      subject: 'Airport Lounge Membership Promo',
+      sender: 'AirClub',
+      senderEmail: 'membership@airclub.com',
+      content: `
+        <div>
+          <p>Hi ${user.name || 'Traveler'},</p>
+          <p>As a valued traveler, we'd like to offer you a special discount on our premium lounge membership.</p>
+          <p>Enjoy complimentary drinks, snacks, and Wi-Fi at over 500 airport lounges worldwide.</p>
+          <p>The AirClub Team</p>
+        </div>
+      `,
+      time: '2 days ago',
+      read: true,
+      viewOnly: true
     }
   ]);
   
-  const handleEmailAction = (email: any, index: number) => {
-    // Mark email as read
-    const updatedEmails = [...emails];
-    updatedEmails[index].read = true;
-    setEmails(updatedEmails);
-    
-    // Track email interaction with Pendo
+  // Update email list based on URL parameters or login state
+  useEffect(() => {
+    // Track page view
     if ((window as any).pendo && (window as any).pendo.track) {
-      (window as any).pendo.track('Email Interaction', {
-        email_id: email.id,
-        email_subject: email.subject,
-        action: email.action
+      (window as any).pendo.track('Inbox Viewed', {
+        email_count: emails.length,
+        unread_count: emails.filter(email => !email.read).length
       });
     }
     
-    // Navigate to the action link
-    navigate(email.actionLink);
+    // Check for URL params to see if we need to highlight a specific email
+    const params = new URLSearchParams(location.search);
+    const highlightEmailId = params.get('highlight');
+    
+    if (highlightEmailId) {
+      const emailToHighlight = emails.find(email => email.id === highlightEmailId);
+      if (emailToHighlight) {
+        setSelectedEmail(emailToHighlight);
+      }
+    }
+  }, [location.search, emails]);
+  
+  const handleEmailClick = (email: Email) => {
+    // Track email interaction with Pendo
+    if ((window as any).pendo && (window as any).pendo.track) {
+      (window as any).pendo.track('Email Opened', {
+        email_id: email.id,
+        email_subject: email.subject
+      });
+    }
+    
+    // Mark email as read
+    const updatedEmails = emails.map(e => 
+      e.id === email.id ? { ...e, read: true } : e
+    );
+    setEmails(updatedEmails);
+    
+    // Set selected email
+    setSelectedEmail(email);
+  };
+  
+  const handleActionClick = (email: Email) => {
+    // Track action click
+    if ((window as any).pendo && (window as any).pendo.track) {
+      (window as any).pendo.track('Email Action Clicked', {
+        email_id: email.id,
+        email_subject: email.subject,
+        destination: email.actionLink
+      });
+    }
+    
+    // Navigate to action link
+    if (email.actionLink) {
+      navigate(email.actionLink);
+    }
   };
   
   return (
     <AppLayout>
-      <div className="p-6 max-w-5xl mx-auto">
-        <div className="mb-6 flex justify-between items-center">
-          <div>
-            <h1 className="text-2xl font-bold text-midnight-navy">Inbox</h1>
-            <p className="text-gray-600">View and manage your travel notifications</p>
-          </div>
-          
-          <div className="flex items-center gap-2">
-            <Button variant="outline" size="sm" className="flex items-center gap-2" data-pendo-id="refresh-inbox">
-              <Clock className="h-4 w-4" />
-              <span>Refresh</span>
-            </Button>
-            <Button size="sm" className="flex items-center gap-2 bg-sky-blue hover:bg-sky-blue/90" data-pendo-id="compose-email">
+      <div className="min-h-screen bg-gray-50 flex">
+        {/* Sidebar */}
+        <aside className="w-64 bg-white border-r border-gray-200 p-6 hidden md:block">
+          <h2 className="text-xl font-bold mb-6 text-midnight-navy">Voyagr Mail</h2>
+          <nav className="flex flex-col gap-4">
+            <a href="#" className="flex items-center gap-2 text-sky-blue font-semibold" data-pendo-id="inbox-nav">
+              <InboxIcon className="h-4 w-4" />
+              <span>Inbox</span>
+              <span className="ml-auto bg-sky-blue text-white text-xs rounded-full px-2 py-0.5">
+                {emails.filter(email => !email.read).length}
+              </span>
+            </a>
+            <a href="#" className="flex items-center gap-2 text-gray-600" data-pendo-id="sent-nav">
               <Mail className="h-4 w-4" />
-              <span>Compose</span>
-            </Button>
-          </div>
-        </div>
-        
-        <div className="space-y-4">
-          {emails.map((email, index) => (
-            <Card 
-              key={email.id}
-              className={`p-4 ${email.read ? 'bg-gray-50' : 'bg-white border-l-4 border-l-sky-blue'}`}
-              data-pendo-id={`email-${email.id}`}
-            >
-              <div className="flex justify-between">
-                <div>
-                  <h3 className={`text-lg ${email.read ? 'font-medium' : 'font-bold'}`}>
-                    {email.subject}
-                  </h3>
-                  <p className="text-sm text-gray-500">From: {email.sender} • {email.time}</p>
-                  <p className="mt-2">{email.content}</p>
+              <span>Sent</span>
+            </a>
+            <a href="#" className="flex items-center gap-2 text-gray-600" data-pendo-id="trash-nav">
+              <Trash className="h-4 w-4" />
+              <span>Trash</span>
+            </a>
+          </nav>
+        </aside>
+
+        {/* Main Content */}
+        <main className="flex-1 overflow-auto">
+          {selectedEmail ? (
+            /* Email View */
+            <div className="bg-white shadow-sm min-h-full p-6" data-pendo-id={`email-view-${selectedEmail.id}`}>
+              <div className="max-w-4xl mx-auto">
+                <div className="flex justify-between items-center mb-6">
+                  <button 
+                    onClick={() => setSelectedEmail(null)}
+                    className="text-gray-500 hover:text-gray-700"
+                    data-pendo-id="back-to-inbox"
+                  >
+                    ← Back to Inbox
+                  </button>
                 </div>
-                <Button 
-                  onClick={() => handleEmailAction(email, index)}
-                  className="bg-sky-blue hover:bg-sky-blue/90 h-10 self-end"
-                  data-pendo-id={`email-action-${email.id}`}
-                >
-                  {email.action} <ArrowRight className="ml-2 h-4 w-4" />
-                </Button>
+                
+                {/* Email Header */}
+                <div className="mb-8">
+                  <h1 className="text-2xl font-bold mb-2">{selectedEmail.subject}</h1>
+                  <div className="flex items-center text-sm text-gray-500">
+                    <span className="font-medium">From: {selectedEmail.sender}</span>
+                    <span className="mx-2">•</span>
+                    <span>{selectedEmail.senderEmail}</span>
+                    <span className="mx-2">•</span>
+                    <span>{selectedEmail.time}</span>
+                  </div>
+                </div>
+                
+                {/* Email Content */}
+                <div 
+                  className="prose prose-sm max-w-none mb-8 p-4 bg-gray-50 rounded-lg"
+                  dangerouslySetInnerHTML={{ __html: selectedEmail.content }}
+                />
+                
+                {/* Action Button */}
+                {selectedEmail.actionLink && !selectedEmail.viewOnly && (
+                  <div className="text-center my-8">
+                    <Button 
+                      onClick={() => handleActionClick(selectedEmail)}
+                      className="bg-sky-blue text-white px-6 py-2 rounded"
+                      data-pendo-id={`email-action-${selectedEmail.id}`}
+                    >
+                      {selectedEmail.id === 'welcome-email' 
+                        ? 'Sign In to Your Dashboard' 
+                        : 'Book a Hotel Near Your Destination'}
+                    </Button>
+                  </div>
+                )}
+                
+                <div className="text-sm text-center text-gray-400 mt-12">
+                  © 2025 Voyagr Inc. · 123 Anywhere Street · Travel City, TX 54321
+                </div>
               </div>
-            </Card>
-          ))}
-          
-          {emails.length === 0 && (
-            <div className="text-center py-12">
-              <InboxIcon className="h-12 w-12 mx-auto text-gray-300" />
-              <p className="mt-4 text-gray-500">Your inbox is empty</p>
-              <Button 
-                variant="outline"
-                className="mt-4"
-                onClick={() => navigate('/dashboard')}
-                data-pendo-id="empty-inbox-action"
-              >
-                Return to Dashboard
-              </Button>
+            </div>
+          ) : (
+            /* Inbox List View */
+            <div className="p-6 max-w-6xl mx-auto">
+              <div className="flex justify-between items-center mb-6">
+                <h1 className="text-2xl font-bold text-midnight-navy">Inbox</h1>
+                
+                {/* Mobile menu button - only visible on small screens */}
+                <button className="md:hidden text-gray-600" data-pendo-id="mobile-menu">
+                  <InboxIcon className="h-5 w-5" />
+                </button>
+              </div>
+              
+              <div className="bg-white shadow rounded-lg overflow-hidden" data-pendo-id="inbox-list">
+                {emails.map((email, index) => (
+                  <React.Fragment key={email.id}>
+                    <button
+                      className={`w-full text-left flex items-center justify-between p-4 hover:bg-gray-50 transition ${!email.read ? 'bg-blue-50' : ''}`}
+                      onClick={() => handleEmailClick(email)}
+                      data-pendo-id={`email-${email.id}`}
+                    >
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center">
+                          {!email.read && (
+                            <div className="h-2 w-2 bg-sky-blue rounded-full mr-2" />
+                          )}
+                          <h2 className={`text-base ${!email.read ? 'font-bold' : 'font-medium'} truncate`}>
+                            {email.subject}
+                          </h2>
+                        </div>
+                        <p className="text-sm text-gray-500 mt-1">
+                          {email.sender} • {email.time}
+                        </p>
+                      </div>
+                      <ChevronRight className="h-4 w-4 text-gray-400 flex-shrink-0" />
+                    </button>
+                    {index < emails.length - 1 && <Separator />}
+                  </React.Fragment>
+                ))}
+                
+                {emails.length === 0 && (
+                  <div className="p-8 text-center text-gray-500">
+                    <InboxIcon className="h-12 w-12 mx-auto text-gray-300 mb-2" />
+                    <p>Your inbox is empty</p>
+                  </div>
+                )}
+              </div>
             </div>
           )}
-        </div>
-        
-        {/* Suggested Actions */}
-        <div className="mt-8 border-t pt-6">
-          <h2 className="text-lg font-medium mb-4">Recommended Actions</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <Card className="p-4 flex items-center gap-3 cursor-pointer" onClick={() => navigate('/hotels')} data-pendo-id="recommended-action-hotel">
-              <div className="p-2 bg-sky-blue/10 rounded-full">
-                <Hotel className="h-5 w-5 text-sky-blue" />
-              </div>
-              <div>
-                <h3 className="font-medium">Book a Hotel</h3>
-                <p className="text-sm text-gray-500">Complete your travel plans</p>
-              </div>
-            </Card>
-            
-            <Card className="p-4 flex items-center gap-3 cursor-pointer" onClick={() => navigate('/reschedule')} data-pendo-id="recommended-action-reschedule">
-              <div className="p-2 bg-sky-blue/10 rounded-full">
-                <Calendar className="h-5 w-5 text-sky-blue" />
-              </div>
-              <div>
-                <h3 className="font-medium">Manage Flight</h3>
-                <p className="text-sm text-gray-500">Change or cancel your booking</p>
-              </div>
-            </Card>
-          </div>
-        </div>
+        </main>
       </div>
     </AppLayout>
   );
