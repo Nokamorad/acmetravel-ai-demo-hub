@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -13,7 +14,7 @@ const Homepage = () => {
           <div className="flex items-center gap-6">
             <a href="#features" className="text-gray-700 hover:text-sky-blue transition-colors">Features</a>
             <a href="#about" className="text-gray-700 hover:text-sky-blue transition-colors">About</a>
-            <Link to="/signup" className="bg-sky-blue text-white py-2 px-4 rounded-md hover:bg-sky-blue/90 transition-colors">
+            <Link to="/dashboard" className="bg-sky-blue text-white py-2 px-4 rounded-md hover:bg-sky-blue/90 transition-colors">
               Sign In
             </Link>
           </div>
@@ -31,7 +32,7 @@ const Homepage = () => {
               <p className="text-xl text-gray-600 mb-8">
                 Meet Travel Agent, your AI-powered assistant that makes booking flights, hotels, and cars effortless. Save time and reduce company travel costs with intelligent recommendations tailored to your preferences.
               </p>
-              <Link to="/signup">
+              <Link to="/dashboard">
                 <Button className="bg-sky-blue hover:bg-sky-blue/90 text-white text-lg py-6 px-8 rounded-lg shadow-md hover:shadow-lg transition-all flex items-center gap-2">
                   Get Started <ArrowRight className="h-5 w-5" />
                 </Button>
@@ -91,7 +92,7 @@ const Homepage = () => {
           <p className="text-xl mb-8 max-w-2xl mx-auto">
             Join thousands of companies optimizing their travel experience with Voyagr.
           </p>
-          <Link to="/signup">
+          <Link to="/dashboard">
             <Button className="bg-white text-midnight-navy hover:bg-cloud-gray transition-colors text-lg py-6 px-8 rounded-lg">
               Get Started Today
             </Button>

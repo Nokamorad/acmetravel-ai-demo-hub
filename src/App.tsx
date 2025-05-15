@@ -7,7 +7,6 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Homepage from "./pages/Homepage";
 import Dashboard from "./pages/Dashboard";
-import SignUp from "./pages/SignUp";
 import NotFound from "./pages/NotFound";
 import BookTrip from "./pages/BookTrip";
 import HelpCenter from "./pages/HelpCenter";
@@ -21,7 +20,6 @@ import Support from "./pages/Support";
 import Upsell from "./pages/Upsell";
 import VoyagerMarketing from "./pages/VoyagerMarketing";
 import BookingConfirmation from "./pages/BookingConfirmation";
-import ReengagementEmail from "./pages/ReengagementEmail";
 import Hotels from "./pages/Hotels";
 
 // Create a client
@@ -42,7 +40,6 @@ const App = () => {
                 <Route path="/search-results" element={<SearchResults />} />
                 <Route path="/homepage" element={<Homepage />} />
                 <Route path="/voyager-marketing" element={<VoyagerMarketing />} />
-                <Route path="/signup" element={<SignUp />} />
                 <Route path="/dashboard" element={<Dashboard />} />
                 <Route path="/book" element={<BookTrip />} />
                 <Route path="/help" element={<HelpCenter />} />
@@ -52,7 +49,6 @@ const App = () => {
                 <Route path="/support" element={<Support />} />
                 <Route path="/upsell" element={<Upsell />} />
                 <Route path="/booking-confirmation" element={<BookingConfirmation />} />
-                <Route path="/email/reengagement" element={<ReengagementEmail />} />
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                 <Route path="*" element={<NotFound />} />
               </Routes>
