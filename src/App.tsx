@@ -22,6 +22,8 @@ import Support from "./pages/Support";
 import Upsell from "./pages/Upsell";
 import VoyagerMarketing from "./pages/VoyagerMarketing";
 import BookingConfirmation from "./pages/BookingConfirmation";
+import ReengagementEmail from "./pages/ReengagementEmail";
+import Hotels from "./pages/Hotels";
 
 // Create a client
 const queryClient = new QueryClient();
@@ -47,12 +49,13 @@ const App = () => {
                 <Route path="/dashboard" element={<Dashboard />} />
                 <Route path="/book" element={<BookTrip />} />
                 <Route path="/help" element={<HelpCenter />} />
-                <Route path="/hotels" element={<RecommendedHotels />} />
+                <Route path="/hotels" element={<Hotels />} />
                 <Route path="/inbox" element={<Inbox />} />
                 <Route path="/reschedule" element={<Reschedule />} />
                 <Route path="/support" element={<Support />} />
                 <Route path="/upsell" element={<Upsell />} />
                 <Route path="/booking-confirmation" element={<BookingConfirmation />} />
+                <Route path="/email/reengagement" element={<ReengagementEmail />} />
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                 <Route path="*" element={<NotFound />} />
               </Routes>
