@@ -26,7 +26,7 @@ const PendoIntegration: React.FC = () => {
       (function(apiKey){
         (function(p,e,n,d,o){var v,w,x,y,z;o=p[d]=p[d]||{};o._q=o._q||[];
         v=['initialize','identify','updateOptions','pageLoad','track'];for(w=0,x=v.length;w<x;++w)(function(m){
-            o[m]=o[m]||function(){o._q[m===v[0]?'unshift':'push']([m].concat([].slice.call(arguments,0)));};})(v[w]);
+            o[m]=o[m]||function(){o._q[m==='initialize'?'unshift':'push']([m].concat([].slice.call(arguments,0)));};})(v[w]);
             y=e.createElement(n);y.async=!0;y.src='https://cdn.pendo.io/agent/static/'+apiKey+'/pendo.js';
             z=e.getElementsByTagName(n)[0];z.parentNode.insertBefore(y,z);})(window,document,'script','pendo');
         
@@ -78,6 +78,14 @@ const PendoIntegration: React.FC = () => {
             id: "demo-account"
           }
         });
+        
+        // Track initial page visit
+        if (location.pathname.includes('voyager-marketing')) {
+          (window as any).pendo.track('Visited Voyager Site', {
+            page: location.pathname,
+            ...getUTMs()
+          });
+        }
         
         // Make functions available globally
         (window as any).getUTMs = getUTMs;
@@ -155,6 +163,32 @@ const PendoIntegration: React.FC = () => {
             id: `demo-${cleanName}`,
             planLevel
           };
+        };
+        
+        // Track booking events
+        (window as any).trackBookingStarted = () => {
+          (window as any).pendo.track('Started Booking', {
+            timestamp: new Date().toISOString()
+          });
+        };
+        
+        (window as any).trackBookingAbandoned = () => {
+          (window as any).pendo.track('Booking Abandoned', {
+            timestamp: new Date().toISOString()
+          });
+        };
+        
+        (window as any).trackEmailViewed = () => {
+          (window as any).pendo.track('Viewed Re-Engagement Email', {
+            timestamp: new Date().toISOString()
+          });
+        };
+        
+        (window as any).trackBookingCompleted = () => {
+          (window as any).pendo.track('Booking Completed', {
+            timestamp: new Date().toISOString(),
+            destination: 'Munich'
+          });
         };
       })(PENDO_API_KEY);
       

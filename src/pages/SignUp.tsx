@@ -2,7 +2,7 @@
 import React from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Link } from "react-router-dom";
-import { Navigation } from "lucide-react";
+import { Plane } from "lucide-react";
 import SignUpForm from "@/components/auth/SignUpForm";
 
 const SignUp = () => {
@@ -25,7 +25,7 @@ const SignUp = () => {
       <header className="bg-white py-4 px-6 shadow-sm">
         <div className="container mx-auto flex justify-between items-center">
           <Link to="/" className="flex items-center">
-            <Navigation className="h-6 w-6 text-sky-blue mr-2" />
+            <Plane className="h-6 w-6 text-sky-blue mr-2" />
             <span className="text-xl font-bold logo-voyagr text-midnight-navy">Voyagr</span>
           </Link>
         </div>
@@ -53,7 +53,7 @@ const SignUp = () => {
       <footer className="bg-white border-t border-gray-200 py-4">
         <div className="container mx-auto px-4">
           <p className="text-center text-sm text-gray-500">
-            &copy; 2025 AcmeCorp. All rights reserved.
+            &copy; 2025 Voyagr Inc. All rights reserved.
           </p>
         </div>
       </footer>

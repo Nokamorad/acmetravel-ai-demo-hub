@@ -20,6 +20,8 @@ import Inbox from "./pages/Inbox";
 import Reschedule from "./pages/Reschedule";
 import Support from "./pages/Support";
 import Upsell from "./pages/Upsell";
+import VoyagerMarketing from "./pages/VoyagerMarketing";
+import BookingConfirmation from "./pages/BookingConfirmation";
 
 // Create a client
 const queryClient = new QueryClient();
@@ -40,6 +42,7 @@ const App = () => {
                 <Route path="/search" element={<BoogleSearch />} />
                 <Route path="/search-results" element={<SearchResults />} />
                 <Route path="/homepage" element={<Homepage />} />
+                <Route path="/voyager-marketing" element={<VoyagerMarketing />} />
                 <Route path="/signup" element={<SignUp />} />
                 <Route path="/dashboard" element={<Dashboard />} />
                 <Route path="/book" element={<BookTrip />} />
@@ -49,6 +52,7 @@ const App = () => {
                 <Route path="/reschedule" element={<Reschedule />} />
                 <Route path="/support" element={<Support />} />
                 <Route path="/upsell" element={<Upsell />} />
+                <Route path="/booking-confirmation" element={<BookingConfirmation />} />
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                 <Route path="*" element={<NotFound />} />
               </Routes>

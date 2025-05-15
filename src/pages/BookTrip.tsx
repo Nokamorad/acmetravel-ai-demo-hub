@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import AppLayout from "@/components/layout/AppLayout";
@@ -8,7 +7,6 @@ import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import CitySearchInput from "@/components/BookTrip/CitySearchInput";
 import SignUpModal from "@/components/modals/SignUpModal";
-import BookingConfirmation from "@/components/features/BookingConfirmation";
 import { useUser } from "@/contexts/UserContext";
 import { 
   PlaneIcon, 
@@ -26,17 +24,17 @@ interface CityData {
   code: string;
 }
 
-// List of major US cities
-const US_CITIES = [
+// List of major cities
+const CITIES = [
   { city: "San Francisco", code: "SFO" },
-  { city: "Los Angeles", code: "LAX" },
+  { city: "Munich", code: "MUC" },
+  { city: "New York", code: "NYC" },
   { city: "Chicago", code: "ORD" },
-  { city: "Dallas", code: "DFW" },
-  { city: "Miami", code: "MIA" },
-  { city: "Seattle", code: "SEA" },
-  { city: "Boston", code: "BOS" },
-  { city: "Atlanta", code: "ATL" },
-  { city: "Denver", code: "DEN" }
+  { city: "London", code: "LHR" },
+  { city: "Paris", code: "CDG" },
+  { city: "Berlin", code: "BER" },
+  { city: "Tokyo", code: "HND" },
+  { city: "Sydney", code: "SYD" }
 ];
 
 const BookTrip = () => {
@@ -52,6 +50,11 @@ const BookTrip = () => {
   const [departDate, setDepartDate] = useState("");
   const [returnDate, setReturnDate] = useState("");
   const [isUserLoggedIn, setIsUserLoggedIn] = useState(false);
+  const [bookingStep, setBookingStep] = useState(1);
+  const [formCompleted, setFormCompleted] = useState(false);
+  
+  // For resuming an abandoned booking
+  const [isResuming, setIsResuming] = useState(false);
   
   useEffect(() => {
     // Check if user is logged in (has name other than default)
@@ -59,31 +62,39 @@ const BookTrip = () => {
       setIsUserLoggedIn(true);
     }
     
-    // Set random origin city
-    const randomOriginCity = US_CITIES[Math.floor(Math.random() * US_CITIES.length)];
-    setOriginCity(randomOriginCity);
+    // Check if we're resuming a booking
+    const params = new URLSearchParams(location.search);
+    if (params.has('resuming')) {
+      setIsResuming(true);
+      setFormCompleted(true);
+      setBookingStep(3);
+    }
     
-    // Set destination city to New York
-    setDestinationCity({ city: "New York", code: "NYC" });
+    // Default origin city to San Francisco
+    const originCity = CITIES.find(city => city.code === "SFO") || CITIES[0];
+    setOriginCity(originCity);
     
-    // Set dates to 5-10 days in the future
+    // Default destination city to Munich for the Munich demo
+    const destinationCity = CITIES.find(city => city.code === "MUC") || { city: "Munich", code: "MUC" };
+    setDestinationCity(destinationCity);
+    
+    // Set dates to 2 weeks in the future
     const today = new Date();
     const departureDate = new Date(today);
-    departureDate.setDate(today.getDate() + 5);
+    departureDate.setDate(today.getDate() + 14);
     
     const returnDateObj = new Date(today);
-    returnDateObj.setDate(today.getDate() + 10);
+    returnDateObj.setDate(today.getDate() + 21);
     
     setDepartDate(departureDate.toISOString().split('T')[0]);
     setReturnDate(returnDateObj.toISOString().split('T')[0]);
     
     // Parse UTM parameters if they exist
-    const searchParams = new URLSearchParams(location.search);
-    const utmSource = searchParams.get('utm_source');
-    const utmMedium = searchParams.get('utm_medium');
-    const utmCampaign = searchParams.get('utm_campaign');
-    const utmTerm = searchParams.get('utm_term');
-    const utmContent = searchParams.get('utm_content');
+    const utmSource = params.get('utm_source');
+    const utmMedium = params.get('utm_medium');
+    const utmCampaign = params.get('utm_campaign');
+    const utmTerm = params.get('utm_term');
+    const utmContent = params.get('utm_content');
     
     // If UTM parameters exist, track them in Pendo
     if (utmSource || utmMedium || utmCampaign) {
@@ -101,7 +112,35 @@ const BookTrip = () => {
         });
       }
     }
-  }, [location.search, user]);
+    
+    // Add event listener for page unload to track abandonment
+    const handleUnload = () => {
+      if (formCompleted && !showConfirmation && !isResuming) {
+        if ((window as any).trackBookingAbandoned) {
+          (window as any).trackBookingAbandoned();
+        }
+      }
+    };
+
+    window.addEventListener('beforeunload', handleUnload);
+    
+    // Track booking started
+    if ((window as any).trackBookingStarted && !isResuming) {
+      (window as any).trackBookingStarted();
+    }
+    
+    return () => {
+      window.removeEventListener('beforeunload', handleUnload);
+    };
+  }, [location.search, user, showConfirmation, formCompleted, isResuming]);
+  
+  // Handle form completion check for abandonment tracking
+  useEffect(() => {
+    // Consider the form completed if we have both cities selected and dates chosen
+    if (originCity && destinationCity && departDate && returnDate) {
+      setFormCompleted(true);
+    }
+  }, [originCity, destinationCity, departDate, returnDate]);
   
   const handleSearchFlights = () => {
     // Track flight search submitted
@@ -115,12 +154,53 @@ const BookTrip = () => {
       });
     }
     
-    // If user is not logged in, open signup modal
-    if (!isUserLoggedIn) {
-      setIsSignUpModalOpen(true);
-    } else {
-      // User is logged in, show confirmation
-      setShowConfirmation(true);
+    if (isResuming) {
+      // If resuming, go straight to confirmation
+      navigate("/booking-confirmation");
+      
+      if ((window as any).trackBookingCompleted) {
+        (window as any).trackBookingCompleted();
+      }
+      return;
+    }
+    
+    // If form is on first step, advance to next step
+    if (bookingStep === 1) {
+      setBookingStep(2);
+      return;
+    }
+    
+    // If form is on second step, trigger abandonment or completion
+    if (bookingStep === 2) {
+      // For demo: if destinationCity is Munich, simulate abandonment
+      if (destinationCity?.code === "MUC" && !isResuming) {
+        // Simulate user abandoning the form
+        if ((window as any).trackBookingAbandoned) {
+          (window as any).trackBookingAbandoned();
+        }
+        
+        // Navigate to inbox with abandonment flag
+        navigate("/inbox?abandoned=true");
+      } else {
+        // Otherwise continue to booking confirmation
+        setBookingStep(3);
+      }
+      return;
+    }
+    
+    // If final step, complete booking
+    if (bookingStep === 3) {
+      // If user is not logged in, open signup modal
+      if (!isUserLoggedIn) {
+        setIsSignUpModalOpen(true);
+      } else {
+        // User is logged in, show confirmation
+        navigate("/booking-confirmation");
+        
+        if ((window as any).trackBookingCompleted) {
+          (window as any).trackBookingCompleted();
+        }
+      }
     }
   };
 
@@ -129,34 +209,71 @@ const BookTrip = () => {
     setIsUserLoggedIn(true);
     setIsSignUpModalOpen(false);
     // Show confirmation after successful signup
-    setShowConfirmation(true);
+    navigate("/booking-confirmation");
+    
+    if ((window as any).trackBookingCompleted) {
+      (window as any).trackBookingCompleted();
+    }
   };
   
   const resetSearch = () => {
     setShowConfirmation(false);
+    setBookingStep(1);
   };
   
-  // If showing booking confirmation, render that instead
-  if (showConfirmation) {
-    return (
-      <AppLayout>
-        <div className="max-w-5xl mx-auto px-4 py-6">
-          <BookingConfirmation
-            origin={originCity?.city ? `${originCity.city} (${originCity.code})` : undefined}
-            destination={destinationCity?.city ? `${destinationCity.city} (${destinationCity.code})` : undefined}
-            departDate={departDate}
-            returnDate={returnDate}
-            onClose={resetSearch}
-          />
-        </div>
-      </AppLayout>
-    );
-  }
+  const getButtonText = () => {
+    if (isResuming) {
+      return "Complete Booking";
+    }
+    
+    switch (bookingStep) {
+      case 1:
+        return "Continue to Passenger Details";
+      case 2:
+        return "Continue to Payment";
+      case 3:
+        return "Complete Booking";
+      default:
+        return "Search Flights";
+    }
+  };
   
   return (
     <AppLayout>
       <div className="max-w-5xl mx-auto px-4 py-6">
-        <h1 className="text-2xl font-bold text-acme-gray-dark mb-6">Book a trip</h1>
+        <h1 className="text-2xl font-bold text-acme-gray-dark mb-6">
+          {isResuming ? "Resume Your Booking" : "Book a trip"}
+        </h1>
+        
+        {isResuming && (
+          <div className="mb-6 bg-amber-50 border border-amber-200 rounded-md p-4">
+            <p className="text-amber-800">
+              Welcome back! We've saved your booking details for your trip to Munich.
+            </p>
+          </div>
+        )}
+        
+        {/* Booking steps indicator */}
+        <div className="mb-8">
+          <div className="flex items-center">
+            <div className={`w-8 h-8 rounded-full flex items-center justify-center ${bookingStep >= 1 ? 'bg-sky-blue text-white' : 'bg-gray-200 text-gray-500'}`}>
+              1
+            </div>
+            <div className={`h-1 flex-1 ${bookingStep >= 2 ? 'bg-sky-blue' : 'bg-gray-200'}`}></div>
+            <div className={`w-8 h-8 rounded-full flex items-center justify-center ${bookingStep >= 2 ? 'bg-sky-blue text-white' : 'bg-gray-200 text-gray-500'}`}>
+              2
+            </div>
+            <div className={`h-1 flex-1 ${bookingStep >= 3 ? 'bg-sky-blue' : 'bg-gray-200'}`}></div>
+            <div className={`w-8 h-8 rounded-full flex items-center justify-center ${bookingStep >= 3 ? 'bg-sky-blue text-white' : 'bg-gray-200 text-gray-500'}`}>
+              3
+            </div>
+          </div>
+          <div className="flex justify-between mt-2 text-sm">
+            <div className="text-center">Flight Details</div>
+            <div className="text-center">Passenger Info</div>
+            <div className="text-center">Payment</div>
+          </div>
+        </div>
         
         {/* Trip Type Selection */}
         <div className="mb-6">
@@ -219,237 +336,265 @@ const BookTrip = () => {
             </TabsTrigger>
           </TabsList>
           
-          <TabsContent value="flights" className="mt-4">
-            <Card className="border shadow-sm p-6">
-              <div className="grid grid-cols-1 lg:grid-cols-5 gap-4">
-                <div className="lg:col-span-2">
-                  <label className="block text-sm font-medium mb-1">From</label>
-                  <CitySearchInput 
-                    placeholder="Enter origin city or airport"
-                    icon={PlaneIcon} 
-                    dataPendoId="flight-origin"
-                    onSelect={setOriginCity}
-                    initialValue={originCity?.city || ""}
-                  />
-                </div>
-                
-                <div className="lg:col-span-2">
-                  <label className="block text-sm font-medium mb-1">To</label>
-                  <CitySearchInput 
-                    placeholder="Enter destination city or airport"
-                    icon={PlaneIcon} 
-                    dataPendoId="flight-destination"
-                    onSelect={setDestinationCity}
-                    initialValue={destinationCity?.city || ""}
-                  />
-                </div>
-                
-                <div>
-                  <label className="block text-sm font-medium mb-1">Trip type</label>
-                  <div className="relative">
-                    <select className="w-full h-10 pl-3 pr-8 border border-gray-300 rounded-md bg-white text-sm focus:ring-2 focus:ring-sky-blue focus:border-sky-blue">
-                      <option>Round-trip</option>
-                      <option>One-way</option>
-                      <option>Multi-city</option>
-                    </select>
-                    <ChevronDownIcon className="absolute right-3 top-2.5 h-4 w-4 text-gray-500" />
-                  </div>
-                </div>
-                
-                <div className="lg:col-span-2">
-                  <label className="block text-sm font-medium mb-1">Depart date</label>
-                  <div className="relative">
-                    <CalendarIcon className="absolute left-3 top-2.5 h-4 w-4 text-gray-500" />
-                    <Input 
-                      type="date" 
-                      value={departDate}
-                      onChange={(e) => setDepartDate(e.target.value)}
-                      className="pl-10 bg-white"
-                      data-pendo-id="flight-depart-date"
+          {/* Booking step 1: Flight details */}
+          {bookingStep === 1 && (
+            <TabsContent value="flights" className="mt-4">
+              <Card className="border shadow-sm p-6">
+                <div className="grid grid-cols-1 lg:grid-cols-5 gap-4">
+                  <div className="lg:col-span-2">
+                    <label className="block text-sm font-medium mb-1">From</label>
+                    <CitySearchInput 
+                      placeholder="Enter origin city or airport"
+                      icon={PlaneIcon} 
+                      dataPendoId="flight-origin"
+                      onSelect={setOriginCity}
+                      initialValue={originCity?.city || ""}
                     />
                   </div>
-                </div>
-                
-                <div className="lg:col-span-2">
-                  <label className="block text-sm font-medium mb-1">Return date</label>
-                  <div className="relative">
-                    <CalendarIcon className="absolute left-3 top-2.5 h-4 w-4 text-gray-500" />
-                    <Input 
-                      type="date" 
-                      value={returnDate}
-                      onChange={(e) => setReturnDate(e.target.value)}
-                      className="pl-10 bg-white"
-                      data-pendo-id="flight-return-date"
+                  
+                  <div className="lg:col-span-2">
+                    <label className="block text-sm font-medium mb-1">To</label>
+                    <CitySearchInput 
+                      placeholder="Enter destination city or airport"
+                      icon={PlaneIcon} 
+                      dataPendoId="flight-destination"
+                      onSelect={setDestinationCity}
+                      initialValue={destinationCity?.city || ""}
                     />
                   </div>
-                </div>
-                
-                <div className="lg:col-span-1">
-                  <label className="block text-sm font-medium mb-1">Passengers</label>
-                  <div className="relative">
-                    <select className="w-full h-10 pl-3 pr-8 border border-gray-300 rounded-md bg-white text-sm focus:ring-2 focus:ring-sky-blue focus:border-sky-blue">
-                      <option>1 passenger</option>
-                      <option>2 passengers</option>
-                      <option>3 passengers</option>
-                      <option>4 passengers</option>
-                    </select>
-                    <ChevronDownIcon className="absolute right-3 top-2.5 h-4 w-4 text-gray-500" />
+                  
+                  <div>
+                    <label className="block text-sm font-medium mb-1">Trip type</label>
+                    <div className="relative">
+                      <select className="w-full h-10 pl-3 pr-8 border border-gray-300 rounded-md bg-white text-sm focus:ring-2 focus:ring-sky-blue focus:border-sky-blue">
+                        <option>Round-trip</option>
+                        <option>One-way</option>
+                        <option>Multi-city</option>
+                      </select>
+                      <ChevronDownIcon className="absolute right-3 top-2.5 h-4 w-4 text-gray-500" />
+                    </div>
+                  </div>
+                  
+                  <div className="lg:col-span-2">
+                    <label className="block text-sm font-medium mb-1">Depart date</label>
+                    <div className="relative">
+                      <CalendarIcon className="absolute left-3 top-2.5 h-4 w-4 text-gray-500" />
+                      <Input 
+                        type="date" 
+                        value={departDate}
+                        onChange={(e) => setDepartDate(e.target.value)}
+                        className="pl-10 bg-white"
+                        data-pendo-id="flight-depart-date"
+                      />
+                    </div>
+                  </div>
+                  
+                  <div className="lg:col-span-2">
+                    <label className="block text-sm font-medium mb-1">Return date</label>
+                    <div className="relative">
+                      <CalendarIcon className="absolute left-3 top-2.5 h-4 w-4 text-gray-500" />
+                      <Input 
+                        type="date" 
+                        value={returnDate}
+                        onChange={(e) => setReturnDate(e.target.value)}
+                        className="pl-10 bg-white"
+                        data-pendo-id="flight-return-date"
+                      />
+                    </div>
+                  </div>
+                  
+                  <div className="lg:col-span-1">
+                    <label className="block text-sm font-medium mb-1">Passengers</label>
+                    <div className="relative">
+                      <select className="w-full h-10 pl-3 pr-8 border border-gray-300 rounded-md bg-white text-sm focus:ring-2 focus:ring-sky-blue focus:border-sky-blue">
+                        <option>1 passenger</option>
+                        <option>2 passengers</option>
+                        <option>3 passengers</option>
+                        <option>4 passengers</option>
+                      </select>
+                      <ChevronDownIcon className="absolute right-3 top-2.5 h-4 w-4 text-gray-500" />
+                    </div>
                   </div>
                 </div>
-              </div>
-              
-              <div className="flex items-center mt-4">
-                <input type="checkbox" id="nonstop" className="mr-2" />
-                <label htmlFor="nonstop" className="text-sm">Nonstop flights only</label>
-              </div>
-              
-              <div className="mt-6 flex justify-end">
-                <Button 
-                  variant="default"
-                  size="lg"
-                  className="text-white"
-                  onClick={handleSearchFlights}
-                  data-pendo-id="search-flights"
-                >
-                  <SearchIcon className="mr-2 h-4 w-4" />
-                  Search flights
-                </Button>
-              </div>
-            </Card>
-            
-            {/* Policy Information */}
-            <div className="mt-4 bg-blue-50 border border-blue-200 rounded-lg p-4">
-              <div className="flex items-start">
-                <InfoIcon className="h-5 w-5 text-blue-500 mr-3 mt-0.5" />
-                <div>
-                  <h3 className="font-medium text-blue-800">Your flight booking policy</h3>
-                  <p className="text-sm text-blue-700 mt-1">
-                    Business class is allowed for flights over 6 hours. For all other flights, economy class is required by your company policy.
-                  </p>
+                
+                <div className="flex items-center mt-4">
+                  <input type="checkbox" id="nonstop" className="mr-2" />
+                  <label htmlFor="nonstop" className="text-sm">Nonstop flights only</label>
                 </div>
-              </div>
-            </div>
-          </TabsContent>
+              </Card>
+            </TabsContent>
+          )}
+          
+          {/* Booking step 2: Passenger details */}
+          {bookingStep === 2 && (
+            <TabsContent value="flights" className="mt-4">
+              <Card className="border shadow-sm p-6">
+                <h3 className="font-medium text-lg mb-4">Passenger Information</h3>
+                
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium mb-1">Full Name (as on ID)</label>
+                    <Input 
+                      defaultValue={user.name} 
+                      className="bg-white" 
+                      data-pendo-id="passenger-name"
+                    />
+                  </div>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium mb-1">Date of Birth</label>
+                      <Input type="date" className="bg-white" data-pendo-id="passenger-dob" />
+                    </div>
+                    
+                    <div>
+                      <label className="block text-sm font-medium mb-1">Gender</label>
+                      <select className="w-full h-10 pl-3 pr-8 border border-gray-300 rounded-md bg-white text-sm focus:ring-2 focus:ring-sky-blue focus:border-sky-blue">
+                        <option>Male</option>
+                        <option>Female</option>
+                        <option>Non-binary</option>
+                        <option>Prefer not to say</option>
+                      </select>
+                    </div>
+                  </div>
+                  
+                  <div>
+                    <label className="block text-sm font-medium mb-1">Passport/ID Number</label>
+                    <Input className="bg-white" data-pendo-id="passenger-id" />
+                  </div>
+                  
+                  <div>
+                    <label className="block text-sm font-medium mb-1">Contact Email</label>
+                    <Input defaultValue={user.email} className="bg-white" data-pendo-id="passenger-email" />
+                  </div>
+                  
+                  <div>
+                    <label className="block text-sm font-medium mb-1">Phone Number</label>
+                    <Input defaultValue="+1 (555) 123-4567" className="bg-white" data-pendo-id="passenger-phone" />
+                  </div>
+                </div>
+              </Card>
+            </TabsContent>
+          )}
+          
+          {/* Booking step 3: Payment details */}
+          {bookingStep === 3 && (
+            <TabsContent value="flights" className="mt-4">
+              <Card className="border shadow-sm p-6">
+                <h3 className="font-medium text-lg mb-4">Payment Information</h3>
+                
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium mb-1">Card Holder Name</label>
+                    <Input 
+                      defaultValue={user.name} 
+                      className="bg-white" 
+                      data-pendo-id="payment-name"
+                    />
+                  </div>
+                  
+                  <div>
+                    <label className="block text-sm font-medium mb-1">Card Number</label>
+                    <Input 
+                      defaultValue="•••• •••• •••• 4242" 
+                      className="bg-white" 
+                      data-pendo-id="payment-card"
+                    />
+                  </div>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium mb-1">Expiration Date</label>
+                      <Input defaultValue="12/25" className="bg-white" data-pendo-id="payment-expiry" />
+                    </div>
+                    
+                    <div>
+                      <label className="block text-sm font-medium mb-1">CVV</label>
+                      <Input defaultValue="•••" className="bg-white" data-pendo-id="payment-cvv" />
+                    </div>
+                  </div>
+                  
+                  <div>
+                    <label className="block text-sm font-medium mb-1">Billing Address</label>
+                    <Input defaultValue="123 Business St" className="bg-white" data-pendo-id="payment-address" />
+                  </div>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium mb-1">City</label>
+                      <Input defaultValue="San Francisco" className="bg-white" />
+                    </div>
+                    
+                    <div>
+                      <label className="block text-sm font-medium mb-1">State/Province</label>
+                      <Input defaultValue="CA" className="bg-white" />
+                    </div>
+                    
+                    <div>
+                      <label className="block text-sm font-medium mb-1">Zip/Postal Code</label>
+                      <Input defaultValue="94105" className="bg-white" />
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-center mt-4">
+                    <input type="checkbox" id="saveCard" className="mr-2" defaultChecked={true} />
+                    <label htmlFor="saveCard" className="text-sm">Save card for future bookings</label>
+                  </div>
+                </div>
+              </Card>
+            </TabsContent>
+          )}
           
           <TabsContent value="hotels">
             <Card className="border shadow-sm p-6">
               <p className="text-center text-gray-500">Hotel booking functionality would be implemented here.</p>
-              <div className="mt-6 flex justify-end">
-                <Button 
-                  variant="default"
-                  size="lg"
-                  className="text-white"
-                  data-pendo-id="search-hotels"
-                >
-                  <SearchIcon className="mr-2 h-4 w-4" />
-                  Search hotels
-                </Button>
-              </div>
             </Card>
           </TabsContent>
           
           <TabsContent value="trains">
             <Card className="border shadow-sm p-6">
               <p className="text-center text-gray-500">Train booking functionality would be implemented here.</p>
-              <div className="mt-6 flex justify-end">
-                <Button 
-                  variant="default"
-                  size="lg"
-                  className="text-white"
-                  data-pendo-id="search-trains"
-                >
-                  <SearchIcon className="mr-2 h-4 w-4" />
-                  Search trains
-                </Button>
-              </div>
             </Card>
           </TabsContent>
           
           <TabsContent value="cars">
             <Card className="border shadow-sm p-6">
               <p className="text-center text-gray-500">Car rental functionality would be implemented here.</p>
-              <div className="mt-6 flex justify-end">
-                <Button 
-                  variant="default"
-                  size="lg"
-                  className="text-white"
-                  data-pendo-id="search-cars"
-                >
-                  <SearchIcon className="mr-2 h-4 w-4" />
-                  Search cars
-                </Button>
-              </div>
             </Card>
           </TabsContent>
         </Tabs>
         
-        {/* Recent Searches Section */}
-        <div className="mb-6">
-          <h2 className="text-lg font-semibold text-acme-gray-dark mb-3">Your recent searches</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <Card className="border shadow-sm p-4">
-              <div className="flex justify-between items-center">
-                <div>
-                  <div className="flex items-center">
-                    <span className="text-sm font-medium">SFO → NYC</span>
-                    <span className="mx-2 text-gray-400">•</span>
-                    <span className="text-xs text-gray-500">May 15 - May 20</span>
-                  </div>
-                  <p className="text-xs text-gray-500 mt-1">1 passenger, Economy</p>
-                </div>
-                <Button 
-                  variant="outline" 
-                  size="sm"
-                  className="text-xs"
-                >
-                  Search again
-                </Button>
-              </div>
-            </Card>
-            
-            <Card className="border shadow-sm p-4">
-              <div className="flex justify-between items-center">
-                <div>
-                  <div className="flex items-center">
-                    <span className="text-sm font-medium">LAX → MIA</span>
-                    <span className="mx-2 text-gray-400">•</span>
-                    <span className="text-xs text-gray-500">Apr 5 - Apr 10</span>
-                  </div>
-                  <p className="text-xs text-gray-500 mt-1">1 passenger, Economy</p>
-                </div>
-                <Button 
-                  variant="outline" 
-                  size="sm"
-                  className="text-xs"
-                >
-                  Search again
-                </Button>
-              </div>
-            </Card>
-          </div>
-        </div>
-        
-        {/* Travel Agent Help Card */}
-        <Card className="border shadow-sm p-4 bg-sky-blue/5">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center">
-              <div className="bg-sky-blue rounded-full p-2 mr-3">
-                <PlaneIcon className="h-4 w-4 text-white" />
-              </div>
-              <div>
-                <h3 className="font-medium text-acme-gray-dark">Need help with your booking?</h3>
-                <p className="text-sm text-gray-600">Travel Agent can assist with finding the best flights and accommodations.</p>
-              </div>
+        {/* Summary Card */}
+        <Card className="border shadow-sm p-4 mb-6">
+          <div className="flex flex-col md:flex-row justify-between">
+            <div>
+              <h3 className="font-medium">{originCity?.city || 'San Francisco'} to {destinationCity?.city || 'Munich'}</h3>
+              <p className="text-sm text-gray-600">
+                {departDate && new Date(departDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })} - 
+                {returnDate && new Date(returnDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+              </p>
             </div>
-            <Button 
-              variant="destructive"
-              className="text-white whitespace-nowrap"
-              data-pendo-id="chat-with-travel-agent"
-            >
-              Ask Travel Agent
-            </Button>
+            <div className="mt-2 md:mt-0">
+              <p className="text-sm text-gray-600">Estimated Price:</p>
+              <p className="font-bold text-lg">€1,245</p>
+            </div>
           </div>
         </Card>
+        
+        {/* Continue Button */}
+        <div className="flex justify-end">
+          <Button 
+            variant="default"
+            size="lg"
+            className="text-white"
+            onClick={handleSearchFlights}
+            data-pendo-id="continue-booking"
+          >
+            <SearchIcon className="mr-2 h-4 w-4" />
+            {getButtonText()}
+          </Button>
+        </div>
+        
       </div>
       
       {/* Signup Modal */}
