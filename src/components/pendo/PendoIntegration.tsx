@@ -94,7 +94,7 @@ const PendoIntegration: React.FC = () => {
           
           console.log('Reinitializing Pendo with user data:', {
             id: `demo.engineering+${cleanName}@email.io`,
-            name: name,
+            full_name: name,
             travel_frequency: travelFrequency,
             member_type: membertype
           });
@@ -123,15 +123,13 @@ const PendoIntegration: React.FC = () => {
           
           // Track signup event
           (window as any).pendo.track('User Signed Up', {
-            name: name,
+          
             travel_frequency: travelFrequency,
             member_type: membertype
           });
           
           return {
             name,
-            email: `demo.engineering+${cleanName}@pendo.io`,
-            id: `demo-${cleanName}`,
             membertype
           };
         };
