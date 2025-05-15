@@ -11,8 +11,7 @@ import {
   User, 
   HelpCircle,
   MessageSquare,
-  Briefcase,
-  Navigation
+  Briefcase
 } from "lucide-react";
 
 interface AppLayoutProps {
@@ -58,7 +57,7 @@ const AppLayout = ({ children }: AppLayoutProps) => {
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-2">
             <Link to="/dashboard" className="flex items-center" data-pendo-id="header-logo">
-              <Navigation className="h-6 w-6 text-sky-blue mr-2" />
+              <img src="/lovable-uploads/f345156a-d089-4d2e-a5c1-793bf54fad80.png" alt="Voyagr Logo" className="h-8 w-auto mr-2" />
               <span className="text-lg font-header font-medium text-midnight-navy hidden sm:inline-block">Voyagr by AcmeCorp</span>
             </Link>
           </div>
