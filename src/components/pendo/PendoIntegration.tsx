@@ -94,8 +94,7 @@ const PendoIntegration: React.FC = () => {
           }
           
           console.log('Reinitializing Pendo with user data:', {
-            id: `demo-${cleanName}`,
-            email: `demo.engineering+${cleanName}@pendo.io`,
+            id: `demo.engineering+${cleanName}@email.io`,
             name: name,
             travel_frequency: travelFrequency,
             member_type: membertype
@@ -104,24 +103,23 @@ const PendoIntegration: React.FC = () => {
           // Update user context
           if (updateUser) {
             updateUser({
-              id: `demo-${cleanName}`,
-              email: `demo.engineering+${cleanName}@pendo.io`,
-              name: name,
-              preferences: {
+              id: `demo.engineering+${cleanName}@email.io`,
+    
+              full_name: name,
+              
                 travelFrequency: travelFrequency,
-                membertype: membertype
-              }
+                member_type: membertype
+              
             });
           }
           
-          (window as any).pendo.initialize({
+          (window as any).pendo.identify({
             visitor: {
-              id: `demo-${cleanName}`,
-              email: `demo.engineering+${cleanName}@pendo.io`,
+              id: `demo.engineering+${cleanName}@email.io`,
               full_name: name,
               travel_frequency: travelFrequency,
               member_type: membertype,
-              ...getUTMs()
+              
             },
             account: {
               id: "demo-account"
@@ -137,7 +135,7 @@ const PendoIntegration: React.FC = () => {
           
           return {
             name,
-            email: `demo.engineering+${cleanName}@pendo.io`,
+            demo.engineering+${cleanName}@pendo.io`,
             id: `demo-${cleanName}`,
             membertype
           };
