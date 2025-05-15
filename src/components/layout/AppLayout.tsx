@@ -1,4 +1,3 @@
-
 import { ReactNode } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
@@ -54,8 +53,9 @@ const AppLayout = ({ children }: AppLayoutProps) => {
           <div className="flex items-center space-x-2">
             <Link to="/dashboard" className="flex items-center" data-pendo-id="header-logo">
               <img src="/lovable-uploads/94fc1222-b3c9-466e-9661-f121af7fdcec.png" alt="Voyagr Logo" className="h-8 w-auto mr-2" />
-              <span className="text-lg font-header font-medium text-midnight-navy hidden sm:inline-block flex items-center">
-                Voyagr <ChevronRight className="h-4 w-4 mx-1" /> AcmeCorp
+              <span className="hidden sm:flex items-center">
+                <span className="text-lg font-header font-medium text-midnight-navy">Voyagr</span>
+                <span className="text-sm font-header text-gray-500 ml-1">by AcmeCorp</span>
               </span>
             </Link>
           </div>
