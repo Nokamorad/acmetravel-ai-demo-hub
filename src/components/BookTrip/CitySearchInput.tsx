@@ -34,6 +34,7 @@ interface CitySearchInputProps {
   icon: LucideIcon;
   dataPendoId?: string;
   onSelect: (value: { city: string; code: string }) => void;
+  initialValue?: string; // Add the initialValue prop to the interface
 }
 
 const CitySearchInput: React.FC<CitySearchInputProps> = ({
@@ -41,12 +42,20 @@ const CitySearchInput: React.FC<CitySearchInputProps> = ({
   icon: Icon,
   dataPendoId,
   onSelect,
+  initialValue = "", // Default to empty string if not provided
 }) => {
   const [open, setOpen] = useState(false);
-  const [value, setValue] = useState("");
+  const [value, setValue] = useState(initialValue); // Initialize with the initialValue
   const [searchQuery, setSearchQuery] = useState("");
   const [filteredAirports, setFilteredAirports] = useState(airportData);
   const triggerRef = useRef<HTMLButtonElement>(null);
+
+  // Update value when initialValue changes
+  useEffect(() => {
+    if (initialValue) {
+      setValue(initialValue);
+    }
+  }, [initialValue]);
 
   useEffect(() => {
     if (searchQuery) {
