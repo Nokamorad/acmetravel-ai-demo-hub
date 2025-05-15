@@ -156,7 +156,7 @@ const BookTrip = () => {
                     icon={PlaneIcon} 
                     dataPendoId="flight-origin"
                     onSelect={setOriginCity}
-                    defaultValue={originCity?.city}
+                    initialValue={originCity?.city || ""}
                   />
                 </div>
                 
@@ -167,7 +167,7 @@ const BookTrip = () => {
                     icon={PlaneIcon} 
                     dataPendoId="flight-destination"
                     onSelect={setDestinationCity}
-                    defaultValue={destinationCity?.city}
+                    initialValue={destinationCity?.city || ""}
                   />
                 </div>
                 
