@@ -1,6 +1,6 @@
 
 import { ReactNode } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
 import { useUser } from "@/contexts/UserContext";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -12,7 +12,7 @@ import {
   HelpCircle,
   MessageSquare,
   Briefcase,
-  ChevronRight
+  Building,
 } from "lucide-react";
 
 interface AppLayoutProps {
@@ -21,6 +21,7 @@ interface AppLayoutProps {
 
 const AppLayout = ({ children }: AppLayoutProps) => {
   const location = useLocation();
+  const navigate = useNavigate();
   const { user } = useUser();
   
   const navItems = [
@@ -33,7 +34,12 @@ const AppLayout = ({ children }: AppLayoutProps) => {
       path: '/book',
       label: 'Book Trip',
       icon: PlusCircle
-    }, 
+    },
+    {
+      path: '/hotels',
+      label: 'Hotels',
+      icon: Building
+    },
     {
       path: '/profile',
       label: 'Profile',
@@ -45,6 +51,16 @@ const AppLayout = ({ children }: AppLayoutProps) => {
       icon: HelpCircle
     }
   ];
+
+  const handleLogoClick = () => {
+    // Reset the session by navigating to the Boogle search page
+    navigate('/', { replace: true });
+    
+    // Track this action in Pendo
+    if ((window as any).pendo && (window as any).pendo.track) {
+      (window as any).pendo.track('Session Reset');
+    }
+  };
   
   return (
     <div className="min-h-screen flex flex-col bg-gray-50" data-pendo-id="app-layout-container">
@@ -52,13 +68,17 @@ const AppLayout = ({ children }: AppLayoutProps) => {
       <header className="bg-white border-b border-gray-200 py-2 px-4" data-pendo-id="app-header">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-2">
-            <Link to="/dashboard" className="flex items-center" data-pendo-id="header-logo">
+            <div 
+              onClick={handleLogoClick} 
+              className="flex items-center cursor-pointer" 
+              data-pendo-id="header-logo-reset"
+            >
               <img src="/lovable-uploads/94fc1222-b3c9-466e-9661-f121af7fdcec.png" alt="Voyagr Logo" className="h-8 w-auto mr-2" />
               <span className="hidden sm:flex items-center">
                 <span className="text-lg font-header font-medium text-midnight-navy">Voyagr</span>
                 <span className="text-sm font-header text-gray-500 ml-1">by AcmeCorp</span>
               </span>
-            </Link>
+            </div>
           </div>
           
           <nav className="hidden md:flex mx-4 space-x-6" data-pendo-id="header-navigation">

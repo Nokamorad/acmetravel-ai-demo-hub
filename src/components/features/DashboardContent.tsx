@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Plus } from "lucide-react";
+import { Plus, Building } from "lucide-react";
 import { useUser } from "@/contexts/UserContext";
 import { useNavigate } from "react-router-dom";
 import { toast } from "@/hooks/use-toast";
@@ -29,6 +29,15 @@ const DashboardContent = () => {
     });
   };
   
+  const handleViewHotels = () => {
+    // Track hotel recommendation click with Pendo
+    if ((window as any).pendo && (window as any).pendo.track) {
+      (window as any).pendo.track('Hotel Recommendations Viewed');
+    }
+    
+    navigate("/hotels");
+  };
+  
   return (
     <div className="space-y-6" data-pendo-id="dashboard-content">
       {/* Welcome Section */}
@@ -42,14 +51,26 @@ const DashboardContent = () => {
           </p>
         </div>
         
-        <Button 
-          className="bg-sky-blue hover:bg-sky-blue/90 flex items-center gap-2"
-          data-pendo-id="create-itinerary-button"
-          onClick={handleCreateItinerary}
-        >
-          <Plus className="h-4 w-4" />
-          Create New Itinerary
-        </Button>
+        <div className="flex gap-2 w-full md:w-auto">
+          <Button 
+            className="bg-sky-blue hover:bg-sky-blue/90 flex items-center gap-2 flex-grow md:flex-grow-0"
+            data-pendo-id="create-itinerary-button"
+            onClick={handleCreateItinerary}
+          >
+            <Plus className="h-4 w-4" />
+            Create New Itinerary
+          </Button>
+          
+          <Button 
+            variant="outline" 
+            className="flex items-center gap-2 flex-grow md:flex-grow-0"
+            data-pendo-id="view-hotels-button"
+            onClick={handleViewHotels}
+          >
+            <Building className="h-4 w-4" />
+            View Hotels
+          </Button>
+        </div>
       </div>
       
       {/* Stats Overview */}
@@ -82,10 +103,101 @@ const DashboardContent = () => {
         </Card>
       </div>
       
-      {/* Compact Pendo guide placeholder - embedded within the layout */}
-      <Card className="border-dashed border-sky-blue/30 bg-transparent" data-pendo-id="recommended-hotels-section">
-        <CardContent className="flex items-center justify-center p-4">
-          <span className="text-sm text-gray-400">Personalized recommendations will appear here</span>
+      {/* Hotel Recommendations Section */}
+      <Card className="border-sky-blue/30 overflow-hidden" data-pendo-id="recommended-hotels-section">
+        <div className="bg-sky-blue/10 p-4 border-b border-sky-blue/20">
+          <div className="flex justify-between items-center">
+            <h2 className="text-lg font-semibold text-midnight-navy">Recommended Hotels</h2>
+            <Button 
+              variant="link" 
+              className="text-sky-blue p-0"
+              onClick={handleViewHotels}
+              data-pendo-id="see-all-hotels-link"
+            >
+              See all
+            </Button>
+          </div>
+        </div>
+        <CardContent className="p-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="bg-white rounded-lg shadow overflow-hidden" data-pendo-id="hotel-card-1">
+              <img 
+                src="https://images.unsplash.com/photo-1566073771259-6a8506099945?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" 
+                alt="Holiday Inn Raleigh" 
+                className="w-full h-32 object-cover"
+              />
+              <div className="p-3">
+                <h3 className="font-medium text-gray-800">Holiday Inn Raleigh Downtown</h3>
+                <div className="flex items-center mt-1 text-sm text-gray-500">
+                  <MapPin className="h-3 w-3 mr-1" />
+                  <span>Downtown Raleigh</span>
+                </div>
+                <div className="mt-2 flex justify-between items-center">
+                  <span className="font-bold text-green-600">$143</span>
+                  <Button 
+                    size="sm" 
+                    className="bg-sky-blue hover:bg-sky-blue/90"
+                    onClick={handleViewHotels}
+                    data-pendo-id="view-hotel-1"
+                  >
+                    View
+                  </Button>
+                </div>
+              </div>
+            </div>
+            
+            <div className="bg-white rounded-lg shadow overflow-hidden" data-pendo-id="hotel-card-2">
+              <img 
+                src="https://images.unsplash.com/photo-1571896349842-33c89424de2d?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" 
+                alt="The Casso" 
+                className="w-full h-32 object-cover"
+              />
+              <div className="p-3">
+                <h3 className="font-medium text-gray-800">The Casso, Raleigh</h3>
+                <div className="flex items-center mt-1 text-sm text-gray-500">
+                  <MapPin className="h-3 w-3 mr-1" />
+                  <span>Glenwood South</span>
+                </div>
+                <div className="mt-2 flex justify-between items-center">
+                  <span className="font-bold text-green-600">$219</span>
+                  <Button 
+                    size="sm" 
+                    className="bg-sky-blue hover:bg-sky-blue/90"
+                    onClick={handleViewHotels}
+                    data-pendo-id="view-hotel-2"
+                  >
+                    View
+                  </Button>
+                </div>
+              </div>
+            </div>
+            
+            <div className="bg-white rounded-lg shadow overflow-hidden" data-pendo-id="hotel-card-3">
+              <img 
+                src="https://images.unsplash.com/photo-1551632436-cbf8dd35adfa?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" 
+                alt="Residence Inn" 
+                className="w-full h-32 object-cover"
+              />
+              <div className="p-3">
+                <h3 className="font-medium text-gray-800">Residence Inn by Marriott</h3>
+                <div className="flex items-center mt-1 text-sm text-gray-500">
+                  <MapPin className="h-3 w-3 mr-1" />
+                  <span>North Hills</span>
+                </div>
+                <div className="mt-2 flex justify-between items-center">
+                  <span className="font-bold text-green-600">$179</span>
+                  <Button 
+                    size="sm" 
+                    className="bg-sky-blue hover:bg-sky-blue/90"
+                    onClick={handleViewHotels}
+                    data-pendo-id="view-hotel-3"
+                  >
+                    View
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </div>
         </CardContent>
       </Card>
     </div>

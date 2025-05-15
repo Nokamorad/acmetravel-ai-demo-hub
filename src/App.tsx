@@ -9,11 +9,11 @@ import Homepage from "./pages/Homepage";
 import Dashboard from "./pages/Dashboard";
 import SignUp from "./pages/SignUp";
 import NotFound from "./pages/NotFound";
-import IconSettings from "./pages/IconSettings";
 import BookTrip from "./pages/BookTrip";
 import HelpCenter from "./pages/HelpCenter";
 import BoogleSearch from "./pages/BoogleSearch";
 import SearchResults from "./pages/SearchResults";
+import RecommendedHotels from "./pages/RecommendedHotels";
 import PendoIntegration from "@/components/pendo/PendoIntegration";
 import { UserProvider } from "@/contexts/UserContext";
 
@@ -39,7 +39,7 @@ const App = () => {
                 <Route path="/dashboard" element={<Dashboard />} />
                 <Route path="/book" element={<BookTrip />} />
                 <Route path="/help" element={<HelpCenter />} />
-                <Route path="/icon-settings" element={<IconSettings />} />
+                <Route path="/hotels" element={<RecommendedHotels />} />
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                 <Route path="*" element={<NotFound />} />
               </Routes>
