@@ -133,12 +133,7 @@ const PendoIntegration: React.FC = () => {
             member_type: membertype
           });
           
-          return {
-            name,
-            demo.engineering+${cleanName}@pendo.io`,
-            id: `demo-${cleanName}`,
-            membertype
-          };
+        
         };
         
         // Track booking events
