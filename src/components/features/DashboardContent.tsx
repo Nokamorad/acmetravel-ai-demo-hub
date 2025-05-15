@@ -30,7 +30,7 @@ const DashboardContent = () => {
   };
   
   return (
-    <div className="space-y-8" data-pendo-id="dashboard-content">
+    <div className="space-y-6" data-pendo-id="dashboard-content">
       {/* Welcome Section */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
@@ -82,10 +82,12 @@ const DashboardContent = () => {
         </Card>
       </div>
       
-      {/* Placeholder for Pendo guide */}
-      <div data-pendo-id="recommended-hotels-section" className="mt-4">
-        {/* This empty div with a specific pendo-id will be used as an anchor for the Pendo guide */}
-      </div>
+      {/* Compact Pendo guide placeholder - embedded within the layout */}
+      <Card className="border-dashed border-sky-blue/30 bg-transparent" data-pendo-id="recommended-hotels-section">
+        <CardContent className="flex items-center justify-center p-4">
+          <span className="text-sm text-gray-400">Personalized recommendations will appear here</span>
+        </CardContent>
+      </Card>
     </div>
   );
 };
