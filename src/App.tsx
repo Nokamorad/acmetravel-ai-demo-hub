@@ -10,6 +10,8 @@ import Dashboard from "./pages/Dashboard";
 import SignUp from "./pages/SignUp";
 import NotFound from "./pages/NotFound";
 import IconSettings from "./pages/IconSettings";
+import BookTrip from "./pages/BookTrip";
+import TripSummary from "./pages/TripSummary";
 import PendoIntegration from "@/components/pendo/PendoIntegration";
 import { UserProvider } from "@/contexts/UserContext";
 
@@ -31,6 +33,8 @@ const App = () => {
                 <Route path="/" element={<Homepage />} />
                 <Route path="/signup" element={<SignUp />} />
                 <Route path="/dashboard" element={<Dashboard />} />
+                <Route path="/book" element={<BookTrip />} />
+                <Route path="/trips" element={<TripSummary />} />
                 <Route path="/icon-settings" element={<IconSettings />} />
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                 <Route path="*" element={<NotFound />} />

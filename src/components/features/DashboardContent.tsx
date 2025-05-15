@@ -4,10 +4,13 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Plus } from "lucide-react";
 import { useUser } from "@/contexts/UserContext";
+import { useNavigate } from "react-router-dom";
+import { toast } from "@/hooks/use-toast";
 
 const DashboardContent = () => {
   const { user } = useUser();
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
   
   useEffect(() => {
     // Simulate data loading
@@ -17,9 +20,17 @@ const DashboardContent = () => {
     
     return () => clearTimeout(timer);
   }, []);
+
+  const handleCreateItinerary = () => {
+    navigate("/book");
+    toast({
+      title: "Create new itinerary",
+      description: "Let's plan your next adventure!"
+    });
+  };
   
   return (
-    <div className="p-6 space-y-8" data-pendo-id="dashboard-content">
+    <div className="space-y-8" data-pendo-id="dashboard-content">
       {/* Welcome Section */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
@@ -34,6 +45,7 @@ const DashboardContent = () => {
         <Button 
           className="bg-sky-blue hover:bg-sky-blue/90 flex items-center gap-2"
           data-pendo-id="create-itinerary-button"
+          onClick={handleCreateItinerary}
         >
           <Plus className="h-4 w-4" />
           Create New Itinerary
