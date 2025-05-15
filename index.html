@@ -4,12 +4,12 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>AcmeTravel - AI-Powered Business Travel Platform | Pendo Demo</title>
-    <meta name="description" content="Experience how AcmeTravel uses Pendo to power Travel Agent, an AI-powered assistant that enhances onboarding, support, and cross-sell experiences." />
+    <title>Voyagr - AI-Powered Business Travel Platform | Pendo Demo</title>
+    <meta name="description" content="Experience how Voyagr uses Pendo to power Travel Agent, an AI-powered assistant that enhances onboarding, support, and cross-sell experiences." />
     <meta name="author" content="Pendo Demo Team" />
 
-    <meta property="og:title" content="AcmeTravel - AI-Powered Business Travel Platform | Pendo Demo" />
-    <meta property="og:description" content="Experience how AcmeTravel uses Pendo to power Travel Agent, an AI-powered assistant that enhances onboarding, support, and cross-sell experiences." />
+    <meta property="og:title" content="Voyagr - AI-Powered Business Travel Platform | Pendo Demo" />
+    <meta property="og:description" content="Experience how Voyagr uses Pendo to power Travel Agent, an AI-powered assistant that enhances onboarding, support, and cross-sell experiences." />
     <meta property="og:type" content="website" />
     <meta property="og:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
 
@@ -17,24 +17,50 @@
     <meta name="twitter:site" content="@lovable_dev" />
     <meta name="twitter:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
     
-    <!-- Pendo snippet placeholder - API key would be replaced in production -->
+    <!-- Pendo snippet -->
     <script>
-      // Pendo snippet initialization
-      (function(apiKey){
+    (function(apiKey){
         (function(p,e,n,d,o){var v,w,x,y,z;o=p[d]=p[d]||{};o._q=o._q||[];
-        v=['initialize','identify','updateOptions','pageLoad','track'];for(w=0,x=v.length;w<x;++w)(function(m){
-            o[m]=o[m]||function(){o._q[m===v[0]?'unshift':'push']([m].concat([].slice.call(arguments,0)));};})(v[w]);
-            y=e.createElement(n);y.async=!0;y.src='https://cdn.pendo.io/agent/static/'+apiKey+'/pendo.js';
-            z=e.getElementsByTagName(n)[0];z.parentNode.insertBefore(y,z);})(window,document,'script','pendo');
-      })('DEMO_API_KEY'); // Replace with actual API key in production
-      
-      console.log("Pendo snippet initialized in head for optimal loading");
+        v=['initialize','identify','updateOptions','pageLoad','track'];
+        for(w=0,x=v.length;w<x;++w)(function(m){
+            o[m]=o[m]||function(){o._q[m===v[0]?'unshift':'push']([m].concat([].slice.call(arguments,0)));};
+        })(v[w]);
+        y=e.createElement(n);y.async=!0;
+        y.src='https://cdn.pendo.io/agent/static/'+apiKey+'/pendo.js';
+        z=e.getElementsByTagName(n)[0];
+        z.parentNode.insertBefore(y,z);
+    })(window,document,'script','pendo');
+
+    // On initial page load: Anonymous Visitor
+    pendo.initialize({
+        visitor: {
+            id: "anonymous-" + Math.floor(Math.random() * 1000000) // Unique random ID
+        },
+        account: {
+            id: "demo-account"
+        }
+    });
+
+    // Later after signup, reinitialize with real user data
+    function onUserSignup(name, email) {
+        const cleanName = name.toLowerCase().replace(/\s+/g, '');
+        pendo.initialize({
+            visitor: {
+                id: `demo-${cleanName}`,
+                email: email,
+                full_name: name
+            },
+            account: {
+                id: "demo-account"
+            }
+        });
+    }
+    })('2d9ca49c-d4fd-4132-59ea-72018c9e5d77');
     </script>
   </head>
 
   <body>
     <div id="root"></div>
-    <!-- IMPORTANT: DO NOT REMOVE THIS SCRIPT TAG OR THIS VERY COMMENT! -->
     <script src="https://cdn.gpteng.co/gptengineer.js" type="module"></script>
     <script type="module" src="/src/main.tsx"></script>
   </body>

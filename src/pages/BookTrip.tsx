@@ -1,11 +1,12 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import AppLayout from "@/components/layout/AppLayout";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import CitySearchInput from "@/components/BookTrip/CitySearchInput";
+import SignUpModal from "@/components/modals/SignUpModal";
 import { 
   PlaneIcon, 
   HotelIcon, 
@@ -22,10 +23,62 @@ interface CityData {
   code: string;
 }
 
+// List of major US cities
+const US_CITIES = [
+  { city: "San Francisco", code: "SFO" },
+  { city: "Los Angeles", code: "LAX" },
+  { city: "Chicago", code: "ORD" },
+  { city: "Dallas", code: "DFW" },
+  { city: "Miami", code: "MIA" },
+  { city: "Seattle", code: "SEA" },
+  { city: "Boston", code: "BOS" },
+  { city: "Atlanta", code: "ATL" },
+  { city: "Denver", code: "DEN" }
+];
+
 const BookTrip = () => {
   const [tripType, setTripType] = useState('business');
   const [originCity, setOriginCity] = useState<CityData | null>(null);
   const [destinationCity, setDestinationCity] = useState<CityData | null>(null);
+  const [isSignUpModalOpen, setIsSignUpModalOpen] = useState(false);
+  const [departDate, setDepartDate] = useState("");
+  const [returnDate, setReturnDate] = useState("");
+  
+  useEffect(() => {
+    // Set random origin city
+    const randomOriginCity = US_CITIES[Math.floor(Math.random() * US_CITIES.length)];
+    setOriginCity(randomOriginCity);
+    
+    // Set destination city to New York
+    setDestinationCity({ city: "New York", code: "NYC" });
+    
+    // Set dates to 5-10 days in the future
+    const today = new Date();
+    const departureDate = new Date(today);
+    departureDate.setDate(today.getDate() + 5);
+    
+    const returnDateObj = new Date(today);
+    returnDateObj.setDate(today.getDate() + 10);
+    
+    setDepartDate(departureDate.toISOString().split('T')[0]);
+    setReturnDate(returnDateObj.toISOString().split('T')[0]);
+  }, []);
+  
+  const handleSearchFlights = () => {
+    // Track flight search submitted
+    if ((window as any).pendo && (window as any).pendo.track) {
+      (window as any).pendo.track('Flight Search Submitted', {
+        origin: originCity?.city,
+        destination: destinationCity?.city,
+        departDate,
+        returnDate,
+        tripType
+      });
+    }
+    
+    // Open signup modal
+    setIsSignUpModalOpen(true);
+  };
   
   return (
     <AppLayout>
@@ -103,6 +156,7 @@ const BookTrip = () => {
                     icon={PlaneIcon} 
                     dataPendoId="flight-origin"
                     onSelect={setOriginCity}
+                    defaultValue={originCity?.city}
                   />
                 </div>
                 
@@ -113,6 +167,7 @@ const BookTrip = () => {
                     icon={PlaneIcon} 
                     dataPendoId="flight-destination"
                     onSelect={setDestinationCity}
+                    defaultValue={destinationCity?.city}
                   />
                 </div>
                 
@@ -134,7 +189,8 @@ const BookTrip = () => {
                     <CalendarIcon className="absolute left-3 top-2.5 h-4 w-4 text-gray-500" />
                     <Input 
                       type="date" 
-                      placeholder="mm/dd/yyyy"
+                      value={departDate}
+                      onChange={(e) => setDepartDate(e.target.value)}
                       className="pl-10 bg-white"
                       data-pendo-id="flight-depart-date"
                     />
@@ -147,7 +203,8 @@ const BookTrip = () => {
                     <CalendarIcon className="absolute left-3 top-2.5 h-4 w-4 text-gray-500" />
                     <Input 
                       type="date" 
-                      placeholder="mm/dd/yyyy"
+                      value={returnDate}
+                      onChange={(e) => setReturnDate(e.target.value)}
                       className="pl-10 bg-white"
                       data-pendo-id="flight-return-date"
                     />
@@ -178,6 +235,7 @@ const BookTrip = () => {
                   variant="default"
                   size="lg"
                   className="text-white"
+                  onClick={handleSearchFlights}
                   data-pendo-id="search-flights"
                 >
                   <SearchIcon className="mr-2 h-4 w-4" />
@@ -320,6 +378,12 @@ const BookTrip = () => {
           </div>
         </Card>
       </div>
+      
+      {/* Signup Modal */}
+      <SignUpModal 
+        isOpen={isSignUpModalOpen} 
+        onClose={() => setIsSignUpModalOpen(false)}
+      />
     </AppLayout>
   );
 };

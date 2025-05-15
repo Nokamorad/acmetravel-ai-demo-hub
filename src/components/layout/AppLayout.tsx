@@ -1,3 +1,4 @@
+
 import { ReactNode } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
@@ -39,7 +40,7 @@ const AppLayout = ({ children }: AppLayoutProps) => {
       icon: User
     }, 
     {
-      path: '/support',
+      path: '/help',
       label: 'Help',
       icon: HelpCircle
     }
