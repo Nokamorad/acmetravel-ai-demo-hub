@@ -22,137 +22,134 @@ const PendoIntegration: React.FC = () => {
         return;
       }
       
-    
-        // Helper to generate a random demo user name
-        const generateRandomName = () => {
-          const names = [
-            "Alex Johnson",
-            "Taylor Smith",
-            "Jordan Lee",
-            "Casey Morgan",
-            "Sam Cameron",
-            "Jamie Parker",
-            "Drew Adams",
-            "Skyler Reese",
-            "Riley Quinn",
-            "Avery Blake"
-          ];
-          const randomIndex = Math.floor(Math.random() * names.length);
-          return names[randomIndex];
-        };
+      // Helper to generate a random demo user name
+      const generateRandomName = () => {
+        const names = [
+          "Alex Johnson",
+          "Taylor Smith",
+          "Jordan Lee",
+          "Casey Morgan",
+          "Sam Cameron",
+          "Jamie Parker",
+          "Drew Adams",
+          "Skyler Reese",
+          "Riley Quinn",
+          "Avery Blake"
+        ];
+        const randomIndex = Math.floor(Math.random() * names.length);
+        return names[randomIndex];
+      };
+      
+      // Helper to generate anonymous ID
+      const generateAnonymousId = () => {
+        return 'anon-' + Math.random().toString(36).substring(2, 15);
+      };
+      
+      // Initialize anonymous visitor on page load
+      const anonymousVisitorId = generateAnonymousId();
+      console.log('Initializing Pendo with anonymous visitor ID:', anonymousVisitorId);
+      
+      (window as any).pendo.initialize({
+        visitor: {
+          id: '',
+        },
+        account: {
+          id: ''
+        }
+      });
+      
+      // Make functions available globally
+      (window as any).generateRandomName = generateRandomName;
+      
+      // On signup, reinitialize with permanent visitor metadata
+      (window as any).onUserSignup = (travelFrequency: string) => {
+        const name = generateRandomName();
+        const cleanName = name.toLowerCase().replace(/\s+/g, '');
+        let membertype = 'Free';
         
-        // Helper to generate anonymous ID
-        const generateAnonymousId = () => {
-          return 'anon-' + Math.random().toString(36).substring(2, 15);
-        };
+        switch (travelFrequency.toLowerCase()) {
+          case 'daily':
+            membertype = 'Platinum';
+            break;
+          case 'weekly':
+            membertype = 'Gold';
+            break;
+          case 'monthly':
+            membertype = 'Silver';
+            break;
+          case 'quarterly':
+            membertype = 'Bronze';
+            break;
+          default:
+            membertype = 'Free';
+        }
         
-        // Initialize anonymous visitor on page load
-        const anonymousVisitorId = generateAnonymousId();
-        console.log('Initializing Pendo with anonymous visitor ID:', anonymousVisitorId);
-        
-        (window as any).pendo.initialize({
-          visitor: {
-            id: '',
-          },
-          account: {
-            id: ''
-          }
+        console.log('Reinitializing Pendo with user data:', {
+          id: `demo.engineering+${cleanName}@email.io`,
+          name: name,
+          travel_frequency: travelFrequency,
+          member_type: membertype
         });
         
-        // Make functions available globally
-        (window as any).generateRandomName = generateRandomName;
+        // Update user context
+        if (updateUser) {
+          updateUser({
+            id: `demo.engineering+${cleanName}@email.io`,
+            name: name, // Changed from full_name to name to match UserProfile interface
+            travelFrequency: travelFrequency,
+            member_type: membertype
+          });
+        }
         
-        // On signup, reinitialize with permanent visitor metadata
-        (window as any).onUserSignup = (travelFrequency: string) => {
-          const name = generateRandomName();
-          const cleanName = name.toLowerCase().replace(/\s+/g, '');
-          let membertype = 'Free';
-          
-          switch (travelFrequency.toLowerCase()) {
-            case 'daily':
-              membertype = 'Platinum';
-              break;
-            case 'weekly':
-              membertype = 'Gold';
-              break;
-            case 'monthly':
-              membertype = 'Silver';
-              break;
-            case 'quarterly':
-              membertype = 'Bronze';
-              break;
-            default:
-              membertype = 'Free';
-          }
-          
-          console.log('Reinitializing Pendo with user data:', {
+        (window as any).pendo.identify({
+          visitor: {
             id: `demo.engineering+${cleanName}@email.io`,
             full_name: name,
             travel_frequency: travelFrequency,
-            member_type: membertype
-          });
-          
-          // Update user context
-          if (updateUser) {
-            updateUser({
-              id: `demo.engineering+${cleanName}@email.io`,
-              full_name: name,
-              travelFrequency: travelFrequency,
-              member_type: membertype
-            });
+            member_type: membertype,
+          },
+          account: {
+            id: "demo-account"
           }
-          
-          (window as any).pendo.identify({
-            visitor: {
-              id: `demo.engineering+${cleanName}@email.io`,
-              full_name: name,
-              travel_frequency: travelFrequency,
-              member_type: membertype,
-            },
-            account: {
-              id: "demo-account"
-            }
-          });
-          
-          // Track signup event
-          (window as any).pendo.track('User Signed Up', {
-          
-            travel_frequency: travelFrequency,
-            member_type: membertype
-          });
-          
-          return {
-            name,
-            membertype
-          };
-        };
+        });
         
-        // Track booking events
-        (window as any).trackBookingStarted = () => {
-          (window as any).pendo.track('Started Booking', {
-            timestamp: new Date().toISOString()
-          });
-        };
+        // Track signup event
+        (window as any).pendo.track('User Signed Up', {
+          travel_frequency: travelFrequency,
+          member_type: membertype
+        });
         
-        (window as any).trackBookingAbandoned = () => {
-          (window as any).pendo.track('Booking Abandoned', {
-            timestamp: new Date().toISOString()
-          });
+        return {
+          name,
+          membertype
         };
-        
-        (window as any).trackEmailViewed = () => {
-          (window as any).pendo.track('Viewed Re-Engagement Email', {
-            timestamp: new Date().toISOString()
-          });
-        };
-        
-        (window as any).trackBookingCompleted = () => {
-          (window as any).pendo.track('Booking Completed', {
-            timestamp: new Date().toISOString(),
-            destination: 'Munich'
-          });
-        };
-      })(PENDO_API_KEY);
+      };
+      
+      // Track booking events
+      (window as any).trackBookingStarted = () => {
+        (window as any).pendo.track('Started Booking', {
+          timestamp: new Date().toISOString()
+        });
+      };
+      
+      (window as any).trackBookingAbandoned = () => {
+        (window as any).pendo.track('Booking Abandoned', {
+          timestamp: new Date().toISOString()
+        });
+      };
+      
+      (window as any).trackEmailViewed = () => {
+        (window as any).pendo.track('Viewed Re-Engagement Email', {
+          timestamp: new Date().toISOString()
+        });
+      };
+      
+      (window as any).trackBookingCompleted = () => {
+        (window as any).pendo.track('Booking Completed', {
+          timestamp: new Date().toISOString(),
+          destination: 'Munich'
+        });
+      };
       
       setInitialized(true);
     };
