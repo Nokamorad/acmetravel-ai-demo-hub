@@ -16,6 +16,10 @@ import SearchResults from "./pages/SearchResults";
 import RecommendedHotels from "./pages/RecommendedHotels";
 import PendoIntegration from "@/components/pendo/PendoIntegration";
 import { UserProvider } from "@/contexts/UserContext";
+import Inbox from "./pages/Inbox";
+import Reschedule from "./pages/Reschedule";
+import Support from "./pages/Support";
+import Upsell from "./pages/Upsell";
 
 // Create a client
 const queryClient = new QueryClient();
@@ -33,6 +37,7 @@ const App = () => {
               <PendoIntegration />
               <Routes>
                 <Route path="/" element={<BoogleSearch />} />
+                <Route path="/search" element={<BoogleSearch />} />
                 <Route path="/search-results" element={<SearchResults />} />
                 <Route path="/homepage" element={<Homepage />} />
                 <Route path="/signup" element={<SignUp />} />
@@ -40,6 +45,10 @@ const App = () => {
                 <Route path="/book" element={<BookTrip />} />
                 <Route path="/help" element={<HelpCenter />} />
                 <Route path="/hotels" element={<RecommendedHotels />} />
+                <Route path="/inbox" element={<Inbox />} />
+                <Route path="/reschedule" element={<Reschedule />} />
+                <Route path="/support" element={<Support />} />
+                <Route path="/upsell" element={<Upsell />} />
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                 <Route path="*" element={<NotFound />} />
               </Routes>
