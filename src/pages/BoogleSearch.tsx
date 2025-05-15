@@ -14,10 +14,13 @@ const BoogleSearch = () => {
     // Track the search event in Pendo
     if ((window as any).pendo && (window as any).pendo.track) {
       (window as any).pendo.track('Search Performed', {
-        query: searchQuery
+        query: searchQuery,
+        page: 'boogle_homepage'
       });
     }
-    navigate('/search-results');
+    
+    // Navigate to search results with the search query as a parameter
+    navigate('/search-results?q=' + encodeURIComponent(searchQuery));
   };
 
   // Randomly generate anonymous visitor ID on page load
@@ -33,6 +36,11 @@ const BoogleSearch = () => {
         account: {
           id: "demo-account"
         }
+      });
+      
+      // Track page view
+      (window as any).pendo.track('Page View', {
+        page: 'boogle_homepage'
       });
     }
   }, []);
